@@ -1,0 +1,72 @@
+.slide-container {
+    margin: auto;
+    /* width: 600px; */
+    max-width: 576px;
+
+    text-align: center;
+    
+  }
+  
+  .wrapper {
+    /* padding-top: 40px; */
+    /* padding-bottom: 40px; */
+  }
+  
+  .caro-card {
+    background: rgb(0, 0, 0);
+    width: 100%;
+    display: inline-block;
+    margin: auto;
+    /* border-radius: 14px; */
+    position: relative;
+    text-align: center;
+    /* box-shadow: -1px 15px 30px -12px black; */
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  
+  .caro-card__image {
+    position: relative;
+    height: 250px;
+    margin-bottom: 20px;
+    /* border-top-left-radius: 10px;
+    border-top-right-radius: 10px; */
+  }
+  
+  .caro-card__unit-name {
+    font-size: 26px;
+    color: black;
+    font-weight: 900;
+    margin-bottom: 5px;
+  }
+  
+  .caro-card__unit-description {
+    padding: 20px;
+    margin-bottom: 10px;  
+  }
+  
+  .caro-card__unit-stats {
+    color: white;
+    font-weight: 700;
+    padding: 20px 15px;
+  }
+  .slick-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* border-top-left-radius: 10px;
+    border-top-right-radius: 10px; */
+}
+.slick-dots{
+    margin-top: -70px;
+}
+.notificationCount{
+  display: flex;
+  justify-content: space-between;
+  float: right;
+}
+.makeittop{
+  margin-top: -37px;
+  z-index: 9999;
+  margin-left: -31px;
+}

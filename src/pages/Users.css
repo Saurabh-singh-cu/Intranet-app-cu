@@ -1,0 +1,137 @@
+.my-form-component {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    /* background-color: #d9d5d5; */
+    border-radius: 10px;
+    width:  80vw;
+    margin-top: 57px;
+  }
+  
+  .form-container, .table-container {
+    flex: 1;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #d9d9d9;
+    color: #fff;
+  }
+  
+  .form-container {
+    margin-right: 10px;
+    height: 90vh;
+    overflow: scroll;
+  }
+  
+  .table-container {
+    margin-left: 10px;
+    height: 90vh;
+    overflow: scroll;
+  }
+  
+  .custom-select, .custom-input, .custom-btn {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: #444242;
+    color: #fff;
+  }
+  
+  .custom-select {
+    appearance: none;
+  }
+  
+  .custom-btn {
+    background-color: #ec575e;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .custom-btn:hover {
+    background-color: #b20710;
+  }
+  
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+  }
+  
+  .custom-table th, .custom-table td {
+    padding: 10px;
+    border: 1px solid #333;
+    text-align: left;
+  }
+  
+  .custom-table th {
+    background-color: #7e6c6d;
+  }
+  
+  .custom-table tbody tr {
+    background-color: #333;
+  }
+  
+  /* Responsive styling */
+  @media (max-width: 1200px) {
+    .my-form-component {
+      flex-direction: column;
+    }
+  }
+  .custom-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: #444242;
+    color: #ffffff;
+    appearance: none; 
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"%3E%3Cpolygon points="0,0 10,0 5,10" fill="%23fff"/%3E%3C/svg%3E'); /* Add a custom down arrow */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Position the arrow */
+    background-size: 10px; /* Adjust arrow size */
+  }
+  .custom-table th, .custom-table td {
+    padding: 12px 8px;
+    text-align: left;
+  }
+  
+  .custom-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+  
+  .custom-table td {
+    border-bottom: 1px solid #e8e8e8;
+  }
+  
+  .drawer-content p {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .drawer-content p strong {
+    font-weight: 500;
+  }
+  
+  .drawer-content .ant-btn {
+    width: 45%;
+  }
+  /* multiselect css  */
+  .ant-select-selection-overflow{
+    color: rgb(255, 255, 255) !important;
+  }
+  .ant-select-selector{
+    background-color: #444244 !important;
+    height: 39px;
+    color: white;
+   
+  }
+  .ant-select-selection-placeholder{
+    color: white !important;
+  }
