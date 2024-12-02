@@ -62,7 +62,7 @@ const Calendar = () => {
       const dummyData =
         day === 23
           ? [
-              { title: "Thanks for visiting our Blog!", time: "Just now", logo : c1 },
+              { title: "Adobe Registration is open!", time: "Just now", logo : c1 },
               { title: "Intranet is on Progress", time: "Stay Tuned", logo : c2 },
             ]
           : [
@@ -95,6 +95,10 @@ const Calendar = () => {
     }
     return days;
   };
+
+  const openGoogleForm = () => {
+    
+  }
 
   return (
     <div style={{ height: "100%" }} className="calendar-container">
@@ -146,7 +150,7 @@ const Calendar = () => {
                
                 </div>
                 <div className="message-actions">
-                  <button className="action-button approve">Register Now</button>
+                  <button onClick={() => openGoogleForm()} className="action-button approve">Register Now</button>
                  
                 </div>
               </div>

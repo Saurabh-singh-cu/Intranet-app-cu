@@ -322,6 +322,7 @@
 .action-button.approve:hover {
   background: #ffffff;
   color: #e74c3c;
+  border: 1px solid #e74c3c;
 }
 
 .action-button.deny {

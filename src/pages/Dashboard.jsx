@@ -25,7 +25,7 @@ import {
   Users,
 } from "lucide-react";
 import EventsCard from "./EventCards";
-import { Badge, Button, Space } from "antd";
+import { Badge, Button, message, notification, Space } from "antd";
 import Avatar from "antd/es/avatar/avatar";
 import { EditOutlined, NotificationOutlined } from "@ant-design/icons";
 import Scroller from "../components/Scroller";
@@ -45,6 +45,7 @@ const Dashboard = () => {
   const [activeTab1, setActiveTab1] = useState("Appointment Holder");
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [filteredData, setFilteredData] = useState({
     club: 0,
@@ -73,32 +74,7 @@ const Dashboard = () => {
     { title: "Academic Excellence", image: c4 },
   ];
 
-  const accordionData = [
-    {
-      title: "Club Entity",
-      content: [
-        "• Latest campus news and updates",
-        "• Upcoming events and activities",
-        "• Student life and experiences",
-      ],
-    },
-    {
-      title: "Academic Queries",
-      content: [
-        "• Course-related questions",
-        "• Study tips and resources",
-        "• Research opportunities",
-      ],
-    },
-    {
-      title: "Career Development",
-      content: [
-        "• Internship opportunities",
-        "• Job market trends",
-        "• Resume and interview tips",
-      ],
-    },
-  ];
+
 
   const toggleAccordion = (index) => {
     setActiveAccordion(activeAccordion === index ? null : index);
@@ -115,9 +91,7 @@ const Dashboard = () => {
   const redirectClubs = () => {
     navigate("/clubs");
   };
-  const redirectClubsAdmin = () => {
-    navigate("/registered-entities");
-  };
+
   const redirectSociety = () => {
     navigate("/department-society");
   };
@@ -171,10 +145,6 @@ const Dashboard = () => {
       all: data.reduce((sum, item) => sum + item.entity_count, 0),
     };
     setFilteredData(filtered);
-  };
-
-  const handleReplyClick = () => {
-    setIsModalOpen(true);
   };
 
   const handleSendClick = () => {
@@ -294,11 +264,11 @@ const Dashboard = () => {
         "Discussion forum for all Chandigarh University Student Department Society.",
     },
     {
-      title: "Professional Society (Student Chapter)",
+      title: "Professional Society (Student Chapters)",
       participants: ["C", "S"],
       additionalCount: 2,
       content:
-        "Discussion forum for all Chandigarh University Student Chapter. ",
+        "Discussion forum for all Chandigarh University Student Chapters. ",
     },
   ];
 
@@ -309,6 +279,15 @@ const Dashboard = () => {
     { name: "Leadership", color: "#f39c12" },
     { name: "Creative Expression", color: "#9b59b6" },
   ];
+
+  const redirectToLogin = () => {
+   alert("Redirecting you to login page.")
+   setTimeout(() => {
+    navigate("/login");
+   }, 2000);
+  };
+
+
 
   return (
     <>
@@ -536,10 +515,10 @@ const Dashboard = () => {
                 </h2>
 
                 <div style={{ fontSize: "16px", margin: "10px 0px" }}>
-                  Co-Curricular
+                  Professional Society
                 </div>
                 <p style={{ fontSize: "23px", fontWeight: "bold" }}>
-                  Student Chapter
+                  Student Chapters
                 </p>
 
                 <span className="icon-home">
@@ -692,7 +671,7 @@ const Dashboard = () => {
                                 <div
                                   key={i}
                                   className="participant-avatar"
-                                  style={{ backgroundColor: getRandomColor() }}
+                                  style={{cursor:"pointer", backgroundColor: getRandomColor() }}
                                 >
                                   {letter}
                                 </div>
@@ -715,7 +694,7 @@ const Dashboard = () => {
                       </button>
                       {activeAccordion === index && (
                         <div className="accordion-content">
-                          <p>{discussion.content}</p>
+                          <p onClick={() => redirectToLogin()} style={{cursor:"pointer"}}>{discussion.content}</p>
                         </div>
                       )}
                     </div>

@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState } from "react";
 import { message, notification } from "antd";
 import barcoder from "../../assets/images/barcode.jpeg";
@@ -8,6 +5,8 @@ import joinus from "../../assets/images/joinus.jpg";
 import "./JoinNow.css";
 import axios from "axios";
 import Swal from "sweetalert2";
+import LightBulbCharacter from "./WalkingMan";
+import WalkingMan from "./WalkingMan";
 
 const JoinNow = () => {
   const [email, setEmail] = useState("");
@@ -36,7 +35,11 @@ const JoinNow = () => {
   const [mobileNumber, setMobileNumber] = useState(""); // New state for mobile number
   const [isFormDisabled, setIsFormDisabled] = useState(false);
 
+  const [walkingManPosition, setWalkingManPosition] = useState("left");
+  const [showWalkingMan, setShowWalkingMan] = useState(true);
+
   const [timeLeft, setTimeLeft] = useState(300);
+
   useEffect(() => {
     if (timeLeft <= 0) return;
 
@@ -46,6 +49,21 @@ const JoinNow = () => {
 
     return () => clearInterval(timer);
   }, [timeLeft]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setWalkingManPosition((prev) => (prev === "left" ? "right" : "left"));
+    }, 10000); // Change position every 10 seconds
+
+    const hideIntervalId = setInterval(() => {
+      setShowWalkingMan((prev) => !prev);
+    }, 15000); // Toggle visibility every 15 seconds
+
+    return () => {
+      clearInterval(intervalId);
+      clearInterval(hideIntervalId);
+    };
+  }, []);
 
   const formateTimer = (seconds) => {
     const min = Math.floor(seconds / 60);
@@ -80,23 +98,31 @@ const JoinNow = () => {
 
   const handleFinalSubmit = async () => {
     try {
-      const response = await axios.post("http://172.17.2.176:8080/intranetapp/final_submit/", {
-        membership_id: membershipId,
-        transaction_id: transactionId
-      });
+      const response = await axios.post(
+        "http://172.17.2.176:8080/intranetapp/final_submit/",
+        {
+          membership_id: membershipId,
+          transaction_id: transactionId,
+        }
+      );
       Swal.fire({
         title: "Payment Success",
         text: "We will be in touch ",
-        icon: "success"
+        icon: "success",
       });
       setShowSuccessMessage(true);
     } catch (error) {
       console.error("Final submission failed:", error);
-      message.error("Final submission failed. Please try again.");
+
+      Swal.fire({
+        title: "Failed",
+        text: `Final submission failed:, ${error}`,
+        icon: "error",
+      });
       Swal.fire({
         title: `${error}`,
-        icon:"error"
-      })
+        icon: "error",
+      });
     }
   };
 
@@ -110,20 +136,23 @@ const JoinNow = () => {
   const handleSendOTP = async () => {
     try {
       setIsFormDisabled(true);
-      const response = await axios.post("http://172.17.2.176:8080/intranetapp/send_otp_email/", {
-        member_name: name,
-        member_email: `${email}@cumail.in`,
-        dept_id: department,
-        entity_id: entity,
-        reg_id: entityType,
-        member_mobile: `${countryCode}${mobileNumber}`,
-        member_uid: uid
-      });
+      const response = await axios.post(
+        "http://172.17.2.176:8080/intranetapp/send_otp_email/",
+        {
+          member_name: name,
+          member_email: `${email}@cumail.in`,
+          dept_id: department,
+          entity_id: entity,
+          reg_id: entityType,
+          member_mobile: `${countryCode}${mobileNumber}`,
+          member_uid: uid,
+        }
+      );
       console.log("Email sent ", response?.data);
       Swal.fire({
         title: "OTP sent!",
         text: "OTP sent to your email",
-        icon: "success"
+        icon: "success",
       });
       setOtpTimer(120);
       setMembershipId(response?.data?.member_id);
@@ -139,23 +168,31 @@ const JoinNow = () => {
       }, 1000);
     } catch (error) {
       console.error("Failed to send OTP:", error);
-      message.error("Failed to send OTP");
+
+      Swal.fire({
+        title: "Failed to send OTP",
+        text: `Please try again!, ${error?.response?.data?.error} `,
+        icon: "warning",
+      });
       setIsFormDisabled(false);
     }
   };
 
   const handleVerifyOTP = async () => {
     try {
-      const response = await axios.post("http://172.17.2.176:8080/intranetapp/verify_otp/", {
-        membership_id: membershipId,
-        otp: otp
-      });
+      const response = await axios.post(
+        "http://172.17.2.176:8080/intranetapp/verify_otp/",
+        {
+          membership_id: membershipId,
+          otp: otp,
+        }
+      );
       console.log("OTP verified successfully");
       setIsVerified(true);
       Swal.fire({
         title: "You are genuine",
         text: "OTP verified successfully",
-        icon: "success"
+        icon: "success",
       });
       setTimeout(() => {
         setShowPayment(true);
@@ -164,8 +201,8 @@ const JoinNow = () => {
       console.error("OTP verification failed:", error);
       Swal.fire({
         title: "Went Wrong",
-        text: `${error}`,
-        icon: "error"
+        text: `${error?.response?.data?.error}`,
+        icon: "error",
       });
     }
   };
@@ -187,7 +224,9 @@ const JoinNow = () => {
     if (validateForm() && isVerified) {
       setShowPayment(true);
     } else {
-      message.error("Please fill all fields and verify your email before proceeding.");
+      message.error(
+        "Please fill all fields and verify your email before proceeding."
+      );
     }
   };
 
@@ -265,9 +304,11 @@ const JoinNow = () => {
             ...prev,
             uid: "UID must start with 2 digits, followed by 3 letters, and end with 4 to 7 digits",
           }));
-          notification.error({
-            message: "Error",
-            description: `UID must start with 2 digits, followed by 3 letters, and end with 4 to 7 digits`,
+
+          Swal.fire({
+            title: "Wrong Email",
+            text: "UID must start with 2 digits, followed by 3 letters, and end with 4 to 7 digits ",
+            icon: "warning",
           });
         } else {
           setErrors((prev) => ({ ...prev, uid: "" }));
@@ -297,8 +338,8 @@ const JoinNow = () => {
                 </h3>
               ) : (
                 <h3 style={{ color: "red" }}>
-                  Time has expired please go back and fill the form and come here
-                  again.
+                  Time has expired please go back and fill the form and come
+                  here again.
                 </h3>
               )}
             </div>
@@ -349,196 +390,273 @@ const JoinNow = () => {
   }
 
   return (
-    <div className="joinnow-container">
+    <div className="joinnow-container" style={{ width: "100%" }}>
+      {/* {showWalkingMan && <WalkingMan position={walkingManPosition} />} */}
       <div className="joinnow-form">
-        <h3 style={{ marginBottom: "14px", color: "#0A2E1F" }}>
-          Join as a Member
-        </h3>
-        <p className="subtitle">
-          Welcome to CU-Intranet - Let's create with us
-        </p>
+        <div className="form-header">
+          <h1>JOIN US</h1>
+        </div>
+
         <form>
-          <div className="input-row-joinnow">
-            <div className="input-group-joinnow">
-              <label className="label-joinnow" htmlFor="entity">
-                Select Entity
-              </label>
-              <select
-                className="input-field-join"
-                id="entity"
-                name="entity"
-                value={entity}
-                onChange={(e) => handleInputChange(e, setEntity)}
-                required
-              >
-                <option value="">Select Entity</option>
-                {entityData.map((entity) => (
-                  <option key={entity.entity_id} value={entity.entity_id}>
-                    {entity.entity_name}
-                  </option>
-                ))}
-              </select>
-              {errors.entity && <span className="error">{errors.entity}</span>}
+          <div className="form-section">
+            <div className="section-header">PERSONAL INFORMATION</div>
+            <div className="section-content">
+              <div className="input-row-joinnow">
+                <div className="input-group-joinnow">
+                  <label className="label-joinnow" htmlFor="name">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    className="input-field-join"
+                    value={name}
+                    onChange={(e) => handleInputChange(e, setName)}
+                    placeholder="Enter your name"
+                  />
+                  {errors.name && (
+                    <div className="error-message">{errors.name}</div>
+                  )}
+                </div>
+                <div className="input-group-joinnow">
+                  <label className="label-joinnow" htmlFor="uid">
+                    UID
+                  </label>
+                  <input
+                    type="text"
+                    id="uid"
+                    name="uid"
+                    className="input-field-join"
+                    value={uid}
+                    onChange={(e) => handleInputChange(e, setUid)}
+                    placeholder="Enter your UID"
+                  />
+                  {errors.uid && (
+                    <div className="error-message">{errors.uid}</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="input-row-joinnow">
+                <div className="input-group-joinnow">
+                  <label className="label-joinnow" htmlFor="email">
+                    Email
+                  </label>
+                  <div className="email-input">
+                    <input
+                      type="text"
+                      id="email"
+                      name="email"
+                      className="input-field-join"
+                      value={email}
+                      onChange={handleEmailChange}
+                      placeholder="Enter email"
+                      disabled
+                      style={{ cursor: "not-allowed" }}
+                    />
+                    <span className="domain">@cuchd.in</span>
+                    {isVerified && <span className="verified">✓</span>}
+                  </div>
+                  {errors.email && (
+                    <div className="error-message">{errors.email}</div>
+                  )}
+                </div>
+                <div className="input-group-joinnow">
+                  <label className="label-joinnow" htmlFor="mobileNumber">
+                    Mobile Number
+                  </label>
+                  <div className="mobile-input">
+                    <input
+                      type="text"
+                      id="mobileNumber"
+                      name="mobileNumber"
+                      className="input-field-join"
+                      value={mobileNumber}
+                      onChange={(e) => handleInputChange(e, setMobileNumber)}
+                      placeholder="+917291XXXX88"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="input-group-joinnow">
-              <label className="label-joinnow" htmlFor="entityType">
-                Select Entity List{" "}
-              </label>
-              <select
-                id="entityType"
-                name="entityType"
-                className="input-field-join"
-                value={entityType}
-                onChange={(e) => handleInputChange(e, setEntityType)}
-              >
-                <option value="">Select Entity List</option>
-                {entityListData.map((entityList) => (
-                  <option
-                    key={entityList.entity_id}
-                    value={entityList.entity_id}
+          </div>
+
+          <div className="form-section">
+            <div className="section-header">ORGANIZATION INFORMATION</div>
+            <div className="section-content">
+              <div className="input-row-joinnow">
+                <div className="input-group-joinnow">
+                  <label className="label-joinnow" htmlFor="entity">
+                    Entity
+                  </label>
+                  <select
+                    id="entity"
+                    name="entity"
+                    className="input-field-join"
+                    value={entity}
+                    onChange={(e) => handleInputChange(e, setEntity)}
                   >
-                    {entityList.registration_name}
-                  </option>
-                ))}
-              </select>
-              {errors.entityType && (
-                <span className="error">{errors.entityType}</span>
-              )}
+                    <option value="">Select Entity</option>
+                    {entityData.map((entity) => (
+                      <option key={entity.entity_id} value={entity.entity_id}>
+                        {entity.entity_name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.entity && (
+                    <div className="error-message">{errors.entity}</div>
+                  )}
+                </div>
+                <div className="input-group-joinnow">
+                  <label className="label-joinnow" htmlFor="entityType">
+                    Entity Type
+                  </label>
+                  <select
+                    id="entityType"
+                    name="entityType"
+                    className="input-field-join"
+                    value={entityType}
+                    onChange={(e) => handleInputChange(e, setEntityType)}
+                  >
+                    <option value="">Select Entity Type</option>
+                    {entityListData.map((entityList) => (
+                      <option
+                        key={entityList.entity_id}
+                        value={entityList.entity_id}
+                      >
+                        {entityList.registration_name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.entityType && (
+                    <div className="error-message">{errors.entityType}</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="input-group-joinnow">
+                <label className="label-joinnow" htmlFor="department">
+                  Department
+                </label>
+                <select
+                  id="department"
+                  name="department"
+                  className="input-field-join"
+                  value={department}
+                  onChange={(e) => handleInputChange(e, setDepartment)}
+                >
+                  <option value="">Select Department</option>
+                  {departments.map((dept) => (
+                    <option key={dept.dept_id} value={dept.dept_id}>
+                      {dept.dept_name}
+                    </option>
+                  ))}
+                </select>
+                {errors.department && (
+                  <div className="error-message">{errors.department}</div>
+                )}
+              </div>
             </div>
           </div>
-          <div className="input-row-joinnow">
-            <div className="input-group-joinnow">
-              <label className="label-joinnow" htmlFor="name">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Name"
-                className="input-field-join"
-                value={name}
-                onChange={(e) => handleInputChange(e, setName)}
-              />
-              {errors.name && <span className="error">{errors.name}</span>}
+
+          <div className="form-section">
+            <div className="section-header">VERIFICATION</div>
+            <div className="section-content">
+              <div className="input-row-joinnow">
+                <div className="input-group-joinnow" style={{ flex: 2 }}>
+                  <label className="label-joinnow" htmlFor="email">
+                    Email
+                  </label>
+                  <div className="email-input">
+                    <input
+                      type="text"
+                      id="email"
+                      name="email"
+                      className="input-field-join"
+                      value={email}
+                      onChange={handleEmailChange}
+                      placeholder="Enter email"
+                      disabled
+                      style={{ cursor: "not-allowed" }}
+                    />
+                    <span className="domain">@cuchd.in</span>
+                    {isVerified && <span className="verified">✓</span>}
+                  </div>
+                  {errors.email && (
+                    <div className="error-message">{errors.email}</div>
+                  )}
+                </div>
+                <div className="input-group-joinnow" style={{ flex: 1 }}>
+                  <label
+                    className="label-joinnow"
+                    style={{ visibility: "hidden" }}
+                  >
+                    Send OTP
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleSendOTP}
+                    className="button-joinnow"
+                    disabled={otpTimer > 0 || isFormDisabled}
+                    style={{ width: "100%", height: "42px" }}
+                  >
+                    {otpTimer > 0 ? `Resend OTP in ${otpTimer}s` : "Send OTP"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="input-row-joinnow">
+                <div className="input-group-joinnow" style={{ flex: 2 }}>
+                  <label className="label-joinnow" htmlFor="otp">
+                    OTP
+                  </label>
+                  <input
+                    type="text"
+                    id="otp"
+                    name="otp"
+                    className="input-field-join"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="Enter OTP"
+                  />
+                  {errors.otp && (
+                    <div className="error-message">{errors.otp}</div>
+                  )}
+                </div>
+                <div className="input-group-joinnow" style={{ flex: 1 }}>
+                  <label
+                    className="label-joinnow"
+                    style={{ visibility: "hidden" }}
+                  >
+                    Verify OTP
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleVerifyOTP}
+                    className="button-joinnow"
+                    style={{ width: "100%", height: "42px" }}
+                  >
+                    Verify OTP
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="input-group-joinnow">
-              <label className="label-joinnow" htmlFor="uid">
-                UID
-              </label>
-              <input
-                type="text"
-                id="uid"
-                name="uid"
-                placeholder="UID"
-                className="input-field-join"
-                value={uid}
-                onChange={(e) => handleInputChange(e, setUid)}
-              />
-              {errors.uid && <span className="error">{errors.uid}</span>}
-            </div>
           </div>
-          <div className="input-group-joinnow">
-            <label className="label-joinnow" htmlFor="department">
-              Department
-            </label>
-            <select
-              id="department"
-              name="department"
-              className="input-field-join"
-              value={department}
-              onChange={(e) => handleInputChange(e, setDepartment)}
-            >
-              <option value="">Select Department</option>
-              {departments.map((dept) => (
-                <option key={dept.dept_id} value={dept.dept_id}>
-                  {dept.dept_name}
-                </option>
-              ))}
-            </select>
-            {errors.department && (
-              <span className="error">{errors.department}</span>
-            )}
-          </div>
-          <div className="input-group-joinnow">
-            <label className="label-joinnow" htmlFor="mobileNumber">
-              Mobile Number
-            </label>
-            <input
-              type="text"
-              id="mobileNumber"
-              name="mobileNumber"
-              placeholder="Enter Mobile Number"
-              className="input-field-join"
-              value={mobileNumber}
-              onChange={(e) => handleInputChange(e, setMobileNumber)}
-            />
-          </div>
-          <div className="input-group-joinnow">
-            <label className="label-joinnow" htmlFor="email">
-              Email
-            </label>
-            <div className="email-input">
-              <input
-                style={{ cursor: "no-drop" }}
-                type="text"
-                id="email"
-                name="email"
-                value={email}
-                onChange={handleEmailChange}
-                placeholder="Enter email"
-                className="input-field-join"
-                disabled
-              />
-              <span className="domain">@cuchd.in</span>
-              {isVerified && <span className="verified">✓</span>}
-            </div>
-            {errors.email && <span className="error">{errors.email}</span>}
-          </div>
-          <button
-            type="button"
-            onClick={handleSendOTP}
-            className="button-joinnow otp-button"
-            disabled={otpTimer > 0 || isFormDisabled}
-          >
-            {otpTimer > 0 ? `Resend OTP in ${otpTimer}s` : "Send OTP"}
-          </button>
-          <div className="input-group-joinnow">
-            <label className="label-joinnow" htmlFor="otp">
-              OTP
-            </label>
-            <input
-              type="text"
-              id="otp"
-              name="otp"
-              placeholder="Enter OTP"
-              className="input-field-join"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-            />
-          </div>
-          <button
-            type="button"
-            onClick={handleVerifyOTP}
-            className="verify-button button-joinnow"
-          >
-            Verify OTP
-          </button>
-          {errors.otp && <span className="error">{errors.otp}</span>}
+
           <button
             type="button"
             onClick={handleNextPage}
-            className="next-button button-joinnow"
+            className="button-joinnow"
             disabled={!isVerified}
+            style={{ width: "100%" }}
           >
             Next Page
           </button>
         </form>
       </div>
-      <img src={joinus} alt="Join Now" className="green-background" />
     </div>
   );
 };
 
 export default JoinNow;
-

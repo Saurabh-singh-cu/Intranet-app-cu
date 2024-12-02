@@ -4,14 +4,13 @@ import s2 from "../assets/images/s2.png"
 import s3 from "../assets/images/s3.png"
 import s4 from "../assets/images/s4.png"
 import c1 from "../assets/images/c1.png"
-import c2 from "../assets/images/c2.png"
 import c3 from "../assets/images/c3.png"
 import c4 from "../assets/images/c4.png"
 import hackthon from "../assets/images/hackthon.jpg"
-import hack from "../assets/images/hack.png"
+import clg from "../assets/images/clg.jpg"
 import tech1 from "../assets/images/tech1.png"
 import tech2 from "../assets/images/tech2.png"
-// import con from "../assets/images/con.jpg"
+
 import './EventCardsDash.css';
 import { FaFacebook, FaInstagram, FaLinkedinIn } from 'react-icons/fa6';
 import { CgMail } from "react-icons/cg";
@@ -30,9 +29,9 @@ const EventCardsDash = () => {
       prize: "Register Now"
     },
     {
-      title: "AI and Me",
+      title: "Adobe",
      
-      image: tech1,
+      image: c1,
       registeredCount: "10",
       daysLeft: "14",
       prize: "Register Now"
@@ -40,7 +39,7 @@ const EventCardsDash = () => {
     {
       title: "Content Writing",
      
-      image: con,
+      image: tech1,
       registeredCount: "9",
       daysLeft: "3",
       prize: "Register Now"
@@ -52,7 +51,7 @@ const EventCardsDash = () => {
     {
       title: "Brain Battle Season 2",
      
-      image: c1,
+      image: clg,
      
     },
    

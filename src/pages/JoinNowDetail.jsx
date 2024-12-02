@@ -45,7 +45,7 @@ const JoinNowDetail = () => {
             <br />
             Strengthening <span>Talent.</span>
           </div>
-          <p className="hero-subtitle">{selectedSociety.dept_name}</p>
+          <p className="hero-subtitle">Owner : {selectedSociety.dept_name}</p>
         </div>
         <div className="hero-shapes">
           <div className="shape shape-1"></div>
@@ -111,7 +111,7 @@ const JoinNowDetail = () => {
 
         <div className="details-sidebar">
           <div className="price-section">
-            <span className="price-1">₹ 100/-</span>
+            <span className="price-1">₹ {selectedSociety?.fee}</span>
             <div className="action-buttons">
               <button className="like-button">
                 <Heart />
@@ -122,8 +122,8 @@ const JoinNowDetail = () => {
             </div>
           </div>
 
-          <button className="register-button">Join as a New Member</button>
-
+          <button onClick={() => navigate("/join-now", {state: {society: location?.state?.society }})} className="register-button">Join as a New Member</button>
+            
           <div className="stats-list">
             <div className="stat-item">
               <Users className="stat-icon" />

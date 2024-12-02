@@ -46,7 +46,9 @@ const ClubList = () => {
   };
 
   const handleCardClick = (clubSociety) => {
+    console.log(clubSociety, "DEKH")
     navigate("/join-now-detailed-page", { state: { society: clubSociety } });
+   
   };
 
   const handleBack = () => {

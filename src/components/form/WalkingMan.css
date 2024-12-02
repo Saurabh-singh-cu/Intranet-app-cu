@@ -1,0 +1,121 @@
+/* ... (keep all the existing CSS) */
+
+.walking-man {
+  position: absolute;
+  width: 60px;
+  height: 120px;
+  transition: all 0.5s ease;
+}
+
+.walking-man.left {
+  left: 20px;
+  animation: walkLeft 2s infinite;
+}
+
+.walking-man.right {
+  right: 20px;
+  animation: walkRight 2s infinite;
+}
+
+.walking-man .head {
+  width: 30px;
+  height: 30px;
+  background-color: #e55d0e;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 15px;
+}
+
+.walking-man .body {
+  width: 40px;
+  height: 50px;
+  background-color: #c97e5a;
+  position: absolute;
+  top: 30px;
+  left: 10px;
+}
+
+.walking-man .leg {
+  width: 15px;
+  height: 40px;
+  background-color: #e55d0e;
+  position: absolute;
+  bottom: 0;
+}
+
+.walking-man .leg.left {
+  left: 10px;
+  animation: legMoveLeft 1s infinite;
+}
+
+.walking-man .leg.right {
+  right: 10px;
+  animation: legMoveRight 1s infinite;
+}
+
+.walking-man .arm {
+  width: 10px;
+  height: 30px;
+  background-color: #c97e5a;
+  position: absolute;
+  top: 40px;
+}
+
+.walking-man .arm.left {
+  left: 0;
+  animation: armMoveLeft 1s infinite;
+}
+
+.walking-man .arm.right {
+  right: 0;
+  animation: armMoveRight 1s infinite;
+}
+
+@keyframes walkLeft {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-10px); }
+}
+
+@keyframes walkRight {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(10px); }
+}
+
+@keyframes legMoveLeft {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(30deg); }
+}
+
+@keyframes legMoveRight {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-30deg); }
+}
+
+@keyframes armMoveLeft {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-30deg); }
+}
+
+@keyframes armMoveRight {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(30deg); }
+}
+
+/* Adjust the joinnow-form to make space for the walking man */
+.joinnow-form {
+  margin-left: 80px;
+  margin-right: 80px;
+}
+
+@media (max-width: 768px) {
+  .walking-man {
+    display: none;
+  }
+
+  .joinnow-form {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
