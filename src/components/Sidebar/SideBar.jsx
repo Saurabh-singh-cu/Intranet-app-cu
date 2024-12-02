@@ -1,16 +1,14 @@
+
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
 import { MdMessage } from "react-icons/md";
-import { BiAnalyse, BiSearch } from "react-icons/bi";
-import { BiCog } from "react-icons/bi";
+import { BiAnalyse, BiSearch, BiCog } from "react-icons/bi";
 import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
 import { BsCartCheck } from "react-icons/bs";
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import logo from "../../assets/images/logo.png";
 import { IoSettingsOutline } from "react-icons/io5";
-import { FaWpforms } from "react-icons/fa6";
-import { FaCodePullRequest } from "react-icons/fa6";
+import { FaWpforms, FaCodePullRequest } from "react-icons/fa6";
 import SidebarMenu from "./SidebarMenu";
 
 const routes = [
@@ -18,37 +16,49 @@ const routes = [
     path: "/admin-dashboard",
     name: "Dashboard",
     icon: <FaHome />,
+    allowedRoles: ["Admin"]
+  },
+  {
+    path: "/student-secretary-dashboard",
+    name: "Dashboard",
+    icon: <FaHome style={{color:"#fff"}} />,
+    allowedRoles: ["Student Secretary"]
   },
   {
     path: "/configuration",
     name: "Configuration",
     icon: <IoSettingsOutline />,
+    allowedRoles: ["Admin"]
   },
- 
   {
     path: "/EntityCreationForm",
     name: "Entity Creation Form",
     icon: <FaWpforms />,
+    allowedRoles: ["Admin"]
   },
   {
     path: "/EntityRegistrationForm",
     name: "Entity Registration Form",
     icon: <FaWpforms />,
+    allowedRoles: ["Admin"]
   },
   {
     path: "/entityTable",
     name: "Entity Request",
     icon: <FaCodePullRequest />,
+    allowedRoles: ["Admin"]
   },
   {
     path: "/registered-entities",
     name: "Registered Entities",
     icon: <FaCodePullRequest />,
+    allowedRoles: ["Admin"]
   },
   {
     path: "/file-manager",
     name: "File Manager",
     icon: <AiTwotoneFileExclamation />,
+    allowedRoles: ["Admin", "Student Secretary"],
     subRoutes: [
       {
         path: "/settings/profile",
@@ -71,11 +81,13 @@ const routes = [
     path: "/order",
     name: "Order",
     icon: <BsCartCheck />,
+    allowedRoles: ["Admin", "Student Secretary"]
   },
   {
     path: "/settings",
     name: "Settings",
     icon: <BiCog />,
+    allowedRoles: ["Admin", "Student Secretary"],
     exact: true,
     subRoutes: [
       {
@@ -99,12 +111,23 @@ const routes = [
     path: "/saved",
     name: "Saved",
     icon: <AiFillHeart />,
+    allowedRoles: ["Admin", "Student Secretary"]
   },
 ];
 
 const SideBar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [userRole, setUserRole] = useState("");
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.role_name) {
+      setUserRole(user.role_name);
+    }
+  }, []);
+
   const toggle = () => setIsOpen(!isOpen);
+
   const inputAnimation = {
     hidden: {
       width: 0,
@@ -139,13 +162,16 @@ const SideBar = ({ children }) => {
     },
   };
 
+  const filteredRoutes = routes.filter(route => 
+    route.allowedRoles && route.allowedRoles.includes(userRole)
+  );
+
   return (
     <>
       <div className="main-container">
         <motion.div
           animate={{
             width: isOpen ? "270px" : "50px",
-
             transition: {
               duration: 0.5,
               type: "spring",
@@ -159,14 +185,12 @@ const SideBar = ({ children }) => {
               {isOpen && (
                 <motion.h1
                   variants={showAnimation}
-                  
                   initial="hidden"
                   animate="show"
                   exit="hidden"
                   className="logo"
-                
                 >
-                  {/* <span className="logo-name"><img src={logo} /></span> */}
+                  {/* Logo content */}
                 </motion.h1>
               )}
             </AnimatePresence>
@@ -175,28 +199,12 @@ const SideBar = ({ children }) => {
               <FaBars onClick={toggle} />
             </div>
           </div>
-          {/* <div className="search">
-            <div className="search_icon">
-              <BiSearch />
-            </div>
-            <AnimatePresence>
-              {isOpen && (
-                <motion.input
-                  initial="hidden"
-                  animate="show"
-                  exit="hidden"
-                  variants={inputAnimation}
-                  type="text"
-                  placeholder="Search"
-                />
-              )}
-            </AnimatePresence>
-          </div> */}
           <section className="routes">
-            {routes.map((route, index) => {
+            {filteredRoutes.map((route, index) => {
               if (route.subRoutes) {
                 return (
                   <SidebarMenu
+                    key={index}
                     setIsOpen={setIsOpen}
                     route={route}
                     showAnimation={showAnimation}
@@ -239,3 +247,4 @@ const SideBar = ({ children }) => {
 };
 
 export default SideBar;
+

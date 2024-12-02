@@ -29,6 +29,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import StudentSecretary from "./pages/StudentSecretary";
 import StudentUpdatedPage from "./pages/secretary/StudentUpdatedPage";
 import ProfessionalSociety from "./pages/ProfessionalSocietyList";
+import JoinNowDetail from "./pages/JoinNowDetail";
 
 function AppContent() {
   const location = useLocation();
@@ -37,6 +38,7 @@ function AppContent() {
   });
   const [showLogin, setShowLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isStudentSecretary, setIsStudentSecretary ] = useState(false);
   const [ user, setUser ] = useState([]);
 
   const handleLogin = () => {
@@ -64,6 +66,7 @@ function AppContent() {
     setUser(getUser);
     console.log(getUser, "USERERERRERRERRE")
     setIsAdmin(getUser?.role_name === 'Admin');
+    setIsStudentSecretary(getUser?.role_name === 'Student Secretary')
   }, []);
 
   
@@ -76,7 +79,7 @@ function AppContent() {
       )}
 
       <div style={{ display: "flex" }}>
-        {isLoggedIn  && isAdmin && <SideBar />}
+        {isLoggedIn  && (isAdmin || isStudentSecretary) && <SideBar />}
         <div style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<Dashboard onShowLogin={handleShowLogin} />} />
@@ -87,7 +90,7 @@ function AppContent() {
             />
             <Route
               path="/student-secretary-dashboard"
-              element={<StudentSecretary onShowLogin={handleShowLogin} />}
+              element={<Dashboard onShowLogin={handleShowLogin} />}
             />
             <Route
               path="/join-now"
@@ -171,7 +174,8 @@ function AppContent() {
             <Route path="/department-society" element={<DeptList />} />
             <Route path="/professional-society" element={<ProfessionalSociety />} />
             <Route path="/communities" element={<CommList />} />
-            <Route path="/club" element={<SpecificCard />} />
+            <Route path="/communities" element={<CommList />} />
+            <Route path="/join-now-detailed-page/" element={<JoinNowDetail />} />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route
               path="/af"

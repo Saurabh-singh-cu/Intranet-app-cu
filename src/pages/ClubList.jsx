@@ -1,159 +1,22 @@
-// import React, { useState, useEffect } from 'react';
-// import { Search, Users, Building, BookOpen } from 'lucide-react';
-// import { useNavigate } from 'react-router-dom';
-// import './ClubList.css';
-
-// const ClubList = () => {
-//   const [societies, setSocieties] = useState([]);
-//   const [filteredSocieties, setFilteredSocieties] = useState([]);
-//   const [departments, setDepartments] = useState([]);
-//   const [selectedDepartment, setSelectedDepartment] = useState('');
-//   const [searchTerm, setSearchTerm] = useState('');
-//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     fetchSocieties();
-//   }, []);
-
-//   const fetchSocieties = async () => {
-//     try {
-//       const response = await fetch('http://172.17.2.176:8080/intranetapp/entity-registration-summary/?entity_id=1');
-//       const data = await response.json();
-      
-//       console.log(data, "DDDDD");
-//       setSocieties(data);
-//       setFilteredSocieties(data);
-      
-//       const uniqueDepartments = [...new Set(data.map(society => society.dept_name))];
-//       setDepartments(uniqueDepartments);
-//     } catch (error) {
-//       console.error('Error fetching societies:', error);
-//     }
-//   };
-
-//   const handleSearch = () => {
-//     const filtered = societies.filter(society => 
-//       society.registration_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-//       (selectedDepartment === '' || society.dept_name === selectedDepartment)
-//     );
-//     setFilteredSocieties(filtered);
-//   };
-
-//   const handleClearSearch = () => {
-//     setSearchTerm('');
-//     setSelectedDepartment('');
-//     setFilteredSocieties(societies);
-//   };
-
-//   const handleDepartmentChange = (e) => {
-//     setSelectedDepartment(e.target.value);
-//     const filtered = societies.filter(society => 
-//       society.dept_name === e.target.value &&
-//       society.registration_name.toLowerCase().includes(searchTerm.toLowerCase())
-//     );
-//     setFilteredSocieties(filtered);
-//   };
-
-//   const handleJoinNow = (registrationCode) => {
-//     navigate(`/club?registration_code=${registrationCode}`);
-//   };
-
-//   const toggleSidebar = () => {
-//     setIsSidebarOpen(!isSidebarOpen);
-//   };
-
-//   return (
-//     <div className="dashboard-club">
-     
-
-
-//       <main className="main-content-club">
-
-//         <div className="stats-container-club">
-//           <div className="stat-card-club">
-//             <div className="stat-number-club">1000+</div>
-//             <div className="stat-label-club">Active members</div>
-//           </div>
-//           <div className="stat-card-club">
-//             <div className="stat-number-club">{filteredSocieties?.length}</div>
-//             <div className="stat-label-club">Clubs</div>
-//           </div>
-//           <div className="stat-card-club">
-//             <div className="stat-number-club">24/7</div>
-//             <div className="stat-label-club">Event organizers</div>
-//           </div>
-//           <div className="stat-card-club">
-//             <div className="stat-number-club">50+</div>
-//             <div className="stat-label-club">Events each day</div>
-//           </div>
-//         </div>
-
-//         <div className="communities-card">
-//           <h2>Clubs</h2>
-//           <p>
-//             Discover a world of opportunities through our vibrant communities and connect with like-minded individuals
-//           </p>
-//         </div>
-
-//         <div className="search-bar">
-//           <div className="search-input-container">
-//             <Search className="search-icon" />
-//             <input
-//               className="search-input"
-//               placeholder="Search societies..."
-//               value={searchTerm}
-//               onChange={(e) => setSearchTerm(e.target.value)}
-//             />
-//           </div>
-//           <select 
-//             className="filter-button" 
-//             value={selectedDepartment} 
-//             onChange={handleDepartmentChange}
-//           >
-//             <option value="">All Departments</option>
-//             {departments.map((dept, index) => (
-//               <option key={index} value={dept}>{dept}</option>
-//             ))}
-//           </select>
-//           <button className="filter-button" onClick={handleSearch}>
-//             Search
-//           </button>
-//           <button className="filter-button" onClick={handleClearSearch}>
-//             Clear
-//           </button>
-//         </div>
-
-//         <div className="societies-grid">
-//           {filteredSocieties.map((society, index) => (
-//             <div key={index} className="society-card">
-//               <h3 className="society-name">{society.registration_name.length > 20 ? society?.registration_name?.slice(0, 20): society?.registration_name} </h3>
-//               <p className="society-department">{society.dept_name.length > 34 ? society?.dept_name.slice(0, 34) : society?.dept_name}</p>
-//               <p className="society-code">Code: {society.registration_code}</p>
-//               <button className="join-button" onClick={() => handleJoinNow(society.registration_code)}>Join now</button>
-//             </div>
-//           ))}
-//         </div>
-//       </main>
-//     </div>
-//   );
-// };
-
-// export default ClubList;
-import React, { useState, useEffect } from 'react';
-import { Search, Users, Building, BookOpen } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import './ClubList.css';
+import React, { useState, useEffect } from "react";
+import { Search, Users, Building, BookOpen, Clock, Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import cc1 from "../assets/images/hackthon.jpg";
+import cc2 from "../assets/images/c3.png";
+import "./ClubList.css";
+import {
+  MdGroup,
+  MdOutlineArrowBack,
+  MdOutlineOutlinedFlag,
+} from "react-icons/md";
+import { BsActivity } from "react-icons/bs";
+import Scroller from "../components/Scroller";
+import Footer from "../components/Footer";
 
 const ClubList = () => {
   const [societies, setSocieties] = useState([]);
   const [filteredSocieties, setFilteredSocieties] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [selectedDepartment, setSelectedDepartment] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedSociety, setSelectedSociety] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -162,143 +25,120 @@ const ClubList = () => {
 
   const fetchSocieties = async () => {
     try {
-      const response = await fetch('http://172.17.2.176:8080/intranetapp/entity-registration-summary/?entity_id=1');
+      const response = await fetch(
+        "http://172.17.2.176:8080/intranetapp/entity-registration-summary/?entity_id=1"
+      );
       const data = await response.json();
-      
-      console.log(data, "DDDDD");
       setSocieties(data);
       setFilteredSocieties(data);
-      
-      const uniqueDepartments = [...new Set(data.map(society => society.dept_name))];
-      setDepartments(uniqueDepartments);
     } catch (error) {
-      console.error('Error fetching societies:', error);
+      console.error("Error fetching societies:", error);
     }
   };
 
-  const handleSearch = () => {
-    const filtered = societies.filter(society => 
-      society.registration_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedDepartment === '' || society.dept_name === selectedDepartment)
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    const filtered = societies.filter((society) =>
+      society.registration_name.toLowerCase().includes(term.toLowerCase())
     );
     setFilteredSocieties(filtered);
   };
 
-  const handleClearSearch = () => {
-    setSearchTerm('');
-    setSelectedDepartment('');
-    setFilteredSocieties(societies);
+  const handleCardClick = (clubSociety) => {
+    navigate("/join-now-detailed-page", { state: { society: clubSociety } });
   };
 
-  const handleDepartmentChange = (e) => {
-    setSelectedDepartment(e.target.value);
-    const filtered = societies.filter(society => 
-      society.dept_name === e.target.value &&
-      society.registration_name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredSocieties(filtered);
-  };
-
-  const handleJoinNow = (society) => {
-    setSelectedSociety(society);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedSociety(null);
-  };
-
-  const redirectJoinNow = (e) => {
-    e.preventDefault();
-    navigate(`/join-now`);
-  };
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+  const handleBack = () => {
+    navigate(-1);
   };
 
   return (
-    <div className="dashboard-club">
-      <main className="main-content-club">
-        <div className="stats-container-club">
-          <div className="stat-card-club">
-            <div className="stat-number-club">8000+</div>
-            <div className="stat-label-club">Active members</div>
-          </div>
-          <div className="stat-card-club">
-            <div className="stat-number-club">{filteredSocieties?.length}</div>
-            <div className="stat-label-club">Clubs</div>
-          </div>
-          <div className="stat-card-club">
-            <div className="stat-number-club">50</div>
-            <div className="stat-label-club">Event/Activity</div>
-          </div>
-          <div className="stat-card-club">
-            <div className="stat-number-club">4</div>
-            <div className="stat-label-club">Ongoing Events</div>
-          </div>
-        </div>
-
-        <div className="communities-card">
-          <h2>Clubs</h2>
-          <p>
-            Discover a world of opportunities through our vibrant communities and connect with like-minded individuals
+    <div className="club-container">
+      {/* Fixed Sidebar */}
+      <aside className="sidebar-list">
+        <div className="club-details-list">
+          <h2 className="entity-name-head"> Club</h2>
+          <p className="club-description">
+            Join our most active clubs and participate in exciting events and
+            activities.
           </p>
+          <div className="club-stats-list">
+            <div className="stat-item-list">
+              <MdGroup style={{ color: "white" }} size={20} />
+              <span className="member-list-count">
+                6748 Active Members in Club
+              </span>
+            </div>
+            <div className="stat-item-list">
+              <MdOutlineOutlinedFlag style={{ color: "white" }} size={20} />
+              <span>{societies.length} Clubs</span>
+            </div>
+            <div className="stat-item-list">
+              <BsActivity style={{ color: "white" }} size={20} />
+              <span>50 Activities</span>
+            </div>
+          </div>
         </div>
+      </aside>
 
-        <div className="search-bar">
-          <div className="search-input-container">
-            <Search className="search-icon" />
+      {/* Main Content */}
+      <main className="main-content-list">
+        <div className="search-container-list">
+          <div className="search-wrapper-list">
+            <Search className="search-icon-list" />
             <input
-              className="search-input"
-              placeholder="Search societies..."
+              type="text"
+              placeholder="Search clubs..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearch}
+              className="search-input"
             />
           </div>
-          {/* <select 
-            className="filter-button" 
-            value={selectedDepartment} 
-            onChange={handleDepartmentChange}
-          >
-            <option value="">All Departments</option>
-            {departments.map((dept, index) => (
-              <option key={index} value={dept}>{dept}</option>
-            ))}
-          </select> */}
-          <button className="filter-button" onClick={handleSearch}>
-            Search
-          </button>
-          <button className="filter-button" onClick={handleClearSearch}>
-            Clear
+        </div>
+        <div className="back-button">
+          <button onClick={handleBack}>
+            <MdOutlineArrowBack />
+            Back
           </button>
         </div>
 
-        <div className="societies-grid">
-          {filteredSocieties.map((society, index) => (
-            <div key={index} className="society-card">
-              <h3 className="society-name">{society.registration_name.length > 20 ? society?.registration_name?.slice(0, 20) + '...' : society?.registration_name}</h3>
-              <p className="society-department">{society.dept_name.length > 34 ? society?.dept_name.slice(0, 34) + '...' : society?.dept_name}</p>
-              <p className="society-code">Code: {society.registration_code}</p>
-              <button className="join-button" onClick={() => handleJoinNow(society)}>Read More</button>
+        <div className="cards-grid-list">
+          {filteredSocieties.map((clubSociety) => (
+            <div
+              key={clubSociety.registration_code}
+              className="club-card-list"
+              onClick={() => handleCardClick(clubSociety)}
+            >
+              <div className="club-numbers">
+                <div className="club-card-image">
+                  <h1>{clubSociety.registration_name?.charAt(0)}</h1>
+                </div>
+                <div className="card-content-list">
+                  <h3>{clubSociety.registration_name}</h3>
+                  <p style={{ fontWeight: "bold" }} className="club-location">
+                    Owner : {clubSociety.dept_name}
+                  </p>
+                  <div className="card-stats-list">
+                    <div className="stat">
+                      <MdGroup size={16} />
+                      <span>82 Registered Member</span>
+                    </div>
+                  </div>
+                  <div className="tags"></div>
+                </div>
+              </div>
+              <div className="price">Know More</div>
             </div>
           ))}
         </div>
+
+        <div className="scroller-i">
+          <Scroller />
+        </div>
       </main>
 
-      {isModalOpen && selectedSociety && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>{selectedSociety.registration_name}</h2>
-            <p><strong>Department:</strong> {selectedSociety.dept_name}</p>
-            <p><strong>Registration Code:</strong> {selectedSociety.registration_code}</p>
-            <p>This is a <span style={{fontWeight:"bold", color:"green", letterSpacing:"1px"}}> {selectedSociety.registration_name} </span>. after click of join now button you will be redirected to page where you will have to fill the for to be a member of this <span style={{fontWeight:"bold", color:"green", letterSpacing:"1px"}}>{selectedSociety.registration_name}</span> with code <span style={{fontWeight:"bold", color:"green", letterSpacing:"1px"}}>{selectedSociety.registration_code}</span></p>
-            <button onClick={redirectJoinNow} type="submit" className="join-button">Join</button>
-            <button className="close-button" onClick={closeModal}>Close</button>
-          </div>
-        </div>
-      )}
+      <Footer theme="clubTheme" />
     </div>
   );
 };

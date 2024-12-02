@@ -16,6 +16,23 @@ import vvv from "../assets/images/vvv.jpg";
 import cf from "../assets/images/cf.jpg";
 import am from "../assets/images/am.jpg";
 import news1 from "../assets/images/news1.jpg";
+import {
+  ChevronDown,
+  ChevronUp,
+  Heart,
+  Share2,
+  Tag,
+  Users,
+} from "lucide-react";
+import EventsCard from "./EventCards";
+import { Badge, Button, Space } from "antd";
+import Avatar from "antd/es/avatar/avatar";
+import { EditOutlined, NotificationOutlined } from "@ant-design/icons";
+import Scroller from "../components/Scroller";
+import bannerclub from "../assets/images/bannerclub.jpg";
+import EventCardsDash from "./EventCardsDash";
+import cc1 from "../assets/images/c3.png";
+import { MdModeEdit } from "react-icons/md";
 
 const Dashboard = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -25,8 +42,9 @@ const Dashboard = () => {
   const [dashboardCount, setDashboardCount] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("generic");
-  const [activeTab1, setActiveTab1] = useState("AppHolder");
+  const [activeTab1, setActiveTab1] = useState("Appointment Holder");
   const [activeAccordion, setActiveAccordion] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
 
   const [filteredData, setFilteredData] = useState({
     club: 0,
@@ -57,7 +75,7 @@ const Dashboard = () => {
 
   const accordionData = [
     {
-      title: "General Discussions",
+      title: "Club Entity",
       content: [
         "• Latest campus news and updates",
         "• Upcoming events and activities",
@@ -115,6 +133,11 @@ const Dashboard = () => {
     setUserName(getuser);
     console.log(getuser, "USER NAME");
     dashboardCardCount();
+
+    // Check if the user is a Student Secretary
+    if (getuser && getuser.role_name === "Student Secretary") {
+      setUserDetails(getuser);
+    }
   }, []);
 
   useEffect(() => {
@@ -211,358 +234,565 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, [carouselImages.length]);
 
-  const tabData = {
-    generic: [
-      {
-        from: "PVC office",
-        content:
-          "Is AI becoming an integral part of many systems and processes?",
-      },
-      {
-        from: "Student Affairs",
-        content: "Reminder: Campus cleanup drive this weekend.",
-      },
-      // { from: "Library", content: "New books available in the Computer Science section." },
-    ],
-    club: [
-      {
-        from: "Robotics Club",
-        content: "Join us for the annual robot-building competition!",
-      },
-      {
-        from: "Debate Club",
-        content: "Upcoming debate on climate change policies.",
-      },
-      // { from: "Art Club", content: "Exhibition of student artwork next week." },
-    ],
-    ps: [
-      {
-        from: "PS Division",
-        content: "Internship opportunities available for 3rd year students.",
-      },
-      {
-        from: "Career Services",
-        content: "Resume building workshop on Friday.",
-      },
-      // { from: "Alumni Cell", content: "Connect with successful alumni in your field of interest." },
-    ],
-  };
-
   const tabData1 = {
-    AppHolder: [
+    "Appointment Holder": [
       {
-        from: (
-          <span
-            style={{ color: "black", fontWeight: "bold", fontSize: "15px" }}
-          >
-            Faculty Advisor : Spectrum
-          </span>
-        ),
-        content: (
-          <span style={{ marginLeft: "14px", marginTop: "5px" }}>
-            Club going to organize the workshop. Apply for Volunteer
-          </span>
-        ),
+        from: "Faculty Advisor : Spectrum",
+        content: "Club going to organize the workshop. Apply for Volunteer",
+        messageTime: "2hr ago",
       },
       {
-        from: (
-          <span
-            style={{ color: "black", fontWeight: "bold", fontSize: "15px" }}
-          >
-            Student Secretary : CAC
-          </span>
-        ),
-        content: (
-          <span style={{ marginLeft: "14px", marginTop: "5px" }}>
-            Group Project Discussion going to be held today at 4PM near C3
-            Block.
-          </span>
-        ),
+        from: "Student Secretary : CAC",
+        content:
+          "Group Project Discussion going to be held today at 4PM near C3 Block.",
+        messageTime: "2hr ago",
       },
-      // { from: "Library", content: "New books available in the Computer Science section." },
     ],
-    facultyDept: [
+    "Faculty/Department": [
       {
         from: "Co-Curricular Cord : CSE.",
         content: "Registration open for all department society till 10th Dec.",
+        messageTime: "2hr ago",
       },
       {
         from: "HOD : CSE 3rd Year",
         content:
-          " Mandatory DCPD workshop going to be organized by Career Department.",
+          "Mandatory DCPD workshop going to be organized by Career Department.",
+        messageTime: "2hr ago",
       },
-      // { from: "Art Club", content: "Exhibition of student artwork next week." },
     ],
   };
 
+  const getRandomColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
+  const discussions = [
+    {
+      title: "Club",
+      participants: ["G", "D", "T"],
+      additionalCount: 5,
+      content: "Discussion about various club activities and events.",
+    },
+    {
+      title: "Community",
+      participants: ["A", "Q", "S"],
+      additionalCount: 3,
+      content:
+        "Discussion forum for all Chandigarh University Student Tech Community & Community.",
+    },
+    {
+      title: "Department Society",
+      participants: ["C", "D", "P", "J"],
+      additionalCount: 2,
+      content:
+        "Discussion forum for all Chandigarh University Student Department Society.",
+    },
+    {
+      title: "Professional Society (Student Chapter)",
+      participants: ["C", "S"],
+      additionalCount: 2,
+      content:
+        "Discussion forum for all Chandigarh University Student Chapter. ",
+    },
+  ];
+
+  const categories = [
+    { name: "Debate ", color: "#3498db" },
+    { name: "Public Speaking", color: "#e74c3c" },
+    { name: "Writing and Editing", color: "#2ecc71" },
+    { name: "Leadership", color: "#f39c12" },
+    { name: "Creative Expression", color: "#9b59b6" },
+  ];
+
   return (
-    <div className="dashboard-home">
-      <div className="loggedInAss">
-        {userName?.role_name ? userName?.role_name : "User"}
-      </div>
-
-      <div className="metric-cards-home">
-        <div onClick={redirectClubs} className="metric-card-home card1h">
-          <img src={circle} />
-          <h2 className="cardCount">{filteredData?.club}</h2>
-         
-          <div style={{ fontSize: "16px", margin: "10px 0px" }}>
-            Co-Curricular
-          </div>
-          <p style={{ fontSize: "23px", fontWeight: "bold" }}>Club</p>
-
-          <span className="icon-home">
-            <PiFlagBanner size={50} />
-          </span>
-        </div>
-
-        <div onClick={redirectSociety} className="metric-card-home card2h">
-          <img src={circle} />
-          <h2 className="cardCount">{filteredData?.departmentSociety}</h2>
-         
-          <div style={{ fontSize: "16px", margin: "10px 0px" }}>
-            Co-Curricular
-          </div>
-          <p style={{ fontSize: "23px", fontWeight: "bold" }}>
-            Department Society
-          </p>
-
-          <span className="icon-home">
-            {" "}
-            <FaHouseFlag size={50} />
-          </span>
-        </div>
-        <div onClick={redirectPro} className="metric-card-home card3h">
-          <img src={circle} />
-          <h2 className="cardCount">{filteredData?.professionalSociety}</h2>
-         
-          <div style={{ fontSize: "16px", margin: "10px 0px" }}>
-            Co-Curricular
-          </div>
-          <p style={{ fontSize: "23px", fontWeight: "bold" }}>
-            Professional Society
-          </p>
-
-          <span className="icon-home">
-            {" "}
-            <BiSolidBuildingHouse size={50} />
-          </span>
-        </div>
-        <div onClick={redirectComm} className="metric-card-home card4h">
-          <img src={circle} />
-          <h2 className="cardCount">{filteredData?.community}</h2>
-         
-          <div style={{ fontSize: "16px", margin: "10px 0px" }}>
-            Co-Curricular
-          </div>
-          <p style={{ fontSize: "23px", fontWeight: "bold" }}>Community</p>
-
-          <span className="icon-home">
-            {" "}
-            <FaUnity size={50} />
-          </span>
-        </div>
-      </div>
-
-      <div className="content-columns-home">
-        <div className="left-column-home">
-          <div className="announcement-card-home">
-            <div
-              style={{ justifyContent: "center" }}
-              className="card-header-home"
-            >
-              <h4 style={{ fontWeight: "bold", fontSize: "22px" }}>
-                {carouselImages[currentIndex].title}
-              </h4>
-              {/* <span className="notification-icon-home">🔔</span> */}
+    <>
+      <div className="dashboard-home">
+        {userDetails && (
+          <div className="secretary-info-container">
+            <div className="secretary-info">
+              <div className="secretary-header">
+                <h2>Welcome, {userDetails.user_name}!</h2>
+                <span className="role-badge">{userName?.role_name}</span>
+              </div>
+              <div className="secretary-details">
+                <div className="detail-item">
+                  <span className="detail-label">Entity:</span>
+                  <span className="detail-value">
+                    {userDetails?.secretary_details?.entity_name}
+                  </span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Registration Code:</span>
+                  <span className="detail-value">
+                    {userDetails?.secretary_details?.registration_code}
+                  </span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Owner:</span>
+                  <span className="detail-value">
+                    {userDetails?.secretary_details?.department}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="banner-image-home">
-              <div className="carousel">
-                {carouselImages.map((image, index) => (
-                  <div
-                    key={index}
-                    className={`carousel-item ${
-                      index === currentIndex ? "active" : ""
-                    }`}
-                  >
-                    <img src={image.src} alt={image.alt} />
-                    <div className="carousel-overlay">
-                      <span>{image.type}</span>
-                      <h2>{image.title}</h2>
+          </div>
+        )}
+
+        {(isLoggedIn === true && userName?.role_name === "Student Secretary") ||
+        userName?.role_name === "Admin" ? (
+          <>
+            <div className="club-details-page">
+              <div
+                className="hero-section"
+                style={{ backgroundImage: `url(${bannerclub})` }}
+              >
+                <div className="hero-content">
+                  <h1 className="hero-title">
+                    {userDetails?.secretary_details?.registration_name}
+                  </h1>
+                  <div className="hero-tagline"></div>
+                  <p className="hero-subtitle">
+                    {" "}
+                    <button class="btn-edit btn-1">Update Banner</button>
+                  </p>
+                </div>
+                <div className="hero-shapes">
+                  <div className="shape shape-1"></div>
+                  <div className="shape shape-2"></div>
+                  <div className="shape shape-3"></div>
+                </div>
+              </div>
+
+              {/* Details Section */}
+              <div className="details-container">
+                <div className="details-content">
+                  <div className="program-header">
+                    <img
+                      src={cc1}
+                      alt="Program Logo"
+                      className="program-logo"
+                    />
+                   <Button className="editIconS" type="primary" shape="circle">
+                      <EditOutlined />
+                    </Button>
+                    <div className="program-info">
+                      <h2>
+                        {userDetails?.secretary_details?.registration_name}
+                      </h2>
+                      <div className="program-meta">
+                        <span className="online-badge">
+                          {" "}
+                          Registered: {new Date().toLocaleDateString()}
+                        </span>
+                        <span className="tag">
+                          Code :{" "}
+                          {userDetails?.secretary_details?.registration_code}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                ))}
-                <div className="carousel-indicators">
-                  {carouselImages.map((_, index) => (
-                    <span
-                      key={index}
-                      className={`indicator ${
-                        index === currentIndex ? "active" : ""
-                      }`}
-                      onClick={() => setCurrentIndex(index)}
-                    ></span>
-                  ))}
+
+                  <div className="prize-section">
+                    <div className="prize-details">
+                      <div className="prize-label">
+                        Connecting All Circles is a vibrant community dedicated
+                        to igniting creativity and encouraging exploration among
+                        students.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="category-tags-container">
+                    <h3 className="category-tags-title">
+                      <Tag className="category-icon" />
+                      Categories  <Button style={{marginLeft:"10px"}} type="primary" shape="circle">
+                      <EditOutlined />
+                    </Button>
+                    </h3>
+                   
+                    <div className="category-tags">
+                      {categories.map((category, index) => (
+                        <span
+                          key={index}
+                          className="category"
+                          style={{ backgroundColor: category.color }}
+                        >
+                          {category.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="details-sidebar">
+                  <div className="price-section">
+                    <span style={{ cursor: "no-drop" }} className="price-1">
+                      ₹ 100/-
+                    </span>
+                    <div className="action-buttons">
+                      <button className="like-button">
+                        <Heart />
+                      </button>
+                      <button className="share-button">
+                        <Share2 />
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    style={{ display: "none" }}
+                    className="register-button"
+                  >
+                    Join as a New Member
+                  </button>
+
+                  <div className="stats-list">
+                    <div className="stat-item">
+                      <Users className="stat-icon" />
+                      <div className="stat-details">
+                        <span className="stat-label">Member Registered</span>
+                        <span className="stat-value">230</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="eligibility-section">
+                    <h3>Eligibility</h3>
+                    <p>Open for any Disciplane Students.</p>
+                    <Button type="primary" shape="circle">
+                      <EditOutlined />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <EventCardsDash />
+            </div>
+          </>
+        ) : (
+          <>
+            {" "}
+            <div className="metric-cards-home">
+              <div onClick={redirectClubs} className="metric-card-home card1h">
+                <img src={circle} />
+                <h2 className="cardCount">{filteredData?.club}</h2>
+
+                <div style={{ fontSize: "16px", margin: "10px 0px" }}>
+                  Co-Curricular
+                </div>
+                <p style={{ fontSize: "23px", fontWeight: "bold" }}>Club</p>
+
+                <span className="icon-home">
+                  <PiFlagBanner size={50} />
+                </span>
+              </div>
+
+              <div onClick={redirectComm} className="metric-card-home card4h">
+                <img src={circle} />
+                <h2 className="cardCount">{filteredData?.community}</h2>
+
+                <div style={{ fontSize: "16px", margin: "10px 0px" }}>
+                  Co-Curricular
+                </div>
+                <p style={{ fontSize: "23px", fontWeight: "bold" }}>
+                  Community
+                </p>
+
+                <span className="icon-home">
+                  {" "}
+                  <FaUnity size={50} />
+                </span>
+              </div>
+
+              <div
+                onClick={redirectSociety}
+                className="metric-card-home card2h"
+              >
+                <img src={circle} />
+                <h2 className="cardCount">{filteredData?.departmentSociety}</h2>
+
+                <div style={{ fontSize: "16px", margin: "10px 0px" }}>
+                  Co-Curricular
+                </div>
+                <p style={{ fontSize: "23px", fontWeight: "bold" }}>
+                  Department Society
+                </p>
+
+                <span className="icon-home">
+                  {" "}
+                  <FaHouseFlag size={50} />
+                </span>
+              </div>
+              <div onClick={redirectPro} className="metric-card-home card3h">
+                <img src={circle} />
+                <h2 className="cardCount">
+                  {filteredData?.professionalSociety}
+                </h2>
+
+                <div style={{ fontSize: "16px", margin: "10px 0px" }}>
+                  Co-Curricular
+                </div>
+                <p style={{ fontSize: "23px", fontWeight: "bold" }}>
+                  Student Chapter
+                </p>
+
+                <span className="icon-home">
+                  {" "}
+                  <BiSolidBuildingHouse size={50} />
+                </span>
+              </div>
+            </div>
+            <div className="content-columns-home">
+              <div className="left-column-home">
+                <div className="announcement-card-home">
+                  <div
+                    style={{
+                      justifyContent: "center",
+                      padding: "5px",
+                      marginBottom: "0px",
+                    }}
+                    className="card-header-home"
+                  >
+                    <h4 style={{ fontWeight: "bold", fontSize: "22px" }}>
+                      {carouselImages[currentIndex].title}
+                    </h4>
+                  </div>
+                  <div className="banner-image-home">
+                    <div className="carousel">
+                      {carouselImages.map((image, index) => (
+                        <div
+                          key={index}
+                          className={`carousel-item ${
+                            index === currentIndex ? "active" : ""
+                          }`}
+                        >
+                          <img src={image.src} alt={image.alt} />
+                          <div className="carousel-overlay">
+                            <span>{image.type}</span>
+                            <h2>{image.title}</h2>
+                          </div>
+                        </div>
+                      ))}
+                      <div className="carousel-indicators">
+                        {carouselImages.map((_, index) => (
+                          <span
+                            key={index}
+                            className={`indicator ${
+                              index === currentIndex ? "active" : ""
+                            }`}
+                            onClick={() => setCurrentIndex(index)}
+                          ></span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="announcement-list-home"></div>
+                </div>
+              </div>
+
+              <div className="right-column-home">
+                <div className="calendar-card-home">
+                  <Calendar />
                 </div>
               </div>
             </div>
-            <div className="announcement-list-home"></div>
-          </div>
-        </div>
-
-        <div className="right-column-home">
-          <div className="calendar-card-home">
-            <Calendar />
-          </div>
-        </div>
-      </div>
-
-      <div className="bottom-cards-home">
-        <div className="notification-card-home">
-          <div
-            style={{ justifyContent: "center" }}
-            className="card-header-home"
-          >
-            <h4>Announcement </h4>
-      
-          </div>
-          <div className="notification-list">
-            <div
-              style={{ display: "flex", padding: "0px" }}
-              className="notification-item"
-            >
-              {Object.keys(tabData1)?.map((tab) => (
-                <button
-                  key={tab}
-                  className={`tab ${activeTab1 === tab ? "active" : ""}`}
-                  onClick={() => setActiveTab1(tab)}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
-            {tabData1[activeTab1]?.map((message, index) => (
-              <div key={index} className="message">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    overflow: "hidden",
-                  }}
-                  className="message-header"
-                >
-                  <h5 className="message-from">From: {message.from}</h5>
+            <div className="bottom-cards-home">
+              <div className="notification-card-home">
+                <div className="card-header-home">
+                  <h4>Announcement</h4>
                 </div>
-                <p className="message-content">{message.content}</p>
-              </div>
-            ))}
-          </div>
-          <div className="card-footer-home">
-            <button className="view-more-btn-home">View More</button>
-          </div>
-        </div>
-
-        <div className="notification-card-home">
-          <div
-            style={{ justifyContent: "center" }}
-            className="card-header-home"
-          >
-            <h4>Discussion Forum</h4>
-          </div>
-          <div className="notification-list">
-            {accordionData.map((item, index) => (
-              <div key={index} className="accordion-item">
-                <button
-                  className={`accordion-title ${
-                    activeAccordion === index ? "active" : ""
-                  }`}
-                  onClick={() => toggleAccordion(index)}
-                >
-                  {item.title}
-                  <span className="accordion-icon">
-                    {activeAccordion === index ? "−" : "+"}
-                  </span>
-                </button>
-                {activeAccordion === index && (
-                  <div className="accordion-content">
-                    {item.content.map((point, i) => (
-                      <p key={i}>{point}</p>
+                <div className="notification-list">
+                  <div
+                    style={{ display: "flex", padding: "0px" }}
+                    className="notification-item"
+                  >
+                    {Object.keys(tabData1)?.map((tab) => (
+                      <button
+                        key={tab}
+                        className={`tab ${activeTab1 === tab ? "activee" : ""}`}
+                        onClick={() => setActiveTab1(tab)}
+                      >
+                        <div>{tab.charAt(0).toUpperCase() + tab.slice(1)} </div>
+                        <div>
+                          {" "}
+                          <Badge style={{ marginBottom: "5px" }} count={2}>
+                            <NotificationOutlined
+                              className={`${
+                                activeTab1 === tab
+                                  ? "anno-ico-white"
+                                  : "anno-ico"
+                              }`}
+                              style={{
+                                fontSize: 16,
+                                color: "white",
+                              }}
+                            />
+                          </Badge>
+                        </div>
+                      </button>
                     ))}
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="card-footer-home">
-            <button className="view-more-btn-home">View More</button>
-          </div>
-        </div>
+                  {tabData1[activeTab1]?.map((message, index) => (
+                    <div key={index} className="message">
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          overflow: "hidden",
+                        }}
+                        className="message-header"
+                      >
+                        <p className="announcement-message ">
+                          {message.content}
+                        </p>
+                      </div>
 
-        <div className="carousel-card-home">
-          <div
-            style={{ justifyContent: "center" }}
-            className="card-header-home"
-          >
-            <h4>News</h4>
-            {/* <span className="notification-icon-home">
-              <FaRegNewspaper />
-            </span> */}
-          </div>
-          <div className="carousel-container">
-            <button onClick={prevSlide} className="carousel-button prev">
-              ❮
-            </button>
-            <div className="carousel-home">
-              {slides.map((slide, index) => (
-                <div
-                  key={index}
-                  className={`carousel-slide-home ${
-                    index === currentSlide ? "active" : ""
-                  }`}
-                  style={{ backgroundImage: `url(${slide.image})` }}
-                >
-                  <div className="carousel-content">
-                    <h4>{slide.title}</h4>
-                  </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p className="author-name">From: {message.from}</p>
+                        <p className="author-name">{message?.messageTime}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <button onClick={nextSlide} className="carousel-button next">
-              ❯
-            </button>
-          </div>
-        </div>
-      </div>
-      <footer
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        className="dashboard-footer"
-      >
-        <div>@Curriculum Portal</div>
-      </footer>
 
-      {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <button
-              className="modal-close"
-              onClick={() => setIsModalOpen(false)}
-            >
-              ×
-            </button>
-            <h2>Reply to Discussion</h2>
-            <textarea
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              placeholder="Type your reply here..."
-            />
-            <button onClick={handleSendClick}>Send</button>
+                <div className="card-footer-home">
+                  <button className="view-more-btn-home">View More</button>
+                </div>
+              </div>
+
+              <div className="notification-card-home">
+                <div className="card-header-home">
+                  <h4>Discussion Forum</h4>
+                </div>
+                <div className="discussion-wrapper">
+                  {discussions.map((discussion, index) => (
+                    <div key={index} className="accordion-item">
+                      <button
+                        className={`accordion-title ${
+                          activeAccordion === index ? "active" : ""
+                        }`}
+                        onClick={() => toggleAccordion(index)}
+                      >
+                        <span>{discussion.title}</span>
+                        <div className="accordion-right">
+                          <div className="participants">
+                            <div className="avatar-stack">
+                              {discussion.participants.map((letter, i) => (
+                                <div
+                                  key={i}
+                                  className="participant-avatar"
+                                  style={{ backgroundColor: getRandomColor() }}
+                                >
+                                  {letter}
+                                </div>
+                              ))}
+                            </div>
+                            {discussion.additionalCount > 0 && (
+                              <span className="additional-count">
+                                +{discussion.additionalCount}
+                              </span>
+                            )}
+                          </div>
+                          <span className="accordion-icon">
+                            {activeAccordion === index ? (
+                              <ChevronUp />
+                            ) : (
+                              <ChevronDown />
+                            )}
+                          </span>
+                        </div>
+                      </button>
+                      {activeAccordion === index && (
+                        <div className="accordion-content">
+                          <p>{discussion.content}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="card-footer-home">
+                  <button className="view-more-btn-home">View More</button>
+                </div>
+              </div>
+
+              <div className="carousel-card-home">
+                <div className="card-header-home">
+                  <h4>News&Views</h4>
+                </div>
+                <div className="carousel-container">
+                  <button onClick={prevSlide} className="carousel-button prev">
+                    ❮
+                  </button>
+                  <div className="carousel-home">
+                    {slides.map((slide, index) => (
+                      <div
+                        key={index}
+                        className={`carousel-slide-home ${
+                          index === currentSlide ? "active" : ""
+                        }`}
+                        style={{ backgroundImage: `url(${slide.image})` }}
+                      >
+                        <div className="carousel-content">
+                          <h4>{slide.title}</h4>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button onClick={nextSlide} className="carousel-button next">
+                    ❯
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        <footer
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          className="dashboard-footer"
+        >
+          <div>@Curriculum Portal</div>
+        </footer>
+
+        {isModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <button
+                className="modal-close"
+                onClick={() => setIsModalOpen(false)}
+              >
+                ×
+              </button>
+              <h2>Reply to Discussion</h2>
+              <textarea
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                placeholder="Type your reply here..."
+              />
+              <button onClick={handleSendClick}>Send</button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+      <div className="scroller-i">
+        <Scroller />
+      </div>
+    </>
   );
 };
 

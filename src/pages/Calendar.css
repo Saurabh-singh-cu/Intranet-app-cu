@@ -14,7 +14,7 @@
   align-items: center;
   background-color: #3498db;
   color: white;
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 .calendar-header button {
@@ -40,20 +40,20 @@
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
   background-color: #e0e0e0;
-  /* padding: 34px; */
+ 
 }
 
 .calendar-day-header {
   background-color: #f8f8f8;
   text-align: center;
-  padding: 10px;
+  /* padding: 10px; */
   font-weight: bold;
 }
 
 .calendar-day {
   background-color: white;
   text-align: center;
-  padding: 15px;
+  /* padding: 15px; */
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
   position: relative;
@@ -99,17 +99,27 @@
 }
 
 .modal-content {
-  background-color: white;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  max-width: 90%;
-  width: 400px;
-  max-height: 90vh;
-  overflow-y: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
   position: relative;
-  animation: modalFadeIn 0.3s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
 }
+.notification-message {
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+
+}
+
 
 @keyframes modalFadeIn {
   from {
@@ -122,16 +132,29 @@
   }
 }
 
-.close-button {
+.modal-content Button {
+  color: #fff;
+    text-align: center;
+    cursor: pointer;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 3px;
+    margin: 4px 2px;
+    padding: 8px 9px;
+    font-size: 13px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.modal-content .close-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  right: 15px;
+  top: 15px;
   background: none;
   border: none;
-  font-size: 24px;
   cursor: pointer;
-  color: #777;
-  transition: color 0.2s;
+  font-size: 20px;
+  color: #666;
 }
 
 .close-button:hover {
@@ -139,10 +162,9 @@
 }
 
 .modal-title {
-  font-size: 24px;
   margin-bottom: 20px;
-  color: #2c3e50;
-  text-align: center;
+  color: #333;
+  font-size: 18px;
 }
 
 .notification-card-modal {
@@ -225,4 +247,94 @@
     font-size: 16px;
   }
 }
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.event-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.message-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+}
+
+.timestamp {
+  color: #666;
+}
+
+.tag {
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  color: #666;
+}
+
+.action-dot {
+  color: #666;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.message-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.action-button {
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.action-button.approve {
+  background: #d94719;
+  color: white;
+}
+
+.action-button.approve:hover {
+  background: #ffffff;
+  color: #e74c3c;
+}
+
+.action-button.deny {
+  background: white;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.action-button.deny:hover {
+  background: #f5f5f5;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
