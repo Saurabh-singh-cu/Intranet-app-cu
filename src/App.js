@@ -30,6 +30,7 @@ import StudentSecretary from "./pages/StudentSecretary";
 import StudentUpdatedPage from "./pages/secretary/StudentUpdatedPage";
 import ProfessionalSociety from "./pages/ProfessionalSocietyList";
 import JoinNowDetail from "./pages/JoinNowDetail";
+import RegisterNewEntity from "./components/form/RegisterNewEntity";
 
 function AppContent() {
   const location = useLocation();
@@ -95,6 +96,10 @@ function AppContent() {
             <Route
               path="/join-now"
               element={<JoinNow onShowLogin={handleShowLogin} />}
+            />
+            <Route
+              path="/Register-New-Entity"
+              element={<RegisterNewEntity onShowLogin={handleShowLogin} />}
             />
             <Route
               path="/paynow"
@@ -177,6 +182,7 @@ function AppContent() {
             <Route path="/communities" element={<CommList />} />
             <Route path="/join-now-detailed-page/" element={<JoinNowDetail />} />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
+           
             <Route
               path="/af"
               element={

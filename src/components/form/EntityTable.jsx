@@ -43,7 +43,7 @@ function EntityTable() {
   const [selectedEntityId, setSelectedEntityId] = useState(null);
 
   useEffect(() => {
-    fetch("http://172.17.2.176:8080/intranetapp/entity-requests/")
+    fetch("http://13.202.65.103/intranetapp/entity-requests/")
       .then((response) => response.json())
       .then((data) => setEntities(data))
       .catch((error) => console.error("Error fetching data:", error));
@@ -126,7 +126,7 @@ function EntityTable() {
           receiver_emails: emails,
           user_id: user?.user_id || null,
         };
-        fetch("http://172.17.2.176:8080/intranetapp/send-email/", {
+        fetch("http://13.202.65.103/intranetapp/send-email/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -208,7 +208,7 @@ function EntityTable() {
   };
 
   useEffect(() => {
-    fetch("http://172.17.2.176:8080/intranetapp/entity-requests/")
+    fetch("http://13.202.65.103/intranetapp/entity-requests/")
       .then((response) => response.json())
       .then((data) => setEntities(data))
       .catch((error) => console.error("Error fetching data:", error));
@@ -237,7 +237,7 @@ function EntityTable() {
 
   const handleStatusConfirm = useCallback(async () => {
     try {
-      const response = await fetch(`http://172.17.2.176:8080/intranetapp/entity-request/${selectedEntityId}/`, {
+      const response = await fetch(`http://13.202.65.103/intranetapp/entity-request/${selectedEntityId}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

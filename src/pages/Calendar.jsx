@@ -75,6 +75,26 @@ const Calendar = () => {
     }
   };
 
+  // const renderCalendar = () => {
+  //   const days = [];
+  //   for (let i = 0; i < firstDayOfMonth; i++) {
+  //     days.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
+  //   }
+  //   for (let day = 1; day <= daysInMonth; day++) {
+  //     const isSpecialDay = day === 23 || day === 27;
+  //     days.push(
+  //       <div
+  //         key={day}
+  //         className={`calendar-day ${isSpecialDay ? "special-day" : ""}`}
+  //         onClick={() => handleDateClick(day)}
+  //       >
+  //         {day}
+  //         {isSpecialDay && <span className="event-indicator"></span>}
+  //       </div>
+  //     );
+  //   }
+  //   return days;
+  // };
   const renderCalendar = () => {
     const days = [];
     for (let i = 0; i < firstDayOfMonth; i++) {
@@ -89,13 +109,19 @@ const Calendar = () => {
           onClick={() => handleDateClick(day)}
         >
           {day}
-          {isSpecialDay && <span className="event-indicator"></span>}
+          {isSpecialDay && (
+            <div className="event-indicators">
+              <span className="event-dot" style={{ backgroundColor: "#DE6623" }}></span>
+              <span className="event-dot" style={{ backgroundColor: "#C78DD6" }}></span>
+              <span className="event-dot" style={{ backgroundColor: "#6EA9E5" }}></span>
+              <span className="event-dot" style={{ backgroundColor: "#638941" }}></span>
+            </div>
+          )}
         </div>
       );
     }
     return days;
   };
-
   const openGoogleForm = () => {
     
   }

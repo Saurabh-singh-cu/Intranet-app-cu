@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from "react";
 import { message, notification } from "antd";
 import barcoder from "../../assets/images/barcode.jpeg";
@@ -39,6 +41,8 @@ const JoinNow = () => {
   const [showWalkingMan, setShowWalkingMan] = useState(true);
 
   const [timeLeft, setTimeLeft] = useState(300);
+
+  const [isOtpSent, setIsOtpSent ] = useState(false)
 
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -99,14 +103,14 @@ const JoinNow = () => {
   const handleFinalSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://172.17.2.176:8080/intranetapp/final_submit/",
+        "http://13.202.65.103/intranetapp/final_submit/",
         {
           membership_id: membershipId,
-          transaction_id: transactionId,
+          transaction_id: entity === "CLUB" ? transactionId : "",
         }
       );
       Swal.fire({
-        title: "Payment Success",
+        title: entity === "CLUB" ? "Payment Success" : "Registration Success",
         text: "We will be in touch ",
         icon: "success",
       });
@@ -137,7 +141,7 @@ const JoinNow = () => {
     try {
       setIsFormDisabled(true);
       const response = await axios.post(
-        "http://172.17.2.176:8080/intranetapp/send_otp_email/",
+        "http://13.202.65.103/intranetapp/send_otp_email/",
         {
           member_name: name,
           member_email: `${email}@cumail.in`,
@@ -148,6 +152,7 @@ const JoinNow = () => {
           member_uid: uid,
         }
       );
+      setIsOtpSent(true)
       console.log("Email sent ", response?.data);
       Swal.fire({
         title: "OTP sent!",
@@ -181,7 +186,7 @@ const JoinNow = () => {
   const handleVerifyOTP = async () => {
     try {
       const response = await axios.post(
-        "http://172.17.2.176:8080/intranetapp/verify_otp/",
+        "http://13.202.65.103/intranetapp/verify_otp/",
         {
           membership_id: membershipId,
           otp: otp,
@@ -197,6 +202,7 @@ const JoinNow = () => {
       setTimeout(() => {
         setShowPayment(true);
       }, 4000);
+     
     } catch (error) {
       console.error("OTP verification failed:", error);
       Swal.fire({
@@ -206,6 +212,25 @@ const JoinNow = () => {
       });
     }
   };
+
+  // page refresh code 
+
+  const handleBeforeUnload = (e) => {
+    if (isOtpSent) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  };
+
+  
+  useEffect(() => {
+    if (isOtpSent) {
+      window.addEventListener('beforeunload', handleBeforeUnload);
+    }
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isOtpSent]);
   const validateForm = () => {
     const newErrors = {};
     if (!entity) newErrors.entity = "Please select an entity";
@@ -222,7 +247,11 @@ const JoinNow = () => {
 
   const handleNextPage = () => {
     if (validateForm() && isVerified) {
-      setShowPayment(true);
+      if (entity === "1") {
+        setShowPayment(true);
+      } else {
+        handleFinalSubmit();
+      }
     } else {
       message.error(
         "Please fill all fields and verify your email before proceeding."
@@ -231,9 +260,9 @@ const JoinNow = () => {
   };
 
   const apiUrls = {
-    "entity-types": "http://172.17.2.176:8080/intranetapp/entity-types/",
-    departments: "http://172.17.2.176:8080/intranetapp/departments/",
-    currentSession: "http://172.17.2.176:8080/intranetapp/current_session/",
+    "entity-types": "http://13.202.65.103/intranetapp/entity-types/",
+    departments: "http://13.202.65.103/intranetapp/departments/",
+    currentSession: "http://13.202.65.103/intranetapp/current_session/",
   };
 
   const fetchDepartments = async () => {
@@ -253,6 +282,8 @@ const JoinNow = () => {
     try {
       const response = await axios.get(apiUrls["entity-types"]);
       setEntityData(response.data);
+      setEntity(response?.data);
+      console.log(response?.data, "TTTTTTTTTTT")
     } catch (error) {
       console.error("Error fetching entity data:", error);
     } finally {
@@ -260,15 +291,15 @@ const JoinNow = () => {
     }
   };
 
-  const fetchEntityList = async (entityId) => {
-    setEntityListData([]);
+  const fetchEntityList = async (entity) => {
+   
 
-    if (!entityId) return;
+   
 
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://172.17.2.176:8080/intranetapp/entity-registration-name/?entity_id=${entityId}`
+        `http://13.202.65.103/intranetapp/entity-registration-name/?entity_id=${entity}`
       );
       setEntityListData(response.data);
       console.log(response.data, "Updated entity list");
@@ -320,6 +351,10 @@ const JoinNow = () => {
     setter(value);
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
+
+  if (name === "entity") {
+    setEntityType("");
+  }
 
   if (showPayment) {
     return (
@@ -388,271 +423,207 @@ const JoinNow = () => {
       </div>
     );
   }
-
+ useEffect(() => {
+  console.log(entity, "ENTITY")
+ }, [])
   return (
-    <div className="joinnow-container" style={{ width: "100%" }}>
-      {/* {showWalkingMan && <WalkingMan position={walkingManPosition} />} */}
-      <div className="joinnow-form">
-        <div className="form-header">
-          <h1>JOIN US</h1>
-        </div>
+    <div className="registration-container">
+      <div className="sidebar-joinnow">
+        <h2>Join As a New Member</h2>
+        <p className="subtitle">
+          Fill out the form below to create your profile and become a part of
+          our amazing community.
+        </p>
+        <ul className="requirements-list">
+          <li>
+            Membership: 1 Club and 1 Prof. Soc./Dept. Soc./ Comm./Ind.Tech Comm.
+          </li>
+          <li>
+            Participation: 2 Activities/Events per year (minimum 25 hours in a
+            year)
+          </li>
+          <li>Academic Credits: Minimum Earn at least 1 GP Credit in AY.</li>
+          <li>Mandatory All Fields to become member of any entity.</li>
+          <li>A student can be member of multiple entity</li>
+          <li>There is a membership fee for Club as per university norms</li>
+          <li>
+            The membership fee for professional society / Student chapter is as
+            per governed outside bodies.
+          </li>
+          <li>
+            After successfully Registration a E-Membership card is generated on
+            official mail id.
+          </li>
+        </ul>
+      </div>
 
+      <div className="main-content">
         <form>
-          <div className="form-section">
-            <div className="section-header">PERSONAL INFORMATION</div>
-            <div className="section-content">
-              <div className="input-row-joinnow">
-                <div className="input-group-joinnow">
-                  <label className="label-joinnow" htmlFor="name">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="input-field-join"
-                    value={name}
-                    onChange={(e) => handleInputChange(e, setName)}
-                    placeholder="Enter your name"
-                  />
-                  {errors.name && (
-                    <div className="error-message">{errors.name}</div>
-                  )}
-                </div>
-                <div className="input-group-joinnow">
-                  <label className="label-joinnow" htmlFor="uid">
-                    UID
-                  </label>
-                  <input
-                    type="text"
-                    id="uid"
-                    name="uid"
-                    className="input-field-join"
-                    value={uid}
-                    onChange={(e) => handleInputChange(e, setUid)}
-                    placeholder="Enter your UID"
-                  />
-                  {errors.uid && (
-                    <div className="error-message">{errors.uid}</div>
-                  )}
-                </div>
+          <section className="form-section">
+            <h3>Personal Information</h3>
+            <div className="input-grid">
+              <div className="input-group">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={name}
+                  onChange={(e) => handleInputChange(e, setName)}
+                  placeholder="Name"
+                  className="form-input"
+                  disabled={isOtpSent}
+                />
+                {errors.name && <span className="error">{errors.name}</span>}
               </div>
 
-              <div className="input-row-joinnow">
-                <div className="input-group-joinnow">
-                  <label className="label-joinnow" htmlFor="email">
-                    Email
-                  </label>
-                  <div className="email-input">
-                    <input
-                      type="text"
-                      id="email"
-                      name="email"
-                      className="input-field-join"
-                      value={email}
-                      onChange={handleEmailChange}
-                      placeholder="Enter email"
-                      disabled
-                      style={{ cursor: "not-allowed" }}
-                    />
-                    <span className="domain">@cuchd.in</span>
-                    {isVerified && <span className="verified">✓</span>}
-                  </div>
-                  {errors.email && (
-                    <div className="error-message">{errors.email}</div>
-                  )}
-                </div>
-                <div className="input-group-joinnow">
-                  <label className="label-joinnow" htmlFor="mobileNumber">
-                    Mobile Number
-                  </label>
-                  <div className="mobile-input">
-                    <input
-                      type="text"
-                      id="mobileNumber"
-                      name="mobileNumber"
-                      className="input-field-join"
-                      value={mobileNumber}
-                      onChange={(e) => handleInputChange(e, setMobileNumber)}
-                      placeholder="+917291XXXX88"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="form-section">
-            <div className="section-header">ORGANIZATION INFORMATION</div>
-            <div className="section-content">
-              <div className="input-row-joinnow">
-                <div className="input-group-joinnow">
-                  <label className="label-joinnow" htmlFor="entity">
-                    Entity
-                  </label>
-                  <select
-                    id="entity"
-                    name="entity"
-                    className="input-field-join"
-                    value={entity}
-                    onChange={(e) => handleInputChange(e, setEntity)}
-                  >
-                    <option value="">Select Entity</option>
-                    {entityData.map((entity) => (
-                      <option key={entity.entity_id} value={entity.entity_id}>
-                        {entity.entity_name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.entity && (
-                    <div className="error-message">{errors.entity}</div>
-                  )}
-                </div>
-                <div className="input-group-joinnow">
-                  <label className="label-joinnow" htmlFor="entityType">
-                    Entity Type
-                  </label>
-                  <select
-                    id="entityType"
-                    name="entityType"
-                    className="input-field-join"
-                    value={entityType}
-                    onChange={(e) => handleInputChange(e, setEntityType)}
-                  >
-                    <option value="">Select Entity Type</option>
-                    {entityListData.map((entityList) => (
-                      <option
-                        key={entityList.entity_id}
-                        value={entityList.entity_id}
-                      >
-                        {entityList.registration_name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.entityType && (
-                    <div className="error-message">{errors.entityType}</div>
-                  )}
-                </div>
+              <div className="input-group">
+                <input
+                  type="text"
+                  id="uid"
+                  name="uid"
+                  value={uid}
+                  onChange={(e) => handleInputChange(e, setUid)}
+                  placeholder="UID"
+                  className="form-input"
+                  disabled={isOtpSent}
+                />
+                {errors.uid && <span className="error">{errors.uid}</span>}
               </div>
 
-              <div className="input-group-joinnow">
-                <label className="label-joinnow" htmlFor="department">
-                  Department
-                </label>
+              <div className="input-group">
                 <select
                   id="department"
                   name="department"
-                  className="input-field-join"
                   value={department}
                   onChange={(e) => handleInputChange(e, setDepartment)}
+                  className="form-select"
+                  disabled={isOtpSent}
                 >
-                  <option value="">Select Department</option>
+                  <option value="">Department</option>
                   {departments.map((dept) => (
-                    <option key={dept.dept_id} value={dept.dept_id}>
-                      {dept.dept_name}
-                    </option>
+                    <option key={dept.dept_id} value={dept.dept_id}>{dept.dept_name}</option>
                   ))}
                 </select>
                 {errors.department && (
-                  <div className="error-message">{errors.department}</div>
+                  <span className="error">{errors.department}</span>
                 )}
               </div>
-            </div>
-          </div>
 
-          <div className="form-section">
-            <div className="section-header">VERIFICATION</div>
-            <div className="section-content">
-              <div className="input-row-joinnow">
-                <div className="input-group-joinnow" style={{ flex: 2 }}>
-                  <label className="label-joinnow" htmlFor="email">
-                    Email
-                  </label>
-                  <div className="email-input">
-                    <input
-                      type="text"
-                      id="email"
-                      name="email"
-                      className="input-field-join"
-                      value={email}
-                      onChange={handleEmailChange}
-                      placeholder="Enter email"
-                      disabled
-                      style={{ cursor: "not-allowed" }}
-                    />
-                    <span className="domain">@cuchd.in</span>
-                    {isVerified && <span className="verified">✓</span>}
-                  </div>
-                  {errors.email && (
-                    <div className="error-message">{errors.email}</div>
-                  )}
-                </div>
-                <div className="input-group-joinnow" style={{ flex: 1 }}>
-                  <label
-                    className="label-joinnow"
-                    style={{ visibility: "hidden" }}
-                  >
-                    Send OTP
-                  </label>
-                  <button
-                    type="button"
-                    onClick={handleSendOTP}
-                    className="button-joinnow"
-                    disabled={otpTimer > 0 || isFormDisabled}
-                    style={{ width: "100%", height: "42px" }}
-                  >
-                    {otpTimer > 0 ? `Resend OTP in ${otpTimer}s` : "Send OTP"}
-                  </button>
-                </div>
+              <div className="input-group">
+                <input
+                  type="text"
+                  id="mobileNumber"
+                  name="mobileNumber"
+                  value={mobileNumber}
+                  onChange={(e) => handleInputChange(e, setMobileNumber)}
+                  placeholder="Phone Number"
+                  className="form-input"
+                  disabled={isOtpSent}
+                />
               </div>
+            </div>
+          </section>
 
-              <div className="input-row-joinnow">
-                <div className="input-group-joinnow" style={{ flex: 2 }}>
-                  <label className="label-joinnow" htmlFor="otp">
-                    OTP
-                  </label>
+          <section className="form-section">
+            <h3>Select Entity & Department</h3>
+            <div className="input-grid">
+              <div className="input-group">
+                <select
+                  id="entity"
+                  name="entity"
+                  value={entity}
+                  onChange={(e) => handleInputChange(e, setEntity)}
+                  className="form-select"
+                  disabled={isOtpSent}
+                >
+                  <option value="">Entity Type</option>
+                  {entityData.map((entity) => (
+                    <option key={entity.entity_id} value={entity.entity_id}>
+                      {entity.entity_name}
+                    </option>
+                  ))}
+                </select>
+                {errors.entity && <span className="error">{errors.entity}</span>}
+              </div>
+             
+
+              <div className="input-group">
+                <select
+                  id="entityType"
+                  name="entityType"
+                  value={entityType}
+                  onChange={(e) => handleInputChange(e, setEntityType)}
+                  className="form-select"
+                  disabled={isOtpSent}
+                >
+                  <option value="">Select Entity Category</option>
+                  {entityListData.map((entity, index) => (
+                    // yaha p galti hai id jaye gi par entity_id sab ka same hai es liye wrong hai!
+                    <option key={`${entity.entity_id}-${index}`} value={entity.entity_id}>
+                      {entity.registration_name}
+                    </option>
+                  ))}
+                </select>
+                {errors.entityType && <span className="error">{errors.entityType}</span>}
+              </div>
+            </div>
+          </section>
+
+          <section className="form-section">
+            <h3>Verification</h3>
+            <div className="verification-grid">
+              <div className="email-group">
+                <div className="email-input-container">
                   <input
                     type="text"
-                    id="otp"
-                    name="otp"
-                    className="input-field-join"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder="Enter OTP"
+                    value={email}
+                    onChange={handleEmailChange}
+                    placeholder="Email ID"
+                    disabled
+                    className="form-input"
                   />
-                  {errors.otp && (
-                    <div className="error-message">{errors.otp}</div>
-                  )}
+                  <span className="domain">@cumail.in</span>
+                  {isVerified && <span className="verified-badge">✓</span>}
                 </div>
-                <div className="input-group-joinnow" style={{ flex: 1 }}>
-                  <label
-                    className="label-joinnow"
-                    style={{ visibility: "hidden" }}
-                  >
-                    Verify OTP
-                  </label>
-                  <button
-                    type="button"
-                    onClick={handleVerifyOTP}
-                    className="button-joinnow"
-                    style={{ width: "100%", height: "42px" }}
-                  >
-                    Verify OTP
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={handleSendOTP}
+                  className="otp-button"
+                  disabled={otpTimer > 0 || isFormDisabled}
+                >
+                  {otpTimer > 0 ? `Resend OTP (${otpTimer}s)` : "Send OTP"}
+                </button>
+              </div>
+
+              <div className="otp-group">
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="OTP"
+                  className="form-input"
+                />
+                <button
+                  type="button"
+                  onClick={handleVerifyOTP}
+                  className="verify-button"
+                >
+                  Verify
+                </button>
               </div>
             </div>
-          </div>
+          </section>
 
+          <div style={{ display: "flex", justifyContent: "center" }}>
           <button
-            type="button"
-            onClick={handleNextPage}
-            className="button-joinnow"
-            disabled={!isVerified}
-            style={{ width: "100%" }}
-          >
-            Next Page
-          </button>
+              type="button"
+              onClick={handleNextPage}
+              className="register-button-joinnow"
+              disabled={!isVerified}
+            >
+              {entity === "1" ? "Make Payment" : "Register"}
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -660,3 +631,9 @@ const JoinNow = () => {
 };
 
 export default JoinNow;
+
+
+
+
+
+

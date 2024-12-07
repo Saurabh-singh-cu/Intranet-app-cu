@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaBell } from "react-icons/fa";
 import { MdMessage } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
@@ -8,9 +8,16 @@ import logonew from "../assets/images/intralogonew.jpeg";
 import { DownOutlined, SettingOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 import "./NavBar.css";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showResults, setShowResults] = useState(false);
+  const [filteredResults, setFilteredResults] = useState([]);
+  const searchRef = useRef(null);
+  const navigate = useNavigate();
+
   const [userName, setUserName] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem("isLoggedIn") === "true";
@@ -78,6 +85,50 @@ const NavBar = () => {
     },
   ];
 
+  const pages = [
+    { title: 'Dashboard', path: '/' },
+    { title: 'Clubs', path: '/clubs' },
+    { title: 'Departments', path: '/department-society' },
+    { title: 'Communities', path: '/communities' },
+    { title: 'Professional Society', path: '/professional-society' },
+    { title: 'Join Now', path: '/join-now' },
+    { title: 'Settings', path: '/settings' },
+    { title: 'Profile', path: '/profile' },
+  ];
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    
+    if (query.trim()) {
+      const results = pages.filter(page => 
+        page.title.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredResults(results);
+      setShowResults(true);
+    } else {
+      setShowResults(false);
+    }
+  };
+
+  const handleResultClick = (path) => {
+    navigate(path);
+    setSearchQuery('');
+    setShowResults(false);
+  };
+
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -90,14 +141,36 @@ const NavBar = () => {
         </div>
       </div>
 
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search & Bookmark your page"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
+      <div className="search-wrapper" ref={searchRef}>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search & Bookmark your page"
+            value={searchQuery}
+            onChange={handleSearch}
+            className="search-input"
+            onFocus={() => searchQuery.trim() && setShowResults(true)}
+          />
+        </div>
+        {showResults && (
+          <div className="search-results">
+            {filteredResults.length > 0 ? (
+              filteredResults.map((result, index) => (
+                <div
+                  key={index}
+                  className="search-result-item"
+                  onClick={() => handleResultClick(result.path)}
+                >
+                  {result.title}
+                </div>
+              ))
+            ) : (
+              <div className="search-result-item no-results">
+                No results found
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="navbar-right">
@@ -105,36 +178,14 @@ const NavBar = () => {
         userName?.role_name === "Admin" ? null : (
           <>
             {" "}
-            <button onClick={renderJoinNow} className="btn dimButton btn-11">
-              Join Now
-            </button>
+            <button onClick={() => navigate("/join-now")} className="nav-button">
+          Join as New Member
+        </button>
           </>
         )}
         {isLoggedIn === true &&
         userName?.role_name === "Student Secretary" ? null : (
-          <>
-            {" "}
-            <button className="icon-button desktop-only">
-              <span>
-                <FaBell />
-              </span>
-            </button>
-            <button className="icon-button desktop-only">
-              <span>
-                <MdMessage />
-              </span>
-            </button>
-            {isLoggedIn === false ? null : (
-              <>
-                {" "}
-                <button className="icon-button desktop-only">
-                  <span>
-                    <IoSettings />
-                  </span>
-                </button>
-              </>
-            )}
-          </>
+          <> {isLoggedIn === false ? null : <></>}</>
         )}
 
         {isLoggedIn === true && userName ? (
@@ -153,6 +204,14 @@ const NavBar = () => {
             </Dropdown>
           </button>
         ) : null}
+
+        <button
+          onClick={() => navigate("/Register-New-Entity")}
+          className="nav-button"
+        >
+          Register New Entity
+        </button>
+      
 
         <div className="user-profile desktop-only">
           <span
@@ -187,24 +246,7 @@ const NavBar = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="search-input"
           />
-          <button className="icon-button">
-            <span className="menu-show-">
-              <FaBell />
-            </span>
-            <span className="menu-show-">Notifications</span>
-          </button>
-          <button className="icon-button">
-            <span className="menu-show-">
-              <MdMessage />
-            </span>
-            <span className="menu-show-">Messages</span>
-          </button>
-          <button className="icon-button">
-            <span className="menu-show-">
-              <IoSettings />
-            </span>
-            <span className="menu-show-">Settings</span>
-          </button>
+        
           {isLoggedIn === true && userName ? (
             <button className="icon-button">
               <span className="greenDot"></span>

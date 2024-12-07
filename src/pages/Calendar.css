@@ -58,6 +58,23 @@
   transition: background-color 0.3s, transform 0.2s;
   position: relative;
 }
+.event-dot {
+  width: 7px;
+  height: 7px;
+  display: flex;
+  flex-direction: row;
+  border-radius: 50%;
+  margin: 0 3px;
+}
+.special-day {
+  background-color: #f0d6c854;
+}
+.event-indicators{
+  display: flex;
+  align-items: normal;
+  position: absolute;
+  bottom: 11px;
+}
 
 .calendar-day:hover {
   background-color: #e8f4fd;

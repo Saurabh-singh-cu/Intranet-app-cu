@@ -483,7 +483,10 @@
 
 @media (max-width: 768px) {
   .sidebar-list {
-    display: block;
+    display: none !important;
+  }
+  .sidebar-list-card4h, .sidebar-list-card2h, .sidebar-list-card3h {
+    display: none !important;
   }
 
   .main-content-list {
@@ -493,4 +496,5 @@
   .cards-grid-list {
     grid-template-columns: 1fr;
   }
+
 }

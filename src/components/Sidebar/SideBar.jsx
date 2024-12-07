@@ -7,7 +7,7 @@ import { BiAnalyse, BiSearch, BiCog } from "react-icons/bi";
 import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
 import { BsCartCheck } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
-import { IoSettingsOutline } from "react-icons/io5";
+// import { IoSettingsOutline } from "react-icons/io5";
 import { FaWpforms, FaCodePullRequest } from "react-icons/fa6";
 import SidebarMenu from "./SidebarMenu";
 
@@ -27,7 +27,7 @@ const routes = [
   {
     path: "/configuration",
     name: "Configuration",
-    icon: <IoSettingsOutline />,
+    icon:<FaWpforms />,
     allowedRoles: ["Admin"]
   },
   {

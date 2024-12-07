@@ -81,7 +81,7 @@ const AdminDashboard = () => {
   const dashboardCardCount = async () => {
     try {
       const response = await axios.get(
-        "http://172.17.2.176:8080/intranetapp/entity_count/"
+        "http://13.202.65.103/intranetapp/entity_count/"
       );
       setDashboardCount(response.data);
       filterData(response.data);
@@ -108,7 +108,7 @@ const AdminDashboard = () => {
   };
 
   const getEntityCount = async() => {
-    const response = await axios.get("http://172.17.2.176:8080/intranetapp/entity-registration/")
+    const response = await axios.get("http://13.202.65.103/intranetapp/entity-registration/")
     setEntityCount(response?.data);
   }
 

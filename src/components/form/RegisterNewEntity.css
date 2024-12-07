@@ -1,0 +1,222 @@
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+  }
+  
+  .sidebar {
+    width: 280px;
+    background-color: #fff;
+    border-right: 1px solid #e0e0e0;
+    padding: 2rem 0;
+  }
+  
+  .logo-container {
+    padding: 0 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .university-logo {
+    width: 120px;
+    height: auto;
+  }
+  
+  .nav-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 1rem;
+  }
+  
+  .nav-tab {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 8px;
+    color: #666;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-tab:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .nav-tab.active {
+    background-color: #f0f0f0;
+    color: #000;
+    font-weight: 500;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 2rem;
+    background-color: #fff;
+  }
+  
+  .form-header {
+    margin-bottom: 2rem;
+  }
+  
+  .form-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .form-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: #666;
+  }
+  
+  .radio-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  .radio-button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s ease;
+  }
+  
+  .radio-button.active {
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .button-secondary {
+    background-color: #f5f5f5;
+    color: #666;
+  }
+  
+  .button-secondary:hover {
+    background-color: #eee;
+  }
+  
+  .button-primary {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .button-primary:hover {
+    background-color: #444;
+  }
+  
+  .acknowledgement-container {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+  
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  
+  .captcha-container {
+    margin: 1.5rem 0;
+  }
+  
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .custom-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #fff;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
+  }
+  
+  .custom-select:focus {
+    outline: none;
+    border-color: #666;
+  }
+  
+  .quill-editor {
+    margin-bottom: 1.5rem;
+  }
+  
+  .quill-editor .ql-container {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+  
+  .quill-editor .ql-toolbar {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  
+  

@@ -34,18 +34,18 @@ const MyFormComponent = () => {
   const [switchState, setSwitchState] = useState(false);
 
   const apiUrls = {
-    "entity-types": "http://172.17.2.176:8080/intranetapp/entity-types/",
+    "entity-types": "http://13.202.65.103/intranetapp/entity-types/",
     roles_permissions:
-      "http://172.17.2.176:8080/intranetapp/roles_permissions/",
-    roles: "http://172.17.2.176:8080/intranetapp/roles/",
-    departments: "http://172.17.2.176:8080/intranetapp/departments/",
-    sessions: "http://172.17.2.176:8080/intranetapp/sessions/",
-    genders: "http://172.17.2.176:8080/intranetapp/genders/",
-    title: "http://172.17.2.176:8080/intranetapp/title/",
-    designation: "http://172.17.2.176:8080/intranetapp/designation/",
-    user_create: "http://172.17.2.176:8080/intranetapp/user_create/",
-    user_table: "http://172.17.2.176:8080/intranetapp/user_table/",
-    current_session: "http://172.17.2.176:8080/intranetapp/current_session/",
+      "http://13.202.65.103/intranetapp/roles_permissions/",
+    roles: "http://13.202.65.103/intranetapp/roles/",
+    departments: "http://13.202.65.103/intranetapp/departments/",
+    sessions: "http://13.202.65.103/intranetapp/sessions/",
+    genders: "http://13.202.65.103/intranetapp/genders/",
+    title: "http://13.202.65.103/intranetapp/title/",
+    designation: "http://13.202.65.103/intranetapp/designation/",
+    user_create: "http://13.202.65.103/intranetapp/user_create/",
+    user_table: "http://13.202.65.103/intranetapp/user_table/",
+    current_session: "http://13.202.65.103/intranetapp/current_session/",
   };
 
   useEffect(() => {
@@ -545,7 +545,7 @@ const MyFormComponent = () => {
         };
         const config = {
           method: "POST",
-          url: "http://172.17.2.176:8080/intranetapp/current_session/",
+          url: "http://13.202.65.103/intranetapp/current_session/",
           data,
         };
         const response = await axios(config);

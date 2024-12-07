@@ -22,17 +22,37 @@ import {
   Heart,
   Share2,
   Tag,
+  Upload,
   Users,
 } from "lucide-react";
 import EventsCard from "./EventCards";
-import { Badge, Button, message, notification, Space } from "antd";
+import {
+  Badge,
+  Button,
+  Drawer,
+  Input,
+  message,
+  notification,
+  Popover,
+  Upload,
+  Space,
+} from "antd";
 import Avatar from "antd/es/avatar/avatar";
-import { EditOutlined, NotificationOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  InboxOutlined,
+  NotificationOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import Scroller from "../components/Scroller";
 import bannerclub from "../assets/images/bannerclub.jpg";
 import EventCardsDash from "./EventCardsDash";
 import cc1 from "../assets/images/c3.png";
-import { MdModeEdit } from "react-icons/md";
+import { MdHeight, MdModeEdit } from "react-icons/md";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import expo from "../assets/images/expo.jpg";
+import NewsViews from "./NewsViews";
 
 const Dashboard = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -46,6 +66,10 @@ const Dashboard = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
   const [messageApi, contextHolder] = message.useMessage();
+
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [drawerContent, setDrawerContent] = useState(null);
+  const [editContent, setEditContent] = useState("");
 
   const [filteredData, setFilteredData] = useState({
     club: 0,
@@ -73,8 +97,6 @@ const Dashboard = () => {
     { title: "Student Activities", image: diljeet },
     { title: "Academic Excellence", image: c4 },
   ];
-
-
 
   const toggleAccordion = (index) => {
     setActiveAccordion(activeAccordion === index ? null : index);
@@ -121,7 +143,7 @@ const Dashboard = () => {
   const dashboardCardCount = async () => {
     try {
       const response = await axios.get(
-        "http://172.17.2.176:8080/intranetapp/entity_count/"
+        "http://13.202.65.103/intranetapp/entity_count/"
       );
       setDashboardCount(response.data);
       filterData(response.data);
@@ -159,33 +181,39 @@ const Dashboard = () => {
 
   const carouselImages = [
     {
+      src: expo,
+      alt: "Major Event 1",
+      type: "Showcase of Innovation and Excellence",
+      title: "CU Projects Expo 2025 ",
+    },
+    {
       src: vv,
       alt: "Major Event 1",
-      type: "UPCOMING MAJOR EVENT",
+      type: "UPCOMING UNIVERSITY EVENT",
       title: "Annual Tech Conference 2024",
     },
     {
       src: vvv,
       alt: "Major Event 2",
-      type: "UPCOMING MAJOR EVENT",
+      type: "UPCOMING CLUB EVENT",
       title: "Global Leadership Summit",
     },
     {
       src: diljeet,
       alt: "University Event 1",
-      type: "UPCOMING UNIVERSITY EVENT",
+      type: "UPCOMING DEPT. SOCIETY EVENT",
       title: "Freshers' Welcome Party",
     },
     {
       src: diljeet1,
       alt: "University Event 2",
-      type: "UPCOMING UNIVERSITY EVENT",
+      type: "UPCOMING PROF. SOCIETY EVENT",
       title: "Annual Sports Meet",
     },
     {
       src: cf,
       alt: "University Event 3",
-      type: "UPCOMING UNIVERSITY EVENT",
+      type: "UPCOMING CO-CURRICULAR EVENT",
       title: "Career Fair 2024",
     },
     {
@@ -199,7 +227,7 @@ const Dashboard = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselImages.length);
-    }, 5000);
+    }, 12000);
 
     return () => clearInterval(interval);
   }, [carouselImages.length]);
@@ -218,7 +246,7 @@ const Dashboard = () => {
         messageTime: "2hr ago",
       },
     ],
-    "Faculty/Department": [
+    "Section Management": [
       {
         from: "Co-Curricular Cord : CSE.",
         content: "Registration open for all department society till 10th Dec.",
@@ -281,17 +309,205 @@ const Dashboard = () => {
   ];
 
   const redirectToLogin = () => {
-   alert("Redirecting you to login page.")
-   setTimeout(() => {
-    navigate("/login");
-   }, 2000);
+    alert("Redirecting you to login page.");
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
   };
 
+  const giveWarningPrice = () => {
+    Swal.fire({
+      title: "Permission Denied",
+      text: "Permission required from Admin! ",
+      icon: "error",
+      footer: '<a href="#">Please contact the Admin!</a>',
+    });
+  };
 
+  const showDrawer = (content) => {
+    setDrawerContent(content);
+    setDrawerVisible(true);
+  };
+
+  const onCloseDrawer = () => {
+    setDrawerVisible(false);
+    setDrawerContent(null);
+  };
+
+  const handleEditContent = () => {
+    // Here you would typically send the editContent to your backend
+    message.success("Content updated successfully");
+    onCloseDrawer();
+  };
+
+  const renderDrawerContent = () => {
+    switch (drawerContent) {
+      case "banner":
+        return (
+          <>
+            <Upload.Dragger
+              name="bannerImage"
+              multiple={false}
+              action="/api/upload" // Replace with your actual upload API endpoint
+              onChange={(info) => {
+                const { status } = info.file;
+                if (status === "done") {
+                  message.success(
+                    `${info.file.name} file uploaded successfully.`
+                  );
+                } else if (status === "error") {
+                  message.error(`${info.file.name} file upload failed.`);
+                }
+              }}
+            >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibit from
+                uploading company data or other sensitive files.
+              </p>
+            </Upload.Dragger>
+            <Button style={{ marginTop: 16 }} onClick={handleEditContent}>
+              Update Banner
+            </Button>
+          </>
+        );
+      case "logo":
+        return (
+          <>
+            <Upload.Dragger
+              name="logoImage"
+              multiple={false}
+              action="/api/upload" // Replace with your actual upload API endpoint
+              onChange={(info) => {
+                const { status } = info.file;
+                if (status === "done") {
+                  message.success(
+                    `${info.file.name} file uploaded successfully.`
+                  );
+                } else if (status === "error") {
+                  message.error(`${info.file.name} file upload failed.`);
+                }
+              }}
+            >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Upload a new logo image. Recommended size: 200x200px.
+              </p>
+            </Upload.Dragger>
+            <Button style={{ marginTop: 16 }} onClick={handleEditContent}>
+              Update Logo
+            </Button>
+          </>
+        );
+      case "description":
+        return (
+          <>
+            <ReactQuill
+              theme="snow"
+              value={editContent}
+              onChange={setEditContent}
+              modules={{
+                toolbar: [
+                  [{ header: [1, 2, false] }],
+                  ["bold", "italic", "underline", "strike", "blockquote"],
+                  [
+                    { list: "ordered" },
+                    { list: "bullet" },
+                    { indent: "-1" },
+                    { indent: "+1" },
+                  ],
+                  ["link", "image"],
+                  ["clean"],
+                ],
+              }}
+            />
+            <Button style={{ marginTop: 16 }} onClick={handleEditContent}>
+              Update Description
+            </Button>
+          </>
+        );
+      case "categories":
+        return (
+          <>
+            <Input.TextArea
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              placeholder="Enter categories, separated by commas"
+              autoSize={{ minRows: 3, maxRows: 5 }}
+            />
+            <Button style={{ marginTop: 16 }} onClick={handleEditContent}>
+              Update Categories
+            </Button>
+          </>
+        );
+      case "eligibility":
+        return (
+          <>
+            <ReactQuill
+              theme="snow"
+              value={editContent}
+              onChange={setEditContent}
+              modules={{
+                toolbar: [
+                  [{ header: [1, 2, false] }],
+                  ["bold", "italic", "underline", "strike", "blockquote"],
+                  [
+                    { list: "ordered" },
+                    { list: "bullet" },
+                    { indent: "-1" },
+                    { indent: "+1" },
+                  ],
+                  ["link"],
+                  ["clean"],
+                ],
+              }}
+            />
+            <Button style={{ marginTop: 16 }} onClick={handleEditContent}>
+              Update Eligibility
+            </Button>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  // carousel button
+  const nextSlide1 = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === carouselImages.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const prevSlide1 = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? carouselImages.length - 1 : prevIndex - 1
+    );
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000); // Change interval as needed
+    return () => clearInterval(interval);
+  }, [currentIndex, carouselImages.length]);
 
   return (
     <>
-      <div className="dashboard-home">
+      <div
+        style={{ height: "89vh" }}
+        className="dashboard-home"
+      >
         {userDetails && (
           <div className="secretary-info-container">
             <div className="secretary-info">
@@ -326,21 +542,34 @@ const Dashboard = () => {
         {(isLoggedIn === true && userName?.role_name === "Student Secretary") ||
         userName?.role_name === "Admin" ? (
           <>
-            <div className="club-details-page">
+            <div style={{ marginTop: "-27px" }} className="club-details-page">
               <div
                 className="hero-section"
-                style={{ backgroundImage: `url(${bannerclub})` }}
+                style={{
+                  backgroundImage: `url(${bannerclub})`,
+                  height: "250px",
+                  justifyContent: "space-between",
+                  display: "flex",
+                }}
               >
                 <div className="hero-content">
                   <h1 className="hero-title">
                     {userDetails?.secretary_details?.registration_name}
                   </h1>
                   <div className="hero-tagline"></div>
-                  <p className="hero-subtitle">
-                    {" "}
-                    <button class="btn-edit btn-1">Update Banner</button>
-                  </p>
+                  <p className="hero-subtitle"> </p>
                 </div>
+                <Popover
+                  title={`Update/Remove Banner Image for ${userDetails?.secretary_details?.registration_name}`}
+                >
+                  {" "}
+                  <button
+                    onClick={() => showDrawer("banner")}
+                    class="btn-edit btn-1"
+                  >
+                    Update Banner
+                  </button>
+                </Popover>
                 <div className="hero-shapes">
                   <div className="shape shape-1"></div>
                   <div className="shape shape-2"></div>
@@ -357,8 +586,18 @@ const Dashboard = () => {
                       alt="Program Logo"
                       className="program-logo"
                     />
-                   <Button className="editIconS" type="primary" shape="circle">
-                      <EditOutlined />
+                    <Button
+                      onClick={() => showDrawer("logo")}
+                      className="editIconS"
+                      type="primary"
+                      shape="circle"
+                    >
+                      <Popover
+                        title={`Update/Remove Logo for ${userDetails?.secretary_details?.registration_name}`}
+                      >
+                        {" "}
+                        <EditOutlined />
+                      </Popover>
                     </Button>
                     <div className="program-info">
                       <h2>
@@ -379,10 +618,26 @@ const Dashboard = () => {
 
                   <div className="prize-section">
                     <div className="prize-details">
-                      <div className="prize-label">
+                      <div
+                        onClick={() => showDrawer("description")}
+                        style={{ display: "flex" }}
+                        className="prize-label"
+                      >
                         Connecting All Circles is a vibrant community dedicated
                         to igniting creativity and encouraging exploration among
                         students.
+                        <Button
+                          className="editIconS"
+                          type="primary"
+                          shape="circle"
+                        >
+                          <Popover
+                            title={`Update description for ${userDetails?.secretary_details?.registration_name}`}
+                          >
+                            {" "}
+                            <EditOutlined />
+                          </Popover>
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -390,11 +645,22 @@ const Dashboard = () => {
                   <div className="category-tags-container">
                     <h3 className="category-tags-title">
                       <Tag className="category-icon" />
-                      Categories  <Button style={{marginLeft:"10px"}} type="primary" shape="circle">
-                      <EditOutlined />
-                    </Button>
+                      Categories{" "}
+                      <Button
+                        onClick={() => showDrawer("categories")}
+                        style={{ marginLeft: "10px" }}
+                        type="primary"
+                        shape="circle"
+                      >
+                        <Popover
+                          title={`Add/Edit Categories for ${userDetails?.secretary_details?.registration_name}`}
+                        >
+                          {" "}
+                          <EditOutlined />
+                        </Popover>
+                      </Button>
                     </h3>
-                   
+
                     <div className="category-tags">
                       {categories.map((category, index) => (
                         <span
@@ -414,6 +680,20 @@ const Dashboard = () => {
                     <span style={{ cursor: "no-drop" }} className="price-1">
                       ₹ 100/-
                     </span>
+                    <Button
+                      style={{ backgroundColor: "grey" }}
+                      onClick={giveWarningPrice}
+                      className="editIconS"
+                      type="primary"
+                      shape="circle"
+                    >
+                      <Popover
+                        title={`Update price for ${userDetails?.secretary_details?.registration_name}`}
+                      >
+                        {" "}
+                        <EditOutlined />
+                      </Popover>
+                    </Button>
                     <div className="action-buttons">
                       <button className="like-button">
                         <Heart />
@@ -444,8 +724,17 @@ const Dashboard = () => {
                   <div className="eligibility-section">
                     <h3>Eligibility</h3>
                     <p>Open for any Disciplane Students.</p>
-                    <Button type="primary" shape="circle">
-                      <EditOutlined />
+                    <Button
+                      onClick={() => showDrawer("eligibility")}
+                      type="primary"
+                      shape="circle"
+                    >
+                      <Popover
+                        title={`Update the Eligibility for ${userDetails?.secretary_details?.registration_name}`}
+                      >
+                        {" "}
+                        <EditOutlined />
+                      </Popover>
                     </Button>
                   </div>
                 </div>
@@ -553,11 +842,25 @@ const Dashboard = () => {
                         >
                           <img src={image.src} alt={image.alt} />
                           <div className="carousel-overlay">
-                            <span>{image.type}</span>
+                            <span style={{ textTransform: "uppercase" }}>
+                              {image.type}
+                            </span>
                             <h2>{image.title}</h2>
                           </div>
                         </div>
                       ))}
+                      <button
+                        onClick={prevSlide1}
+                        className="carousel-button prev"
+                      >
+                        ❮
+                      </button>
+                      <button
+                        onClick={nextSlide1}
+                        className="carousel-button next"
+                      >
+                        ❯
+                      </button>
                       <div className="carousel-indicators">
                         {carouselImages.map((_, index) => (
                           <span
@@ -597,7 +900,7 @@ const Dashboard = () => {
                         className={`tab ${activeTab1 === tab ? "activee" : ""}`}
                         onClick={() => setActiveTab1(tab)}
                       >
-                        <div>{tab.charAt(0).toUpperCase() + tab.slice(1)} </div>
+                        <div style={{fontSize:"15px"}}>{tab.charAt(0).toUpperCase() + tab.slice(1)} </div>
                         <div>
                           {" "}
                           <Badge style={{ marginBottom: "5px" }} count={2}>
@@ -671,7 +974,10 @@ const Dashboard = () => {
                                 <div
                                   key={i}
                                   className="participant-avatar"
-                                  style={{cursor:"pointer", backgroundColor: getRandomColor() }}
+                                  style={{
+                                    cursor: "pointer",
+                                    backgroundColor: getRandomColor(),
+                                  }}
                                 >
                                   {letter}
                                 </div>
@@ -694,7 +1000,12 @@ const Dashboard = () => {
                       </button>
                       {activeAccordion === index && (
                         <div className="accordion-content">
-                          <p onClick={() => redirectToLogin()} style={{cursor:"pointer"}}>{discussion.content}</p>
+                          <p
+                            onClick={() => redirectToLogin()}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {discussion.content}
+                          </p>
                         </div>
                       )}
                     </div>
@@ -706,7 +1017,7 @@ const Dashboard = () => {
               </div>
 
               <div className="carousel-card-home">
-                <div className="card-header-home">
+                {/* <div className="card-header-home">
                   <h4>News&Views</h4>
                 </div>
                 <div className="carousel-container">
@@ -731,7 +1042,8 @@ const Dashboard = () => {
                   <button onClick={nextSlide} className="carousel-button next">
                     ❯
                   </button>
-                </div>
+                </div> */}
+                <NewsViews />
               </div>
             </div>
           </>
@@ -771,6 +1083,16 @@ const Dashboard = () => {
       <div className="scroller-i">
         <Scroller />
       </div>
+
+      <Drawer
+        title="Edit Content"
+        placement="right"
+        onClose={onCloseDrawer}
+        visible={drawerVisible}
+        width={400}
+      >
+        {renderDrawerContent()}
+      </Drawer>
     </>
   );
 };

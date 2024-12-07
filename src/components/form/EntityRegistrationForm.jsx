@@ -37,9 +37,9 @@ const EntityRegistrationForm = () => {
   });
 
   const apiUrls = {
-    "entity-types": "http://172.17.2.176:8080/intranetapp/entity-types/",
-    departments: "http://172.17.2.176:8080/intranetapp/departments/",
-    currentSession: "http://172.17.2.176:8080/intranetapp/current_session/",
+    "entity-types": "http://13.202.65.103/intranetapp/entity-types/",
+    departments: "http://13.202.65.103/intranetapp/departments/",
+    currentSession: "http://13.202.65.103/intranetapp/current_session/",
   };
 
   const handleChange = (e) => {
@@ -66,7 +66,7 @@ const EntityRegistrationForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://172.17.2.176:8080/intranetapp/entity-registration/", {
+      const response = await axios.post("http://13.202.65.103/intranetapp/entity-registration/", {
         ...formData,
         session_code: currentSession,
       });
@@ -136,9 +136,10 @@ const EntityRegistrationForm = () => {
       <form onSubmit={(e) => { e.preventDefault(); showConfirm(); }}>
         <h1 className="reg-h1">Entity Registration Form</h1>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="level-reg" htmlFor="entity">
+        {/* Entity and Registration Code */}
+        <div className="form-row-reg">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="entity">
               Entity <span className="required">*</span>
             </label>
             <select
@@ -158,8 +159,8 @@ const EntityRegistrationForm = () => {
             </select>
           </div>
 
-          <div className="form-group">
-            <label className="level-reg" htmlFor="registeration_code">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="registeration_code">
               Registration Code <span className="required">*</span>
             </label>
             <input
@@ -174,9 +175,10 @@ const EntityRegistrationForm = () => {
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="level-reg" htmlFor="department">
+        {/* Department and Registration Name */}
+        <div className="form-row-reg">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="department">
               Department <span className="required">*</span>
             </label>
             <select
@@ -196,8 +198,8 @@ const EntityRegistrationForm = () => {
             </select>
           </div>
 
-          <div className="form-group">
-            <label className="level-reg" htmlFor="registeration_name">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="registeration_name">
               Registration Name <span className="required">*</span>
             </label>
             <input
@@ -214,9 +216,10 @@ const EntityRegistrationForm = () => {
 
         <h2 className="reg-h2">Faculty Advisory Details</h2>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="level-reg" htmlFor="faculty_advisory_name">
+        {/* Faculty Advisory Name and Employee Code */}
+        <div className="form-row-reg">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="faculty_advisory_name">
               Name <span className="required">*</span>
             </label>
             <input
@@ -230,8 +233,8 @@ const EntityRegistrationForm = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="level-reg" htmlFor="faculty_advisory_empcode">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="faculty_advisory_empcode">
               Employee Code <span className="required">*</span>
             </label>
             <input
@@ -246,9 +249,10 @@ const EntityRegistrationForm = () => {
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="level-reg" htmlFor="faculty_advisory_email">
+        {/* Faculty Advisory Email and Mobile */}
+        <div className="form-row-reg">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="faculty_advisory_email">
               Email <span className="required">*</span>
             </label>
             <input
@@ -262,8 +266,8 @@ const EntityRegistrationForm = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="level-reg" htmlFor="faculty_advisory_mobile">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="faculty_advisory_mobile">
               Mobile <span className="required">*</span>
             </label>
             <input
@@ -280,9 +284,10 @@ const EntityRegistrationForm = () => {
 
         <h2 className="reg-h2">Faculty Co-Advisory Details</h2>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="level-reg" htmlFor="faculty_co_advisory_name">
+        {/* Faculty Co-Advisory Name and Employee Code */}
+        <div className="form-row-reg">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="faculty_co_advisory_name">
               Name <span className="required">*</span>
             </label>
             <input
@@ -296,8 +301,8 @@ const EntityRegistrationForm = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="level-reg" htmlFor="faculty_co_advisory_empcode">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="faculty_co_advisory_empcode">
               Employee Code <span className="required">*</span>
             </label>
             <input
@@ -312,9 +317,10 @@ const EntityRegistrationForm = () => {
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="level-reg" htmlFor="faculty_co_advisory_email">
+        {/* Faculty Co-Advisory Email and Mobile */}
+        <div className="form-row-reg">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="faculty_co_advisory_email">
               Email <span className="required">*</span>
             </label>
             <input
@@ -328,8 +334,8 @@ const EntityRegistrationForm = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="level-reg" htmlFor="faculty_co_advisory_mobile">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="faculty_co_advisory_mobile">
               Mobile <span className="required">*</span>
             </label>
             <input
@@ -346,9 +352,10 @@ const EntityRegistrationForm = () => {
 
         <h2 className="reg-h2">Secretary Details</h2>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="level-reg" htmlFor="Secretary_name">
+        {/* Secretary Name and UID */}
+        <div className="form-row-reg">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="Secretary_name">
               Name <span className="required">*</span>
             </label>
             <input
@@ -362,8 +369,8 @@ const EntityRegistrationForm = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="level-reg" htmlFor="Secretary_uid">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="Secretary_uid">
               UID <span className="required">*</span>
             </label>
             <input
@@ -378,9 +385,10 @@ const EntityRegistrationForm = () => {
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="level-reg" htmlFor="Secretary_email">
+        {/* Secretary Email and Mobile */}
+        <div className="form-row-reg">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="Secretary_email">
               Email <span className="required">*</span>
             </label>
             <input
@@ -394,8 +402,8 @@ const EntityRegistrationForm = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="level-reg" htmlFor="Secretary_mobile">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="Secretary_mobile">
               Mobile <span className="required">*</span>
             </label>
             <input
@@ -412,9 +420,10 @@ const EntityRegistrationForm = () => {
 
         <h2 className="reg-h2">Joint Secretary Details</h2>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="level-reg" htmlFor="Joint_Secretary_name">
+        {/* Joint Secretary Name and UID */}
+        <div className="form-row-reg">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="Joint_Secretary_name">
               Name <span className="required">*</span>
             </label>
             <input
@@ -428,8 +437,8 @@ const EntityRegistrationForm = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="level-reg" htmlFor="Joint_Secretary_uid">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="Joint_Secretary_uid">
               UID <span className="required">*</span>
             </label>
             <input
@@ -444,9 +453,10 @@ const EntityRegistrationForm = () => {
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="level-reg" htmlFor="Joint_Secretary_email">
+        {/* Joint Secretary Email and Mobile */}
+        <div className="form-row-reg">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="Joint_Secretary_email">
               Email <span className="required">*</span>
             </label>
             <input
@@ -460,8 +470,8 @@ const EntityRegistrationForm = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="level-reg" htmlFor="Joint_Secretary_mobile">
+          <div className="form-group-reg">
+            <label className="label-reg" htmlFor="Joint_Secretary_mobile">
               Mobile <span className="required">*</span>
             </label>
             <input
@@ -476,13 +486,14 @@ const EntityRegistrationForm = () => {
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group full-width">
-            <label className="level-reg" htmlFor="remarks">
+        {/* Remarks */}
+        <div className="form-row-reg">
+          <div className="form-group-reg full-width">
+            <label className="label-reg" htmlFor="remarks">
               Remarks
             </label>
             <textarea
-              className="input-reg"
+              className="input-reg textarea-reg"
               id="remarks"
               name="remarks"
               value={formData.remarks}
@@ -491,7 +502,8 @@ const EntityRegistrationForm = () => {
           </div>
         </div>
 
-        <div className="form-row">
+        {/* Submit Button */}
+        <div className="form-row-reg">
           <button className="reg-button" type="submit">
             Submit Registration
           </button>

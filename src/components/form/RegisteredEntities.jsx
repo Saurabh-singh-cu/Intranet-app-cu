@@ -25,7 +25,7 @@ function RegisteredEntities() {
   const [selectedEntityDetails, setSelectedEntityDetails] = useState(null);
 
   useEffect(() => {
-    fetch("http://172.17.2.176:8080/intranetapp/entity-registration/")
+    fetch("http://13.202.65.103/intranetapp/entity-registration/")
       .then((response) => response.json())
       .then((data) => setEntities(data))
       .catch((error) => console.error("Error fetching data:", error));
@@ -105,7 +105,7 @@ function RegisteredEntities() {
           receiver_emails: emails,
           user_id: user?.user_id || null,
         };
-        fetch("http://172.17.2.176:8080/intranetapp/send-email/", {
+        fetch("http://13.202.65.103/intranetapp/send-email/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
