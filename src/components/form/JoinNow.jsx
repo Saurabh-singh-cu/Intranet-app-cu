@@ -428,6 +428,7 @@ const JoinNow = () => {
  }, [])
   return (
     <div className="registration-container">
+    <div className="border-line">
       <div className="sidebar-joinnow">
         <h2>Join As a New Member</h2>
         <p className="subtitle">
@@ -625,6 +626,7 @@ const JoinNow = () => {
             </button>
           </div>
         </form>
+      </div>
       </div>
     </div>
   );

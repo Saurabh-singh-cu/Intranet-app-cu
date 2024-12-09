@@ -864,16 +864,6 @@ button {
   position: relative;
 }
 
-.modal-close {
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-size: 20px;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
 .modal-content h2 {
   margin-top: 0;
   margin-bottom: 15px;
@@ -1625,16 +1615,6 @@ button {
   bottom: 5px;
   left: 50%;
   transform: translateX(-50%);
-}
-
-.modal-overlay {
-  z-index: 1000;
-  background-color: #00000080;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  position: fixed;
-  inset: 0;
 }
 
 .modal-content {
@@ -11983,8 +11963,7 @@ input[class^="ag-"][type="range"]:disabled {
   background-color: #4a4a4a;
   border-radius: 40px;
   width: 30%;
-  height: 83vh;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .sidebar-joinnow h2 {
@@ -12026,13 +12005,12 @@ input[class^="ag-"][type="range"]:disabled {
 .main-content {
   flex: 1;
   max-width: 60%;
-  margin-top: -37px;
   padding: 2rem;
 }
 
 .form-section {
   border-radius: 8px;
-  padding: 1.5rem;
+  margin-bottom: 10px;
 }
 
 .form-section h3 {
@@ -12281,6 +12259,17 @@ input[class^="ag-"][type="range"]:disabled {
     height: auto;
     margin-left: 0;
   }
+}
+
+.border-line {
+  box-sizing: border-box;
+  border: 1px solid #b3b3b3;
+  border-radius: 20px;
+  justify-content: space-around;
+  height: 83vh;
+  padding: 2rem;
+  display: flex;
+  box-shadow: 0 5px 15px #00000059;
 }
 
 .walking-man {
@@ -13188,35 +13177,47 @@ input[class^="ag-"][type="range"]:disabled {
   height: auto;
 }
 
-.nav-tabs {
-  flex-direction: column;
-  gap: .5rem;
-  padding: 0 1rem;
-  display: flex;
+.nav-tabs:before {
+  content: "";
+  background-color: #fff;
+  width: 2px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
 }
 
 .nav-tab {
+  color: #fff;
   text-align: left;
   cursor: pointer;
-  color: #666;
   background: none;
   border: none;
-  border-radius: 8px;
-  align-items: center;
-  width: 100%;
-  padding: 1rem;
-  transition: all .2s;
-  display: flex;
+  margin-left: 20px;
+  padding: 20px;
+  font-size: .9rem;
+  transition: all .3s;
+  position: relative;
 }
 
-.nav-tab:hover {
-  background-color: #f5f5f5;
+.nav-tab:before {
+  content: "";
+  background-color: #f3f3f3;
+  width: 20px;
+  height: 2px;
+  position: absolute;
+  top: 50%;
+  left: -20px;
 }
 
 .nav-tab.active {
-  color: #000;
-  background-color: #f0f0f0;
-  font-weight: 500;
+  background-color: #4caf50;
+  border-radius: 4px;
+}
+
+.nav-tab:not(.active):hover {
+  background-color: #ffffff1a;
+  border-radius: 4px;
 }
 
 .main-content {
@@ -13247,7 +13248,7 @@ input[class^="ag-"][type="range"]:disabled {
 .form-label {
   color: #333;
   margin-bottom: .5rem;
-  font-weight: 500;
+  font-weight: bold;
   display: block;
 }
 
@@ -13286,6 +13287,7 @@ input[class^="ag-"][type="range"]:disabled {
 }
 
 .form-row {
+  border-bottom: 1px solid #000;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
@@ -13332,7 +13334,6 @@ input[class^="ag-"][type="range"]:disabled {
   background-color: #f9f9f9;
   border-radius: 8px;
   margin-bottom: 2rem;
-  padding: 1.5rem;
 }
 
 .checkbox-container {
@@ -13384,5 +13385,126 @@ input[class^="ag-"][type="range"]:disabled {
 .quill-editor .ql-toolbar {
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
+}
+
+.sidebar-joinnow .nav-tab.active, .button.button-primary {
+  color: #fff;
+  background-color: #4caf50;
+}
+
+.button.button-primary:disabled {
+  cursor: not-allowed;
+  background-color: #ccc;
+}
+
+.help-button {
+  color: #fff;
+  cursor: pointer;
+  background-color: #4a90e2;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  transition: background-color .3s;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  box-shadow: 0 2px 5px #0003;
+}
+
+.help-button:hover {
+  background-color: #357abd;
+}
+
+.help-guide {
+  flex-direction: row;
+  margin: 0 auto;
+  display: flex;
+}
+
+.guide-tabs {
+  gap: .5rem;
+  margin: 1.5rem 0;
+  padding-bottom: .5rem;
+  display: flex;
+  overflow-x: auto;
+}
+
+.guide-tab {
+  cursor: pointer;
+  white-space: nowrap;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: .5rem 1rem;
+  transition: all .2s;
+}
+
+.guide-tab.active {
+  color: #fff;
+  background: #4a90e2;
+  border-color: #4a90e2;
+}
+
+.guide-content {
+  animation: .3s fadeIn;
+}
+
+.guide-step {
+  margin: 1rem 0;
+  padding-left: 1rem;
+  line-height: 1.5;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (width <= 768px) {
+  .help-guide {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .guide-tabs {
+    flex-wrap: nowrap;
+    margin: 1rem 0;
+  }
+}
+
+.modal-overlay {
+  z-index: 1000;
+  background-color: #00000080;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: fixed;
+  inset: 0;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 8px;
+  max-width: 62%;
+  max-height: 90%;
+  padding: 20px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.modal-close {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 24px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 /*# sourceMappingURL=index.c41b5a0e.css.map */

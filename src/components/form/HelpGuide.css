@@ -1,0 +1,59 @@
+.help-guide {
+
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .guide-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  
+  .guide-tab {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  
+  .guide-tab.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+  }
+  
+  .guide-content {
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .guide-step {
+    margin: 1rem 0;
+    padding-left: 1rem;
+    line-height: 1.5;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @media (max-width: 768px) {
+    .help-guide {
+      width: 100%;
+      padding: 0 1rem;
+    }
+    
+    .guide-tabs {
+      flex-wrap: nowrap;
+      margin: 1rem 0;
+    }
+  }
+  
+  

@@ -21,36 +21,50 @@
     height: auto;
   }
   
-  .nav-tabs {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0 1rem;
-  }
-  
-  .nav-tab {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    border-radius: 8px;
-    color: #666;
-    transition: all 0.2s ease;
-  }
-  
-  .nav-tab:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .nav-tab.active {
-    background-color: #f0f0f0;
-    color: #000;
-    font-weight: 500;
-  }
+.nav-tabs::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #ffffff;
+}
+
+.nav-tab {
+  position: relative;
+  padding: 20px 20px;
+  margin-left: 20px;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.nav-tab::before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  width: 20px;
+  height: 2px;
+  background-color: #f3f3f3;
+}
+
+.nav-tab.active {
+  background-color: #4CAF50;
+  border-radius: 4px;
+}
+
+.nav-tab:not(.active):hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+
   
   .main-content {
     flex: 1;
@@ -80,9 +94,10 @@
   .form-label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: 500;
+    font-weight: bold;
     color: #333;
   }
+
   
   .form-input {
     width: 100%;
@@ -123,6 +138,7 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     margin-bottom: 1.5rem;
+    border-bottom: 1px solid black;
   }
   
   .form-actions {
@@ -163,7 +179,7 @@
   
   .acknowledgement-container {
     background-color: #f9f9f9;
-    padding: 1.5rem;
+    /* padding: 1.5rem; */
     border-radius: 8px;
     margin-bottom: 2rem;
   }
@@ -219,4 +235,46 @@
     border-top-right-radius: 6px;
   }
   
+
+
+
+  /* This is a CSS file */
+
+/* Existing styles (if any) would go here */
+
+.sidebar-joinnow .nav-tab.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button.button-primary {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button.button-primary:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Rest of the styles would go here */
+.help-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.help-button:hover {
+  background-color: #357abd;
+}
+
   
