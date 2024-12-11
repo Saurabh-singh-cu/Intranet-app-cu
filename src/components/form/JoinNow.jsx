@@ -1,14 +1,10 @@
-
-
 import React, { useEffect, useState } from "react";
-import { message, notification } from "antd";
+import { message } from "antd";
 import barcoder from "../../assets/images/barcode.jpeg";
-import joinus from "../../assets/images/joinus.jpg";
 import "./JoinNow.css";
 import axios from "axios";
 import Swal from "sweetalert2";
-import LightBulbCharacter from "./WalkingMan";
-import WalkingMan from "./WalkingMan";
+import { useNavigate } from "react-router-dom";
 
 const JoinNow = () => {
   const [email, setEmail] = useState("");
@@ -33,16 +29,13 @@ const JoinNow = () => {
   const [entityData, setEntityData] = useState([]);
   const [entityListData, setEntityListData] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [countryCode, setCountryCode] = useState(""); // New state for country code
-  const [mobileNumber, setMobileNumber] = useState(""); // New state for mobile number
+  const [mobileNumber, setMobileNumber] = useState("");
   const [isFormDisabled, setIsFormDisabled] = useState(false);
-
-  const [walkingManPosition, setWalkingManPosition] = useState("left");
-  const [showWalkingMan, setShowWalkingMan] = useState(true);
 
   const [timeLeft, setTimeLeft] = useState(300);
 
-  const [isOtpSent, setIsOtpSent ] = useState(false)
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (timeLeft <= 0) return;
@@ -53,21 +46,6 @@ const JoinNow = () => {
 
     return () => clearInterval(timer);
   }, [timeLeft]);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setWalkingManPosition((prev) => (prev === "left" ? "right" : "left"));
-    }, 10000); // Change position every 10 seconds
-
-    const hideIntervalId = setInterval(() => {
-      setShowWalkingMan((prev) => !prev);
-    }, 15000); // Toggle visibility every 15 seconds
-
-    return () => {
-      clearInterval(intervalId);
-      clearInterval(hideIntervalId);
-    };
-  }, []);
 
   const formateTimer = (seconds) => {
     const min = Math.floor(seconds / 60);
@@ -81,17 +59,7 @@ const JoinNow = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitTimer(10);
-    const timer = setInterval(() => {
-      setSubmitTimer((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timer);
-          handleFinalSubmit();
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
+    handleFinalSubmit();
   };
 
   useEffect(() => {
@@ -103,28 +71,25 @@ const JoinNow = () => {
   const handleFinalSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://13.202.65.103/intranetapp/final_submit/",
+        "http://172.17.2.247:8080/intranetapp/final_submit/",
         {
           membership_id: membershipId,
-          transaction_id: entity === "CLUB" ? transactionId : "",
+          transaction_id:
+            entity === "1" ? transactionId : "No Payment Required",
         }
       );
       Swal.fire({
-        title: entity === "CLUB" ? "Payment Success" : "Registration Success",
+        title: entity === "1" ? "Payment Success" : "Registration Success",
         text: "We will be in touch ",
         icon: "success",
       });
       setShowSuccessMessage(true);
+      navigate("/");
     } catch (error) {
       console.error("Final submission failed:", error);
-
       Swal.fire({
         title: "Failed",
-        text: `Final submission failed:, ${error}`,
-        icon: "error",
-      });
-      Swal.fire({
-        title: `${error}`,
+        text: `Final submission failed: ${error}`,
         icon: "error",
       });
     }
@@ -141,18 +106,18 @@ const JoinNow = () => {
     try {
       setIsFormDisabled(true);
       const response = await axios.post(
-        "http://13.202.65.103/intranetapp/send_otp_email/",
+        "http://172.17.2.247:8080/intranetapp/send_otp_email/",
         {
           member_name: name,
           member_email: `${email}@cumail.in`,
           dept_id: department,
           entity_id: entity,
           reg_id: entityType,
-          member_mobile: `${countryCode}${mobileNumber}`,
+          member_mobile: mobileNumber,
           member_uid: uid,
         }
       );
-      setIsOtpSent(true)
+      setIsOtpSent(true);
       console.log("Email sent ", response?.data);
       Swal.fire({
         title: "OTP sent!",
@@ -173,10 +138,9 @@ const JoinNow = () => {
       }, 1000);
     } catch (error) {
       console.error("Failed to send OTP:", error);
-
       Swal.fire({
         title: "Failed to send OTP",
-        text: `Please try again!, ${error?.response?.data?.error} `,
+        text: `Please try again! ${error?.response?.data?.error}`,
         icon: "warning",
       });
       setIsFormDisabled(false);
@@ -186,7 +150,7 @@ const JoinNow = () => {
   const handleVerifyOTP = async () => {
     try {
       const response = await axios.post(
-        "http://13.202.65.103/intranetapp/verify_otp/",
+        "http://172.17.2.247:8080/intranetapp/verify_otp/",
         {
           membership_id: membershipId,
           otp: otp,
@@ -199,10 +163,7 @@ const JoinNow = () => {
         text: "OTP verified successfully",
         icon: "success",
       });
-      setTimeout(() => {
-        setShowPayment(true);
-      }, 4000);
-     
+      setShowPayment(true);
     } catch (error) {
       console.error("OTP verification failed:", error);
       Swal.fire({
@@ -213,24 +174,22 @@ const JoinNow = () => {
     }
   };
 
-  // page refresh code 
-
   const handleBeforeUnload = (e) => {
     if (isOtpSent) {
       e.preventDefault();
-      e.returnValue = '';
+      e.returnValue = "";
     }
   };
 
-  
   useEffect(() => {
     if (isOtpSent) {
-      window.addEventListener('beforeunload', handleBeforeUnload);
+      window.addEventListener("beforeunload", handleBeforeUnload);
     }
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [isOtpSent]);
+
   const validateForm = () => {
     const newErrors = {};
     if (!entity) newErrors.entity = "Please select an entity";
@@ -250,6 +209,7 @@ const JoinNow = () => {
       if (entity === "1") {
         setShowPayment(true);
       } else {
+        setShowPayment(false);
         handleFinalSubmit();
       }
     } else {
@@ -260,9 +220,9 @@ const JoinNow = () => {
   };
 
   const apiUrls = {
-    "entity-types": "http://13.202.65.103/intranetapp/entity-types/",
-    departments: "http://13.202.65.103/intranetapp/departments/",
-    currentSession: "http://13.202.65.103/intranetapp/current_session/",
+    "entity-types": "http://172.17.2.247:8080/intranetapp/entity-types/",
+    departments: "http://172.17.2.247:8080/intranetapp/departments/",
+    currentSession: "http://172.17.2.247:8080/intranetapp/current_session/",
   };
 
   const fetchDepartments = async () => {
@@ -282,8 +242,6 @@ const JoinNow = () => {
     try {
       const response = await axios.get(apiUrls["entity-types"]);
       setEntityData(response.data);
-      setEntity(response?.data);
-      console.log(response?.data, "TTTTTTTTTTT")
     } catch (error) {
       console.error("Error fetching entity data:", error);
     } finally {
@@ -292,14 +250,10 @@ const JoinNow = () => {
   };
 
   const fetchEntityList = async (entity) => {
-   
-
-   
-
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://13.202.65.103/intranetapp/entity-registration-name/?entity_id=${entity}`
+        `http://172.17.2.247:8080/intranetapp/entity-registration-name/?entity_id=${entity}`
       );
       setEntityListData(response.data);
       console.log(response.data, "Updated entity list");
@@ -352,63 +306,92 @@ const JoinNow = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  if (name === "entity") {
-    setEntityType("");
-  }
-
   if (showPayment) {
     return (
-      <div className="payment-container">
-        <div className="payment-content">
-          <div className="payment-header">
-            <h1>Payment Gateway.</h1>
-            <p>
-              A simple and responsive payment checkout experience designed by
-              CU-Intranet.
-            </p>
-            <div>
-              {timeLeft > 0 ? (
-                <h3>
-                  Time Left to complete this payment {formateTimer(timeLeft)}
-                </h3>
-              ) : (
-                <h3 style={{ color: "red" }}>
-                  Time has expired please go back and fill the form and come
-                  here again.
-                </h3>
-              )}
+      <>
+        {entity === "1" ? (
+          <div className="payment-container">
+            <div className="payment-form-wrapper">
+              <h2>Complete Your Payment</h2>
+              <p>Secure and easy payment process</p>
+              <p>
+                {" "}
+                Time Left to complete this payment {formateTimer(timeLeft)}
+              </p>
+              <p>
+                {" "}
+                Time has expired please go back and fill the form and come here
+                again.
+              </p>
+
+              <form className="payment-form" onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <input
+                    id="card-number"
+                    name="card-number"
+                    type="text"
+                    required
+                    value={transactionId}
+                    onChange={(e) => setTransactionId(e.target.value)}
+                    placeholder="Enter Transaction ID"
+                  />
+                </div>
+                {/* <div className="form-group-row">
+            <input
+              id="expiry-date"
+              name="expiry-date"
+              type="text"
+              required
+              placeholder="MM/YY"
+              value={expiryDate}
+              onChange={(e) => setExpiryDate(e.target.value)}
+            />
+            <input
+              id="cvv"
+              name="cvv"
+              type="text"
+              required
+              placeholder="CVV"
+              value={cvv}
+              onChange={(e) => setCvv(e.target.value)}
+            />
+          </div> */}
+                <button type="submit" className="pay-button">
+                  <span className="lock-icon">🔒</span>
+                  Pay Now
+                </button>
+              </form>
+              <div className="secure-payment-info">
+                <span className="credit-card-icon">💳</span>
+                <p>Secure payment processed by Stripe</p>
+              </div>
             </div>
           </div>
-          <div className="payment-form">
-            <h2>Payment</h2>
-            <form onSubmit={handleSubmit}>
-              <img src={barcoder} alt="Barcode" />
-              <input
-                type="text"
-                value={transactionId}
-                onChange={(e) => setTransactionId(e.target.value)}
-                placeholder="Enter Transaction ID"
-                className="input-field-join"
-              />
-              <button
-                style={{ marginTop: "14px" }}
-                type="submit"
-                className="pay-button"
-                disabled={submitTimer > 0}
-              >
-                {submitTimer > 0
-                  ? `Submitting in ${submitTimer}s`
-                  : "Submit Payment"}
-              </button>
-            </form>
-            <p className="terms">
-              Your personal data will be used to process your order, support
-              your experience throughout this website, and for other purposes
-              described in our privacy policy.
-            </p>
+        ) : (
+        <form onSubmit={handleSubmit}>
+            <div className="no-payment-container">
+            <div className="no-payment-content">
+              <h2>Checkout Page</h2>
+              <p>Make sure to submit this form and wait!</p>
+              <div className="free-features">
+               
+              </div>
+           
+              <button type="submit" className="pay-button">
+                  <span className="lock-icon">🎁</span>
+                  Submit Form
+                </button>
+              <div className="learn-more">
+                <a href="#">
+                 Welcome Onboard
+                  <span className="arrow-icon">→</span>
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </form>
+        )}
+      </>
     );
   }
 
@@ -423,219 +406,219 @@ const JoinNow = () => {
       </div>
     );
   }
- useEffect(() => {
-  console.log(entity, "ENTITY")
- }, [])
+
   return (
     <div className="registration-container">
-    <div className="border-line">
-      <div className="sidebar-joinnow">
-        <h2>Join As a New Member</h2>
-        <p className="subtitle">
-          Fill out the form below to create your profile and become a part of
-          our amazing community.
-        </p>
-        <ul className="requirements-list">
-          <li>
-            Membership: 1 Club and 1 Prof. Soc./Dept. Soc./ Comm./Ind.Tech Comm.
-          </li>
-          <li>
-            Participation: 2 Activities/Events per year (minimum 25 hours in a
-            year)
-          </li>
-          <li>Academic Credits: Minimum Earn at least 1 GP Credit in AY.</li>
-          <li>Mandatory All Fields to become member of any entity.</li>
-          <li>A student can be member of multiple entity</li>
-          <li>There is a membership fee for Club as per university norms</li>
-          <li>
-            The membership fee for professional society / Student chapter is as
-            per governed outside bodies.
-          </li>
-          <li>
-            After successfully Registration a E-Membership card is generated on
-            official mail id.
-          </li>
-        </ul>
-      </div>
+      <div className="border-line">
+        <div className="sidebar-joinnow">
+          <h2>Join As a New Member</h2>
+          <p className="subtitle">
+            Fill out the form below to create your profile and become a part of
+            our amazing community.
+          </p>
+          <ul className="requirements-list">
+            <li>
+              Membership: 1 Club and 1 Prof. Soc./Dept. Soc./ Comm./Ind.Tech
+              Comm.
+            </li>
+            <li>
+              Participation: 2 Activities/Events per year (minimum 25 hours in a
+              year)
+            </li>
+            <li>Academic Credits: Minimum Earn at least 1 GP Credit in AY.</li>
+            <li>Mandatory All Fields to become member of any entity.</li>
+            <li>A student can be member of multiple entity</li>
+            <li>There is a membership fee for Club as per university norms</li>
+            <li>
+              The membership fee for professional society / Student chapter is
+              as per governed outside bodies.
+            </li>
+            <li>
+              After successfully Registration a E-Membership card is generated
+              on official mail id.
+            </li>
+          </ul>
+        </div>
 
-      <div className="main-content">
-        <form>
-          <section className="form-section">
-            <h3>Personal Information</h3>
-            <div className="input-grid">
-              <div className="input-group">
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={name}
-                  onChange={(e) => handleInputChange(e, setName)}
-                  placeholder="Name"
-                  className="form-input"
-                  disabled={isOtpSent}
-                />
-                {errors.name && <span className="error">{errors.name}</span>}
-              </div>
-
-              <div className="input-group">
-                <input
-                  type="text"
-                  id="uid"
-                  name="uid"
-                  value={uid}
-                  onChange={(e) => handleInputChange(e, setUid)}
-                  placeholder="UID"
-                  className="form-input"
-                  disabled={isOtpSent}
-                />
-                {errors.uid && <span className="error">{errors.uid}</span>}
-              </div>
-
-              <div className="input-group">
-                <select
-                  id="department"
-                  name="department"
-                  value={department}
-                  onChange={(e) => handleInputChange(e, setDepartment)}
-                  className="form-select"
-                  disabled={isOtpSent}
-                >
-                  <option value="">Department</option>
-                  {departments.map((dept) => (
-                    <option key={dept.dept_id} value={dept.dept_id}>{dept.dept_name}</option>
-                  ))}
-                </select>
-                {errors.department && (
-                  <span className="error">{errors.department}</span>
-                )}
-              </div>
-
-              <div className="input-group">
-                <input
-                  type="text"
-                  id="mobileNumber"
-                  name="mobileNumber"
-                  value={mobileNumber}
-                  onChange={(e) => handleInputChange(e, setMobileNumber)}
-                  placeholder="Phone Number"
-                  className="form-input"
-                  disabled={isOtpSent}
-                />
-              </div>
-            </div>
-          </section>
-
-          <section className="form-section">
-            <h3>Select Entity & Department</h3>
-            <div className="input-grid">
-              <div className="input-group">
-                <select
-                  id="entity"
-                  name="entity"
-                  value={entity}
-                  onChange={(e) => handleInputChange(e, setEntity)}
-                  className="form-select"
-                  disabled={isOtpSent}
-                >
-                  <option value="">Entity Type</option>
-                  {entityData.map((entity) => (
-                    <option key={entity.entity_id} value={entity.entity_id}>
-                      {entity.entity_name}
-                    </option>
-                  ))}
-                </select>
-                {errors.entity && <span className="error">{errors.entity}</span>}
-              </div>
-             
-
-              <div className="input-group">
-                <select
-                  id="entityType"
-                  name="entityType"
-                  value={entityType}
-                  onChange={(e) => handleInputChange(e, setEntityType)}
-                  className="form-select"
-                  disabled={isOtpSent}
-                >
-                  <option value="">Select Entity Category</option>
-                  {entityListData.map((entity, index) => (
-                    // yaha p galti hai id jaye gi par entity_id sab ka same hai es liye wrong hai!
-                    <option key={`${entity.entity_id}-${index}`} value={entity.entity_id}>
-                      {entity.registration_name}
-                    </option>
-                  ))}
-                </select>
-                {errors.entityType && <span className="error">{errors.entityType}</span>}
-              </div>
-            </div>
-          </section>
-
-          <section className="form-section">
-            <h3>Verification</h3>
-            <div className="verification-grid">
-              <div className="email-group">
-                <div className="email-input-container">
+        <div className="main-content">
+          <form>
+            <section className="form-section">
+              <h3>Personal Information</h3>
+              <div className="input-grid">
+                <div className="input-group">
                   <input
                     type="text"
-                    value={email}
-                    onChange={handleEmailChange}
-                    placeholder="Email ID"
-                    disabled
+                    id="name"
+                    name="name"
+                    value={name}
+                    onChange={(e) => handleInputChange(e, setName)}
+                    placeholder="Name"
+                    className="form-input"
+                    disabled={isOtpSent}
+                  />
+                  {errors.name && <span className="error">{errors.name}</span>}
+                </div>
+
+                <div className="input-group">
+                  <input
+                    type="text"
+                    id="uid"
+                    name="uid"
+                    value={uid}
+                    onChange={(e) => handleInputChange(e, setUid)}
+                    placeholder="UID"
+                    className="form-input"
+                    disabled={isOtpSent}
+                  />
+                  {errors.uid && <span className="error">{errors.uid}</span>}
+                </div>
+
+                <div className="input-group">
+                  <select
+                    id="department"
+                    name="department"
+                    value={department}
+                    onChange={(e) => handleInputChange(e, setDepartment)}
+                    className="form-select"
+                    disabled={isOtpSent}
+                  >
+                    <option value="">Department</option>
+                    {departments.map((dept) => (
+                      <option key={dept.dept_id} value={dept.dept_id}>
+                        {dept.dept_name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.department && (
+                    <span className="error">{errors.department}</span>
+                  )}
+                </div>
+
+                <div className="input-group">
+                  <input
+                    type="text"
+                    id="mobileNumber"
+                    name="mobileNumber"
+                    value={mobileNumber}
+                    onChange={(e) => handleInputChange(e, setMobileNumber)}
+                    placeholder="Phone Number"
+                    className="form-input"
+                    disabled={isOtpSent}
+                  />
+                </div>
+              </div>
+            </section>
+
+            <section className="form-section">
+              <h3>Select Entity & Department</h3>
+              <div className="input-grid">
+                <div className="input-group">
+                  <select
+                    id="entity"
+                    name="entity"
+                    value={entity}
+                    onChange={(e) => handleInputChange(e, setEntity)}
+                    className="form-select"
+                    disabled={isOtpSent}
+                  >
+                    <option value="">Entity Type</option>
+                    {entityData.map((entity) => (
+                      <option key={entity.entity_id} value={entity.entity_id}>
+                        {entity.entity_name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.entity && (
+                    <span className="error">{errors.entity}</span>
+                  )}
+                </div>
+
+                <div className="input-group">
+                  <select
+                    id="entityType"
+                    name="entityType"
+                    value={entityType}
+                    onChange={(e) => handleInputChange(e, setEntityType)}
+                    className="form-select"
+                    disabled={isOtpSent}
+                  >
+                    <option value="">Select Entity Category</option>
+                    {entityListData.map((entity, index) => (
+                      <option
+                        key={`${entity.reg_id}-${index}`}
+                        value={entity.reg_id}
+                      >
+                        {entity.registration_name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.entityType && (
+                    <span className="error">{errors.entityType}</span>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            <section className="form-section">
+              <h3>Verification</h3>
+              <div className="verification-grid">
+                <div className="email-group">
+                  <div className="email-input-container">
+                    <input
+                      type="text"
+                      value={email}
+                      onChange={handleEmailChange}
+                      placeholder="Email ID"
+                      disabled
+                      className="form-input"
+                    />
+                    <span className="domain">@cumail.in</span>
+                    {isVerified && <span className="verified-badge">✓</span>}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleSendOTP}
+                    className="otp-button"
+                    disabled={otpTimer > 0 || isFormDisabled}
+                  >
+                    {otpTimer > 0 ? `Resend OTP (${otpTimer}s)` : "Send OTP"}
+                  </button>
+                </div>
+
+                <div className="otp-group">
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="OTP"
                     className="form-input"
                   />
-                  <span className="domain">@cumail.in</span>
-                  {isVerified && <span className="verified-badge">✓</span>}
+                  <button
+                    type="button"
+                    onClick={handleVerifyOTP}
+                    className="verify-button"
+                  >
+                    Verify
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={handleSendOTP}
-                  className="otp-button"
-                  disabled={otpTimer > 0 || isFormDisabled}
-                >
-                  {otpTimer > 0 ? `Resend OTP (${otpTimer}s)` : "Send OTP"}
-                </button>
               </div>
+            </section>
 
-              <div className="otp-group">
-                <input
-                  type="text"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  placeholder="OTP"
-                  className="form-input"
-                />
-                <button
-                  type="button"
-                  onClick={handleVerifyOTP}
-                  className="verify-button"
-                >
-                  Verify
-                </button>
-              </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button
+                type="button"
+                onClick={handleNextPage}
+                className="register-button-joinnow"
+                disabled={!isVerified}
+              >
+                {entity === "1" ? "Make Payment" : "Register"}
+              </button>
             </div>
-          </section>
-
-          <div style={{ display: "flex", justifyContent: "center" }}>
-          <button
-              type="button"
-              onClick={handleNextPage}
-              className="register-button-joinnow"
-              disabled={!isVerified}
-            >
-              {entity === "1" ? "Make Payment" : "Register"}
-            </button>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
       </div>
     </div>
   );
 };
 
 export default JoinNow;
-
-
-
-
-
-

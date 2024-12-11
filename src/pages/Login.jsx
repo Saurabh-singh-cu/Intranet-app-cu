@@ -39,7 +39,7 @@ const Login = ({ onLogin }) => {
 
     try {
       const response = await fetch(
-        "http://13.202.65.103/intranetapp/login/",
+        "http://172.17.2.247:8080/intranetapp/login/",
         {
           method: "POST",
           headers: {

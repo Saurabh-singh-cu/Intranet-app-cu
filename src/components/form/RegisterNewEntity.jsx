@@ -119,7 +119,7 @@ const RegisterNewEntity = () => {
 
   //   try {
   //     const response = await axios.post(
-  //       "http://13.202.65.103/intranetapp/entity-requests/",
+  //       "http://172.17.2.247:8080/intranetapp/entity-requests/",
   //       formData
   //     );
 
@@ -154,7 +154,7 @@ const RegisterNewEntity = () => {
     if (validateUniversityBody() && validateAdvisoryBoardStudent() && validateAdvisoryBoardFaculty()) {
       try {
         const response = await axios.post(
-          "http://13.202.65.103/intranetapp/entity-requests/",
+          "http://172.17.2.247:8080/intranetapp/entity-requests/",
           formData
         );
   
@@ -429,7 +429,7 @@ const RegisterNewEntity = () => {
     const fetchEntityData = async () => {
       try {
         const response = await axios.get(
-          "http://13.202.65.103/intranetapp/entity-types/"
+          "http://172.17.2.247:8080/intranetapp/entity-types/"
         );
         setEntityData(response.data);
       } catch (error) {
@@ -440,7 +440,7 @@ const RegisterNewEntity = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          "http://13.202.65.103/intranetapp/departments/"
+          "http://172.17.2.247:8080/intranetapp/departments/"
         );
         setDepartments(response.data);
       } catch (error) {
@@ -451,7 +451,7 @@ const RegisterNewEntity = () => {
     const getCurrentSession = async () => {
       try {
         const response = await axios.get(
-          "http://13.202.65.103/intranetapp/current_session/"
+          "http://172.17.2.247:8080/intranetapp/current_session/"
         );
         setCurrentSession(response.data.session_code);
       } catch (error) {

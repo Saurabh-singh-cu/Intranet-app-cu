@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { notification, Checkbox, Spin, Modal } from "antd";
-
 import ReCAPTCHA from "react-google-recaptcha";
-
 import cuimg from "../../assets/images/cuimg.png";
-
 import "./AcademicAffairsForm.css";
 import axios from "axios";
 import ReactQuill from "react-quill";
@@ -129,7 +126,7 @@ const AcademicAffairsForm = () => {
 
     try {
       const response = await axios.post(
-        "http://13.202.65.103/intranetapp/entity-requests/",
+        "http://172.17.2.247:8080/intranetapp/entity-requests/",
         formData
       );
 
@@ -312,7 +309,7 @@ const AcademicAffairsForm = () => {
   useEffect(() => {
     const fetchEntityData = async () => {
       const response = await fetch(
-        "http://13.202.65.103/intranetapp/entity-types/"
+        "http://172.17.2.247:8080/intranetapp/entity-types/"
       );
       const data = await response.json();
       setEntityData(data);
@@ -320,7 +317,7 @@ const AcademicAffairsForm = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          "http://13.202.65.103/intranetapp/departments/"
+          "http://172.17.2.247:8080/intranetapp/departments/"
         );
         setDepartments(response.data);
         console.log(response.data, "depart");
@@ -337,7 +334,7 @@ const AcademicAffairsForm = () => {
   const getCurrentSession = async () => {
     try{
       const response = await axios.get(
-        "http://13.202.65.103/intranetapp/current_session/"
+        "http://172.17.2.247:8080/intranetapp/current_session/"
       );
       setCurrentSession(response?.data?.session_code);
     }catch(error) {
@@ -408,7 +405,7 @@ const AcademicAffairsForm = () => {
                 <label className="labelName">Type</label>
                 <div className="radio-group">
                   {entityData &&
-                    entityData.map((entity) => (
+                    entityData?.map((entity) => (
                       <button
                         type="button"
                         onClick={() => handleEntityClick(entity)}

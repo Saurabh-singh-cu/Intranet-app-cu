@@ -71,6 +71,9 @@ const Dashboard = () => {
   const [drawerContent, setDrawerContent] = useState(null);
   const [editContent, setEditContent] = useState("");
 
+  const [bannerFile, setBannerFile] = useState(null);
+  const [logoFile, setLogoFile] = useState(null);
+
   const [filteredData, setFilteredData] = useState({
     club: 0,
     community: 0,
@@ -97,6 +100,15 @@ const Dashboard = () => {
     { title: "Student Activities", image: diljeet },
     { title: "Academic Excellence", image: c4 },
   ];
+
+  axios.interceptors.request.use((config) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = user?.access;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
 
   const toggleAccordion = (index) => {
     setActiveAccordion(activeAccordion === index ? null : index);
@@ -143,7 +155,7 @@ const Dashboard = () => {
   const dashboardCardCount = async () => {
     try {
       const response = await axios.get(
-        "http://13.202.65.103/intranetapp/entity_count/"
+        "http://172.17.2.247:8080/intranetapp/entity_count/"
       );
       setDashboardCount(response.data);
       filterData(response.data);
@@ -341,12 +353,85 @@ const Dashboard = () => {
   };
 
   const renderDrawerContent = () => {
+    if (drawerContent === "media") {
+      return (
+        <>
+          <h3>Update Banner</h3>
+          <Upload.Dragger
+            name="banner"
+            className="banner-box"
+            multiple={false}
+            beforeUpload={(file) => {
+              setBannerFile(file);
+              return false;
+            }}
+            onChange={(info) => {
+              const { status } = info.file;
+              if (status !== "uploading") {
+                console.log(info.file, info.fileList);
+              }
+              if (status === "done") {
+                message.success(
+                  `${info.file.name} banner file ready for upload.`
+                );
+              } else if (status === "error") {
+                message.error(
+                  `${info.file.name} banner file failed to prepare.`
+                );
+              }
+            }}
+            action="/api/upload"
+          >
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag file to upload banner
+            </p>
+          </Upload.Dragger>
+
+          <h3 style={{ marginTop: "20px" }}>Update Logo</h3>
+          <Upload.Dragger
+            name="logo"
+            multiple={false}
+            beforeUpload={(file) => {
+              setLogoFile(file);
+              return false;
+            }}
+            onChange={(info) => {
+              const { status } = info.file;
+              if (status !== "uploading") {
+                console.log(info.file, info.fileList);
+              }
+              if (status === "done") {
+                message.success(
+                  `${info.file.name} logo file ready for upload.`
+                );
+              } else if (status === "error") {
+                message.error(`${info.file.name} logo file failed to prepare.`);
+              }
+            }}
+            action="/api/upload"
+          >
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">Click or drag file to upload logo</p>
+          </Upload.Dragger>
+
+          <Button style={{ marginTop: 16 }} onClick={handleMediaUpload}>
+            Update Media
+          </Button>
+        </>
+      );
+    }
     switch (drawerContent) {
       case "banner":
         return (
           <>
             <Upload.Dragger
               name="bannerImage"
+              className="banner-box"
               multiple={false}
               action="/api/upload" // Replace with your actual upload API endpoint
               onChange={(info) => {
@@ -482,6 +567,37 @@ const Dashboard = () => {
     }
   };
 
+  const handleMediaUpload = async () => {
+    const formData = new FormData();
+    formData.append("reg_id", userDetails?.secretary_details?.reg_id);
+
+    // Append banner and logo files if they exist
+    if (bannerFile) formData.append("banner", bannerFile);
+    if (logoFile) formData.append("logo", logoFile);
+
+    try {
+      const response = await axios.post(
+        "http://172.17.2.247:8080/intranetapp/entity-media/",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        message.success("Media updated successfully");
+        onCloseDrawer();
+      } else {
+        message.error("Failed to update media");
+      }
+    } catch (error) {
+      console.error("Error updating media:", error);
+      message.error("An error occurred while updating media");
+    }
+  };
+
   // carousel button
   const nextSlide1 = () => {
     setCurrentIndex((prevIndex) =>
@@ -505,7 +621,7 @@ const Dashboard = () => {
   return (
     <>
       <div
-        style={{ height: "89vh" }}
+        style={{ height: "89vh", overflow: "scroll" }}
         className="dashboard-home"
       >
         {userDetails && (
@@ -563,12 +679,17 @@ const Dashboard = () => {
                   title={`Update/Remove Banner Image for ${userDetails?.secretary_details?.registration_name}`}
                 >
                   {" "}
-                  <button
-                    onClick={() => showDrawer("banner")}
-                    class="btn-edit btn-1"
+                  <Popover
+                    title={`Update Banner and Logo for ${userDetails?.secretary_details?.registration_name}`}
                   >
-                    Update Banner
-                  </button>
+                    <button
+                      onClick={() => showDrawer("media")}
+                      className="btn-edit btn-1"
+                    >
+                      Update Media
+                    </button>
+                  </Popover>
+                  {renderDrawerContent()}
                 </Popover>
                 <div className="hero-shapes">
                   <div className="shape shape-1"></div>
@@ -900,7 +1021,9 @@ const Dashboard = () => {
                         className={`tab ${activeTab1 === tab ? "activee" : ""}`}
                         onClick={() => setActiveTab1(tab)}
                       >
-                        <div style={{fontSize:"15px"}}>{tab.charAt(0).toUpperCase() + tab.slice(1)} </div>
+                        <div style={{ fontSize: "15px" }}>
+                          {tab.charAt(0).toUpperCase() + tab.slice(1)}{" "}
+                        </div>
                         <div>
                           {" "}
                           <Badge style={{ marginBottom: "5px" }} count={2}>

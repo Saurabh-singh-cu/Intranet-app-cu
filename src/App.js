@@ -115,7 +115,7 @@ function AppContent() {
                 )
               }
             />
-            <Route
+            {/* <Route
               path="/EntityCreationForm"
               element={
                 isLoggedIn ? (
@@ -124,7 +124,7 @@ function AppContent() {
                   <Dashboard onShowLogin={handleShowLogin} />
                 )
               }
-            />
+            /> */}
             <Route
               path="/entityTable"
               element={

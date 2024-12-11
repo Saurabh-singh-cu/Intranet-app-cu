@@ -34,19 +34,27 @@ const MyFormComponent = () => {
   const [switchState, setSwitchState] = useState(false);
 
   const apiUrls = {
-    "entity-types": "http://13.202.65.103/intranetapp/entity-types/",
-    roles_permissions:
-      "http://13.202.65.103/intranetapp/roles_permissions/",
-    roles: "http://13.202.65.103/intranetapp/roles/",
-    departments: "http://13.202.65.103/intranetapp/departments/",
-    sessions: "http://13.202.65.103/intranetapp/sessions/",
-    genders: "http://13.202.65.103/intranetapp/genders/",
-    title: "http://13.202.65.103/intranetapp/title/",
-    designation: "http://13.202.65.103/intranetapp/designation/",
-    user_create: "http://13.202.65.103/intranetapp/user_create/",
-    user_table: "http://13.202.65.103/intranetapp/user_table/",
-    current_session: "http://13.202.65.103/intranetapp/current_session/",
+    "entity-types": "http://172.17.2.247:8080/intranetapp/entity-types/",
+    roles_permissions: "http://172.17.2.247:8080/intranetapp/roles_permissions/",
+    roles: "http://172.17.2.247:8080/intranetapp/roles/",
+    departments: "http://172.17.2.247:8080/intranetapp/departments/",
+    sessions: "http://172.17.2.247:8080/intranetapp/sessions/",
+    genders: "http://172.17.2.247:8080/intranetapp/genders/",
+    title: "http://172.17.2.247:8080/intranetapp/title/",
+    designation: "http://172.17.2.247:8080/intranetapp/designation/",
+    user_create: "http://172.17.2.247:8080/intranetapp/user_create/",
+    user_table: "http://172.17.2.247:8080/intranetapp/user_table/",
+    current_session: "http://172.17.2.247:8080/intranetapp/current_session/",
   };
+
+  axios.interceptors.request.use((config) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = user?.access;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
 
   useEffect(() => {
     setInputData({});
@@ -290,9 +298,9 @@ const MyFormComponent = () => {
         user_mobile: inputData.user_mobile,
         user_name: inputData.user_name,
         user_role: inputData.user_role,
-        username: inputData.username
+        username: inputData.username,
       };
-  
+
       if (editMode !== null) {
         await axios.put(`${apiUrl}${editMode}/`, payload);
         notification.success({
@@ -308,7 +316,7 @@ const MyFormComponent = () => {
           style: { backgroundColor: "#88C273" },
         });
       }
-  
+
       fetchTableData("roles");
       setEditMode(null);
       setInputData({});
@@ -320,7 +328,6 @@ const MyFormComponent = () => {
       });
     }
   };
-  
 
   const fetchTableData = async (value) => {
     setloading(true);
@@ -545,7 +552,7 @@ const MyFormComponent = () => {
         };
         const config = {
           method: "POST",
-          url: "http://13.202.65.103/intranetapp/current_session/",
+          url: "http://172.17.2.247:8080/intranetapp/current_session/",
           data,
         };
         const response = await axios(config);
@@ -567,374 +574,363 @@ const MyFormComponent = () => {
 
   return (
     <>
-      <div className="my-form-component">
-        <div className="form-container">
-          <h2
-            style={{
-              fontSize: "15px",
-              marginBottom: "15px",
-              color: "black",
-              fontWeight: "300",
-            }}
-          >
-            {" "}
-            User Configuration
-          </h2>
-          <select
-            value={selectedValue}
-            onChange={handleSelectChange}
-            className="custom-select"
-          >
-            <option value="">Select an Option</option>
-            <option value="entity-types">Entity Name</option>
-            <option value="roles_permissions">Roles & Permissions</option>
-            <option value="roles">Roles</option>
-            <option value="departments">Departments</option>
-            <option value="sessions">Sessions</option>
-            <option value="genders">Genders</option>
-            <option value="title">Title</option>
-            <option value="designation">Designation</option>
-            <option value="user_create">Create User</option>
-          </select>
-          {/* onSubmit={handleSubmit} */}
-          {selectedValue && (
-            <form className="custom-form">
-              {selectedValue === "sessions"
-                ? null
-                : field1 && (
-                    <input
-                      type="text"
-                      name={field1}
-                      value={inputData[field1] || ""}
-                      onChange={handleInputChange}
-                      placeholder={`Enter ${field1}`}
-                      className="custom-input"
-                    />
-                  )}
+      <div className="user-config-interface">
+        <header className="header-user">
+          <h1>User Configuration</h1>
+        </header>
+        <main className="main-content-user">
+          <section className="form-section">
+            <select
+              value={selectedValue}
+              onChange={handleSelectChange}
+              className="select-input"
+            >
+              <option value="">Select an Option</option>
+              <option value="entity-types">Entity Name</option>
+              <option value="roles_permissions">Roles & Permissions</option>
+              <option value="roles">Roles</option>
+              <option value="departments">Departments</option>
+              <option value="sessions">Sessions</option>
+              <option value="genders">Genders</option>
+              <option value="title">Title</option>
+              <option value="designation">Designation</option>
+              <option value="user_create">Create User</option>
+            </select>
 
-              {selectedValue === "entity-types" && (
-                <textarea
-                  type="text"
-                  name={extraField1}
-                  value={inputData[extraField1] || ""}
-                  onChange={handleInputChange}
-                  placeholder={`Enter ${extraField1}`}
-                  className="custom-input"
-                />
-              )}
+            {selectedValue && (
+              <form className="config-form">
+                {selectedValue === "sessions"
+                  ? null
+                  : field1 && (
+                      <input
+                        type="text"
+                        name={field1}
+                        value={inputData[field1] || ""}
+                        onChange={handleInputChange}
+                        placeholder={`Enter ${field1}`}
+                        className="text-input"
+                      />
+                    )}
 
-              {selectedValue === "roles_permissions" && (
-                <select
-                  name="entity"
-                  value={inputData["entity"] || ""}
-                  onChange={handleInputChange}
-                  className="custom-select"
-                >
-                  <option value="">Select Entity</option>
-                  {entityData.map((entity) => (
-                    <option key={entity.entity_id} value={entity.entity_id}>
-                      {entity.entity_name}
-                    </option>
-                  ))}
-                </select>
-              )}
-
-              {selectedValue === "roles" && (
-                <Select
-                  mode="multiple"
-                  style={{ width: "100%" }}
-                  placeholder="Select Permissions"
-                  value={inputData.roles_permissions || []}
-                  onChange={(value) =>
-                    handleInputChange1("roles_permissions", value)
-                  }
-                  optionFilterProp="children"
-                >
-                  {permissionData.map((entity) => (
-                    <Select.Option
-                      key={entity.permission_id}
-                      value={entity.permission_id}
-                    >
-                      {entity.permission_name} || {entity.entity_name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-              {field2 && (
-                <select
-                  name={field2}
-                  value={inputData[field2] || ""}
-                  onChange={handleInputChange}
-                  className="custom-select"
-                >
-                  <option value="">Select Status</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              )}
-              {selectedValue === "sessions" && field2 && (
-                <>
-                  <select
-                    name="start_year"
-                    value={inputData.start_year || ""}
+                {selectedValue === "entity-types" && (
+                  <textarea
+                    type="text"
+                    name={extraField1}
+                    value={inputData[extraField1] || ""}
                     onChange={handleInputChange}
-                    className="custom-select"
-                  >
-                    <option value="">Select Start Year</option>
-                    <option value="2020">2020</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
-                  </select>
-
-                  <select
-                    name="end_year"
-                    value={inputData.end_year || ""}
-                    onChange={handleInputChange}
-                    className="custom-select"
-                  >
-                    <option value="">Select End Year</option>
-                    <option value="2020">2020</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
-                  </select>
-
-                  <select
-                    name="start_month"
-                    value={inputData.start_month || ""}
-                    onChange={handleInputChange}
-                    className="custom-select"
-                  >
-                    <option value="">Select Start Month</option>
-                    <option value="01">January</option>
-                    <option value="02">February</option>
-                    <option value="03">March</option>
-                    <option value="04">April</option>
-                    <option value="05">May</option>
-                    <option value="06">June</option>
-                    <option value="07">July</option>
-                    <option value="08">August</option>
-                    <option value="09">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="12">December</option>
-                  </select>
-                  <select
-                    name="end_month"
-                    value={inputData.end_month || ""}
-                    onChange={handleInputChange}
-                    className="custom-select"
-                  >
-                    <option value="">Select End Month</option>
-                    <option value="01">January</option>
-                    <option value="02">February</option>
-                    <option value="03">March</option>
-                    <option value="04">April</option>
-                    <option value="05">May</option>
-                    <option value="06">June</option>
-                    <option value="07">July</option>
-                    <option value="08">August</option>
-                    <option value="09">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="12">December</option>
-                  </select>
-                </>
-              )}
-              {selectedValue === "user_create" && (
-                <form onSubmit={handleSubmit} className="custom-form">
-                  <div>
-                    <select
-                      name="user_role"
-                      value={inputData["user_role"] || ""}
-                      onChange={handleInputChange}
-                      className="custom-select"
-                    >
-                      <option value="">Select Role</option>
-                      {roles.map((role) => (
-                        <option key={role.role_id} value={role.role_id}>
-                          {role.role_name}
-                        </option>
-                      ))}
-                    </select>
-
-                    <select
-                      name="desig_id"
-                      value={inputData["desig_id"] || ""}
-                      onChange={handleInputChange}
-                      className="custom-select"
-                    >
-                      <option value="">Select Designation</option>
-                      {designations.map((desig) => (
-                        <option key={desig.desig_id} value={desig.desig_id}>
-                          {desig.desig_name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <select
-                      name="title_id"
-                      value={inputData["title_id"] || ""}
-                      onChange={handleInputChange}
-                      className="custom-select"
-                    >
-                      <option value="">Select Title</option>
-                      {titles.map((title) => (
-                        <option key={title.title_id} value={title.title_id}>
-                          {title.title_name}
-                        </option>
-                      ))}
-                    </select>
-
-                    <select
-                      name="dept_id"
-                      value={inputData["dept_id"] || ""}
-                      onChange={handleInputChange}
-                      className="custom-select"
-                    >
-                      <option value="">Select Department</option>
-                      {departments.map((dept) => (
-                        <option key={dept.dept_id} value={dept.dept_id}>
-                          {dept.dept_name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <input
-                      type="text"
-                      name="user_name"
-                      value={inputData["user_name"] || ""}
-                      onChange={handleInputChange}
-                      placeholder="Enter Full Name"
-                      className="custom-input"
-                    />
-                    <input
-                      type="text"
-                      name="username"
-                      value={inputData["username"] || ""}
-                      onChange={handleInputChange}
-                      placeholder="Enter Unique Name"
-                      className="custom-input"
-                    />
-                  </div>
-
-                  <div>
-                    <input
-                      type="email"
-                      name="user_email"
-                      value={inputData["user_email"] || ""}
-                      onChange={handleInputChange}
-                      placeholder="Enter Email"
-                      className="custom-input"
-                    />
-                    <input
-                      type="text"
-                      name="emp_code"
-                      value={inputData["emp_code"] || ""}
-                      onChange={handleInputChange}
-                      placeholder="Enter Employee Code"
-                      className="custom-input"
-                    />
-                  </div>
-
-                  <div>
-                    <input
-                      type="text"
-                      name="user_mobile"
-                      value={inputData["user_mobile"] || ""}
-                      onChange={handleInputChange}
-                      placeholder="Enter Mobile Number"
-                      className="custom-input"
-                    />
-                    <select
-                      name="gender"
-                      value={inputData["gender"] || ""}
-                      onChange={handleInputChange}
-                      className="custom-select"
-                    >
-                      <option value="">Select Gender</option>
-                      {genders.map((gender) => (
-                        <option key={gender.gender_id} value={gender.gender_id}>
-                          {gender.gender_name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <input
-                    type="password"
-                    name="password"
-                    value={inputData["password"] || ""}
-                    onChange={handleInputChange}
-                    placeholder="Enter Password"
-                    className="custom-input"
+                    placeholder={`Enter ${extraField1}`}
+                    className="text-input"
                   />
-                </form>
-              )}
-              {editMode && selectedValue === "user_create" ? (
-                <>
-                  {" "}
-                  <button
-                    onClick={handleEditUser}
-                    type="submit"
-                    className="custom-btn submit-btn"
-                  >
-                    Update
-                  </button>
-                </>
-              ) : selectedValue === "roles" ? (
-                <button
-                onClick={handleRolesSubmit }
-                type="submit"
-                className="custom-btn submit-btn"
-              >
-                Create Role
-              </button>
-              ) : selectedUser === "user_create" ? <button>Add User</button> : (
-                <button
-                  onClick={handleSubmit}
-                  type="submit"
-                  className="custom-btn submit-btn"
-                >
-                  Submit
-                </button>
-              )}
-            </form>
-          )}
-        </div>
+                )}
 
-        <div className="table-container">
-          <h2
-            style={{
-              fontSize: "15px",
-              marginBottom: "15px",
-              color: "black",
-              fontWeight: "300",
-            }}
-          >
-            {" "}
-            Configuration Table
-          </h2>
+                {selectedValue === "roles_permissions" && (
+                  <select
+                    name="entity"
+                    value={inputData["entity"] || ""}
+                    onChange={handleInputChange}
+                    className="select-input"
+                  >
+                    <option value="">Select Entity</option>
+                    {entityData.map((entity) => (
+                      <option key={entity.entity_id} value={entity.entity_id}>
+                        {entity.entity_name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+
+                {selectedValue === "roles" && (
+                  <Select
+                    mode="multiple"
+                    style={{ width: "100%" }}
+                    placeholder="Select Permissions"
+                    value={inputData.roles_permissions || []}
+                    onChange={(value) =>
+                      handleInputChange1("roles_permissions", value)
+                    }
+                    optionFilterProp="children"
+                    className="select-input"
+                  >
+                    {permissionData.map((entity) => (
+                      <Select.Option
+                        key={entity.permission_id}
+                        value={entity.permission_id}
+                      >
+                        {entity.permission_name} || {entity.entity_name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                )}
+                {field2 && (
+                  <select
+                    name={field2}
+                    value={inputData[field2] || ""}
+                    onChange={handleInputChange}
+                    className="custom-select"
+                  >
+                    <option value="">Select Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                )}
+                {selectedValue === "sessions" && field2 && (
+                  <>
+                    <select
+                      name="start_year"
+                      value={inputData.start_year || ""}
+                      onChange={handleInputChange}
+                      className="select-input"
+                    >
+                      <option value="">Select Start Year</option>
+                      <option value="2020">2020</option>
+                      <option value="2021">2021</option>
+                      <option value="2022">2022</option>
+                      <option value="2023">2023</option>
+                      <option value="2024">2024</option>
+                      <option value="2025">2025</option>
+                      <option value="2026">2026</option>
+                      <option value="2027">2027</option>
+                      <option value="2028">2028</option>
+                    </select>
+
+                    <select
+                      name="end_year"
+                      value={inputData.end_year || ""}
+                      onChange={handleInputChange}
+                      className="select-input"
+                    >
+                      <option value="">Select End Year</option>
+                      <option value="2020">2020</option>
+                      <option value="2021">2021</option>
+                      <option value="2022">2022</option>
+                      <option value="2023">2023</option>
+                      <option value="2024">2024</option>
+                      <option value="2025">2025</option>
+                      <option value="2026">2026</option>
+                      <option value="2027">2027</option>
+                      <option value="2028">2028</option>
+                    </select>
+
+                    <select
+                      name="start_month"
+                      value={inputData.start_month || ""}
+                      onChange={handleInputChange}
+                      className="select-input"
+                    >
+                      <option value="">Select Start Month</option>
+                      <option value="01">January</option>
+                      <option value="02">February</option>
+                      <option value="03">March</option>
+                      <option value="04">April</option>
+                      <option value="05">May</option>
+                      <option value="06">June</option>
+                      <option value="07">July</option>
+                      <option value="08">August</option>
+                      <option value="09">September</option>
+                      <option value="10">October</option>
+                      <option value="11">November</option>
+                      <option value="12">December</option>
+                    </select>
+                    <select
+                      name="end_month"
+                      value={inputData.end_month || ""}
+                      onChange={handleInputChange}
+                      className="select-input"
+                    >
+                      <option value="">Select End Month</option>
+                      <option value="01">January</option>
+                      <option value="02">February</option>
+                      <option value="03">March</option>
+                      <option value="04">April</option>
+                      <option value="05">May</option>
+                      <option value="06">June</option>
+                      <option value="07">July</option>
+                      <option value="08">August</option>
+                      <option value="09">September</option>
+                      <option value="10">October</option>
+                      <option value="11">November</option>
+                      <option value="12">December</option>
+                    </select>
+                  </>
+                )}
+                {selectedValue === "user_create" && (
+                  <form onSubmit={handleSubmit} className="custom-form">
+                    <div>
+                      <select
+                        name="user_role"
+                        value={inputData["user_role"] || ""}
+                        onChange={handleInputChange}
+                        className="select-input"
+                      >
+                        <option value="">Select Role</option>
+                        {roles.map((role) => (
+                          <option key={role.role_id} value={role.role_id}>
+                            {role.role_name}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        name="desig_id"
+                        value={inputData["desig_id"] || ""}
+                        onChange={handleInputChange}
+                        className="select-input"
+                      >
+                        <option value="">Select Designation</option>
+                        {designations.map((desig) => (
+                          <option key={desig.desig_id} value={desig.desig_id}>
+                            {desig.desig_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <select
+                        name="title_id"
+                        value={inputData["title_id"] || ""}
+                        onChange={handleInputChange}
+                        className="select-input"
+                      >
+                        <option value="">Select Title</option>
+                        {titles.map((title) => (
+                          <option key={title.title_id} value={title.title_id}>
+                            {title.title_name}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        name="dept_id"
+                        value={inputData["dept_id"] || ""}
+                        onChange={handleInputChange}
+                        className="select-input"
+                      >
+                        <option value="">Select Department</option>
+                        {departments.map((dept) => (
+                          <option key={dept.dept_id} value={dept.dept_id}>
+                            {dept.dept_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        name="user_name"
+                        value={inputData["user_name"] || ""}
+                        onChange={handleInputChange}
+                        placeholder="Enter Full Name"
+                        className="text-input"
+                      />
+                      <input
+                        type="text"
+                        name="username"
+                        value={inputData["username"] || ""}
+                        onChange={handleInputChange}
+                        placeholder="Enter Unique Name"
+                        className="text-input"
+                      />
+                    </div>
+
+                    <div>
+                      <input
+                        type="email"
+                        name="user_email"
+                        value={inputData["user_email"] || ""}
+                        onChange={handleInputChange}
+                        placeholder="Enter Email"
+                        className="text-input"
+                      />
+                      <input
+                        type="text"
+                        name="emp_code"
+                        value={inputData["emp_code"] || ""}
+                        onChange={handleInputChange}
+                        placeholder="Enter Employee Code"
+                        className="text-input"
+                      />
+                    </div>
+
+                    <div>
+                      <input
+                        type="text"
+                        name="user_mobile"
+                        value={inputData["user_mobile"] || ""}
+                        onChange={handleInputChange}
+                        placeholder="Enter Mobile Number"
+                        className="text-input"
+                      />
+                      <select
+                        name="gender"
+                        value={inputData["gender"] || ""}
+                        onChange={handleInputChange}
+                        className="select-input"
+                      >
+                        <option value="">Select Gender</option>
+                        {genders.map((gender) => (
+                          <option
+                            key={gender.gender_id}
+                            value={gender.gender_id}
+                          >
+                            {gender.gender_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <input
+                      type="password"
+                      name="password"
+                      value={inputData["password"] || ""}
+                      onChange={handleInputChange}
+                      placeholder="Enter Password"
+                      className="text-input"
+                    />
+                  </form>
+                )}
+                {editMode && selectedValue === "user_create" ? (
+                  <>
+                    {" "}
+                    <button
+                      onClick={handleEditUser}
+                      type="submit"
+                      className="submit-button"
+                    >
+                      Update
+                    </button>
+                  </>
+                ) : selectedValue === "roles" ? (
+                  <button
+                    onClick={handleRolesSubmit}
+                    type="submit"
+                    className="submit-button"
+                  >
+                    Create Role
+                  </button>
+                ) : selectedUser === "user_create" ? (
+                  <button>Add User</button>
+                ) : (
+                  <button
+                    onClick={handleSubmit}
+                    type="submit"
+                    className="submit-button"
+                  >
+                    Submit
+                  </button>
+                )}
+              </form>
+            )}
+          </section>
+
+          <section className="table-section">
+          <h2>Configuration Table</h2>
           {loading === true ? (
             <Spin size={40} spinning={loading} />
           ) : (
             <>
               {" "}
               {tableData.length > 0 && (
-                <table className="custom-table">
+                <table className="config-table">
                   <thead>
                     <tr>
                       {selectedValue === "user_create" && (
@@ -1009,7 +1005,7 @@ const MyFormComponent = () => {
                         {selectedValue === "user_create" && (
                           <td
                             style={{
-                              color: "white",
+                              color: "black",
                               fontWeight: "200",
                               fontSize: "14px",
                             }}
@@ -1019,7 +1015,7 @@ const MyFormComponent = () => {
                         )}
                         <td
                           style={{
-                            color: "white",
+                            color: "black",
                             fontWeight: "200",
                             fontSize: "14px",
                           }}
@@ -1032,7 +1028,7 @@ const MyFormComponent = () => {
                         {field2 && (
                           <td
                             style={{
-                              color: "white",
+                              color: "black",
                               fontWeight: "200",
                               fontSize: "14px",
                             }}
@@ -1085,26 +1081,8 @@ const MyFormComponent = () => {
                               justifyContent: "space-around",
                             }}
                           >
-                            <div
-                              style={{
-                                color: "green",
-                                fontSize: "20px",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => handleEdit(item)}
-                            >
-                              <FaRegEdit />
-                            </div>
-                            <div
-                              style={{
-                                color: "red",
-                                fontSize: "20px",
-                                cursor: "pointer",
-                              }}
-                              onClick={() => handleDelete(item)}
-                            >
-                              <MdDelete />
-                            </div>
+                            <button onClick={() => handleEdit(item)} className="edit-button">Edit</button>
+                            <button onClick={() => handleDelete(item)} className="delete-button">Delete</button>
                           </td>
                         )}
                       </tr>
@@ -1114,7 +1092,23 @@ const MyFormComponent = () => {
               )}
             </>
           )}
-        </div>
+          </section>
+        </main>
+
+        {/* <div className="table-container">
+          <h2
+            style={{
+              fontSize: "15px",
+              marginBottom: "15px",
+              color: "black",
+              fontWeight: "300",
+            }}
+          >
+            {" "}
+            Configuration Table
+          </h2>
+        
+        </div> */}
       </div>
       <Drawer
         title="User Details"

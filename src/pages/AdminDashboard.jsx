@@ -28,6 +28,17 @@ const AdminDashboard = () => {
 
   const navigate = useNavigate();
 
+
+  axios.interceptors.request.use((config) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = user?.access;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
+
+
   useEffect(() => {
     const getUserinfo = JSON.parse(localStorage.getItem("user"));
     const userRole = getUserinfo?.role_name;
@@ -81,7 +92,7 @@ const AdminDashboard = () => {
   const dashboardCardCount = async () => {
     try {
       const response = await axios.get(
-        "http://13.202.65.103/intranetapp/entity_count/"
+        "http://172.17.2.247:8080/intranetapp/entity_count/"
       );
       setDashboardCount(response.data);
       filterData(response.data);
@@ -108,14 +119,14 @@ const AdminDashboard = () => {
   };
 
   const getEntityCount = async() => {
-    const response = await axios.get("http://13.202.65.103/intranetapp/entity-registration/")
+    const response = await axios.get("http://172.17.2.247:8080/intranetapp/entity-registration/")
     setEntityCount(response?.data);
   }
 
   console.log(userRoleName, "ROLENAME")
 
   return (
-    <div className="dashboard-home">
+    <div style={{overflow:"scroll"}} className="dashboard-home">
       <div className="loggedInAss">{userName?.role_name}</div>
       <div  className="metric-cards-home-admin">
       <div  onClick={redirectClubs} className="metric-card-home adminDash">

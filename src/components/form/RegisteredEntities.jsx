@@ -8,6 +8,7 @@ import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import mail from "../../assets/images/mail.png";
 import "./EntityTable.css";
+import axios from "axios";
 
 function RegisteredEntities() {
   const [entities, setEntities] = useState([]);
@@ -24,12 +25,25 @@ function RegisteredEntities() {
   const [viewMoreDrawerVisible, setViewMoreDrawerVisible] = useState(false);
   const [selectedEntityDetails, setSelectedEntityDetails] = useState(null);
 
-  useEffect(() => {
-    fetch("http://13.202.65.103/intranetapp/entity-registration/")
-      .then((response) => response.json())
-      .then((data) => setEntities(data))
-      .catch((error) => console.error("Error fetching data:", error));
 
+  axios.interceptors.request.use((config) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = user?.access;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
+
+  useEffect(() => {
+    axios.get("http://172.17.2.247:8080/intranetapp/entity-registration/")
+      .then((response) => {
+        setEntities(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  
     const userData = localStorage.getItem("user");
     if (userData) {
       try {
@@ -105,15 +119,10 @@ function RegisteredEntities() {
           receiver_emails: emails,
           user_id: user?.user_id || null,
         };
-        fetch("http://13.202.65.103/intranetapp/send-email/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        })
-          .then((response) => response.json())
-          .then((data) => {
+        axios
+          .post("http://172.17.2.247:8080/intranetapp/send-email/", payload)
+
+          .then((response) => {
             message.success("Email sent successfully");
             onMailDrawerClose();
           })

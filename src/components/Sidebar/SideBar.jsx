@@ -30,12 +30,12 @@ const routes = [
     icon:<FaWpforms />,
     allowedRoles: ["Admin"]
   },
-  {
-    path: "/EntityCreationForm",
-    name: "Entity Creation Form",
-    icon: <FaWpforms />,
-    allowedRoles: ["Admin"]
-  },
+  // {
+  //   path: "/EntityCreationForm",
+  //   name: "Entity Creation Form",
+  //   icon: <FaWpforms />,
+  //   allowedRoles: ["Admin"]
+  // },
   {
     path: "/EntityRegistrationForm",
     name: "Entity Registration Form",

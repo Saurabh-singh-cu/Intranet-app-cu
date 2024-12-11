@@ -20,6 +20,7 @@ import mail from "../../assets/images/mail.png";
 import "./EntityTable.css";
 import { useCallback, useEffect, useState } from "react";
 import { Color } from "antd/es/color-picker";
+import axios from "axios";
 
 const { TextArea } = Input;
 
@@ -41,27 +42,80 @@ function EntityTable() {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [remark, setRemark] = useState("");
   const [selectedEntityId, setSelectedEntityId] = useState(null);
+  const [userData, setUserData] = useState(null);
+
+  axios.interceptors.request.use((config) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = user?.access;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
 
   useEffect(() => {
-    fetch("http://13.202.65.103/intranetapp/entity-requests/")
-      .then((response) => response.json())
-      .then((data) => setEntities(data))
-      .catch((error) => console.error("Error fetching data:", error));
-
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        localStorage.removeItem("user");
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      if (parsedUser.access) {
+        fetchEntities(parsedUser.access);
+      } else {
+        console.error("Access token not found in user data");
         navigate("/login");
       }
     } else {
       navigate("/login");
     }
   }, [navigate]);
+
+  // const fetchEntities = useCallback((token) => {
+  //   console.log(token, "TOKENNNNNN")
+  //   fetch("http://172.17.2.247:8080/intranetapp/entity-requests/", {
+  //     headers: {
+  //       'Authorization': `Bearer ${token}`,
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //     .then((response) => {
+  //       if (response.ok) {
+  //         return response.json();
+  //       } else if (response.status === 403) {
+  //         throw new Error('Forbidden: You do not have permission to access this resource');
+  //       } else if (response.status === 401) {
+  //         throw new Error('Unauthorized');
+  //       }
+  //       throw new Error('Network response was not ok');
+  //     })
+  //     .then((data) => {
+  //       if (Array.isArray(data)) {
+  //         setEntities(data);
+  //       } else {
+  //         console.error('Received data is not an array:', data);
+  //         setEntities([]);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //       if (error.message === 'Unauthorized' || error.message.includes('Forbidden')) {
+  //         message.error(error.message);
+  //         localStorage.removeItem('user');
+  //         navigate('/login');
+  //       }
+  //       setEntities([]);
+  //     });
+  // }, [navigate]);
+
+  const fetchEntities = async () => {
+    try {
+      const response = await axios.get(
+        "http://172.17.2.247:8080/intranetapp/entity-requests/"
+      );
+      setEntities(response.data);
+    } catch (error) {
+      console.error("Error fetching entities:", error);
+    }
+  };
 
   const handleEdit = useCallback(
     (params) => {
@@ -126,15 +180,10 @@ function EntityTable() {
           receiver_emails: emails,
           user_id: user?.user_id || null,
         };
-        fetch("http://13.202.65.103/intranetapp/send-email/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        })
-          .then((response) => response.json())
-          .then((data) => {
+        axios
+          .post("http://172.17.2.247:8080/intranetapp/send-email/", payload)
+
+          .then((response) => {
             message.success("Email sent successfully");
             onMailDrawerClose();
           })
@@ -168,26 +217,21 @@ function EntityTable() {
   };
 
   const handleView = (params) => {
-    setEditingEntity(params.data); // Set the entity data to be viewed
-    setViewModalVisible(true); // Show the modal
+    setEditingEntity(params.data); 
+    setViewModalVisible(true); 
   };
 
-  async function updateStatusAPI(entityId, newStatus) {
+  const updateStatusAPI = async (entityId, newStatus) => {
     try {
-      const response = await fetch("/api/update-status", {
-        // Replace with your actual API endpoint
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          entity_id: entityId, // Assuming each row has an 'id' field
-          status: newStatus, // The new status selected
-        }),
-      });
+      const payload = {
+        entity_id: entityId,
+        status: newStatus,
+      };
 
-      if (response.ok) {
-        const result = await response.json();
+      const response = await axios.put("/api/update-status", payload);
+
+      if (response.status === 200) {
+        const result = response.data;
         console.log("Status updated successfully:", result);
       } else {
         console.error("Failed to update status");
@@ -195,11 +239,11 @@ function EntityTable() {
     } catch (error) {
       console.error("Error updating status:", error);
     }
-  }
+  };
 
   const handleViewMore = (params) => {
-    setSelectedEntityDetails(params.data); // Set the entity data to be viewed
-    setViewMoreDrawerVisible(true); // Show the drawer with details
+    setSelectedEntityDetails(params.data); 
+    setViewMoreDrawerVisible(true); 
   };
 
   const onViewMoreDrawerClose = () => {
@@ -207,27 +251,6 @@ function EntityTable() {
     setSelectedEntityDetails(null);
   };
 
-  useEffect(() => {
-    fetch("http://13.202.65.103/intranetapp/entity-requests/")
-      .then((response) => response.json())
-      .then((data) => setEntities(data))
-      .catch((error) => console.error("Error fetching data:", error));
-
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        // Use parsedUser if needed
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        localStorage.removeItem("user");
-        navigate("/login");
-      }
-    } else {
-      navigate("/login");
-    }
-  }, [navigate]);
-  
 
   const handleStatusChange = useCallback((params) => {
     setSelectedEntityId(params.data.entcr_id);
@@ -237,19 +260,18 @@ function EntityTable() {
 
   const handleStatusConfirm = useCallback(async () => {
     try {
-      const response = await fetch(`http://13.202.65.103/intranetapp/entity-request/${selectedEntityId}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          status: selectedStatus,
-          remark: remark,
-        }),
-      });
+      const payload = {
+        status: selectedStatus,
+        remark: remark,
+      };
 
-      if (response.ok) {
-        message.success('Status updated successfully');
+      const response = await axios.put(
+        `http://172.17.2.247:8080/intranetapp/entity-request/${selectedEntityId}/`,
+        payload
+      );
+
+      if (response.status === 200) {
+        message.success("Status updated successfully");
 
         setEntities((prevEntities) =>
           prevEntities.map((entity) =>
@@ -259,28 +281,34 @@ function EntityTable() {
           )
         );
       } else {
-        message.error('Failed to update status');
+        message.error("Failed to update status");
       }
     } catch (error) {
-      console.error('Error updating status:', error);
-      message.error('An error occurred while updating status');
+      console.error("Error updating status:", error);
+      message.error("An error occurred while updating status");
     }
 
     setStatusModalVisible(false);
-    setRemark('');
+    setRemark("");
   }, [selectedStatus, remark, selectedEntityId]);
 
   const StatusCellRenderer = (props) => {
-    const statusOptions = ['Pending', 'Approved', 'Interview Scheduled', 'Rejected', 'Request Hold'];
-    
+    const statusOptions = [
+      "Pending",
+      "Approved",
+      "Interview Scheduled",
+      "Rejected",
+      "Request Hold",
+    ];
+
     return (
       <Select
         value={props.value}
         onChange={(value) => handleStatusChange({ data: props.data, value })}
-        style={{ width: '100%' }}
+        style={{ width: "100%" }}
       >
         {statusOptions.map((status) => (
-          <Select.Option  key={status} value={status}>
+          <Select.Option key={status} value={status}>
             {status}
           </Select.Option>
         ))}
@@ -424,9 +452,6 @@ function EntityTable() {
     gridApi.exportDataAsCsv();
   };
 
-
-
-
   const renderSection = (title, fields) => (
     <>
       <tr className="section-header">
@@ -435,12 +460,11 @@ function EntityTable() {
       {fields.map(([label, key]) => (
         <tr key={key}>
           <td>{label}</td>
-          <td>{selectedEntityDetails?.[key] || 'N/A'}</td>
+          <td>{selectedEntityDetails?.[key] || "N/A"}</td>
         </tr>
       ))}
     </>
   );
-
 
   return (
     <div className="entity-table-container">
@@ -579,213 +603,89 @@ function EntityTable() {
         visible={viewMoreDrawerVisible}
         width={600}
       >
-        {/* <Form layout="vertical">
-          <Form.Item label="Proposed Name">
-            {selectedEntityDetails?.proposed_name}
-          </Form.Item>
-          <Form.Item label="Proposed Date">
-            {selectedEntityDetails?.proposed_date}
-          </Form.Item>
-          <Form.Item label="Proposed By">
-            {selectedEntityDetails?.proposed_by}
-          </Form.Item>
-          <Form.Item label="Proposer Name">
-            {selectedEntityDetails?.proposer_name}
-          </Form.Item>
-          <Form.Item label="Entity Nature">
-            {selectedEntityDetails?.entity_nature}
-          </Form.Item>
-          <Form.Item label="Status">{selectedEntityDetails?.status}</Form.Item>
-          <Form.Item label="Entity Name">
-            {selectedEntityDetails?.entity_name}
-          </Form.Item>
-          <Form.Item label="Department">
-            {selectedEntityDetails?.department_name}
-          </Form.Item>
+        {viewMoreDrawerVisible && (
+          <div className="drawer-overlay" onClick={onViewMoreDrawerClose}>
+            <div
+              className="drawer-content"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2>Entity Details</h2>
+              <table className="entity-details-table">
+                <tbody>
+                  {renderSection("Entity Information", [
+                    ["Proposed Name", "proposed_name"],
+                    ["Proposed Date", "proposed_date"],
+                    ["Proposed By", "proposed_by"],
+                    ["Proposer Name", "proposer_name"],
+                    ["Entity Nature", "entity_nature"],
+                    ["Status", "status"],
+                    ["Entity Name", "entity_name"],
+                    ["Department", "department_name"],
+                  ])}
 
-         
-          <Form.Item label="Student Section 1 Name">
-            {selectedEntityDetails?.student_sec_1_name}
-          </Form.Item>
-          <Form.Item label="Student Section 1 Email">
-            {selectedEntityDetails?.student_sec_1_email}
-          </Form.Item>
-          <Form.Item label="Student Section 1 UID">
-            {selectedEntityDetails?.student_sec_1_uid}
-          </Form.Item>
-          <Form.Item label="Student Section 1 Mobile">
-            {selectedEntityDetails?.student_sec_1_mobile}
-          </Form.Item>
+                  {renderSection("Student Section 1", [
+                    ["Name", "student_sec_1_name"],
+                    ["Email", "student_sec_1_email"],
+                    ["UID", "student_sec_1_uid"],
+                    ["Mobile", "student_sec_1_mobile"],
+                  ])}
 
-          <Form.Item label="Student Section 2 Name">
-            {selectedEntityDetails?.student_sec_2_name}
-          </Form.Item>
-          <Form.Item label="Student Section 2 Email">
-            {selectedEntityDetails?.student_sec_2_email}
-          </Form.Item>
-          <Form.Item label="Student Section 2 UID">
-            {selectedEntityDetails?.student_sec_2_uid}
-          </Form.Item>
-          <Form.Item label="Student Section 2 Mobile">
-            {selectedEntityDetails?.student_sec_2_mobile}
-          </Form.Item>
+                  {renderSection("Student Section 2", [
+                    ["Name", "student_sec_2_name"],
+                    ["Email", "student_sec_2_email"],
+                    ["UID", "student_sec_2_uid"],
+                    ["Mobile", "student_sec_2_mobile"],
+                  ])}
 
-          <Form.Item label="Student Advisor Section 1 Name">
-            {selectedEntityDetails?.student_advsec_1_name}
-          </Form.Item>
-          <Form.Item label="Student Advisor Section 1 Email">
-            {selectedEntityDetails?.student_advsec_1_email}
-          </Form.Item>
-          <Form.Item label="Student Advisor Section 1 UID">
-            {selectedEntityDetails?.student_advsec_1_uid}
-          </Form.Item>
-          <Form.Item label="Student Advisor Section 1 Mobile">
-            {selectedEntityDetails?.student_advsec_1_mobile}
-          </Form.Item>
+                  {renderSection("Student Advisor Section 1", [
+                    ["Name", "student_advsec_1_name"],
+                    ["Email", "student_advsec_1_email"],
+                    ["UID", "student_advsec_1_uid"],
+                    ["Mobile", "student_advsec_1_mobile"],
+                  ])}
 
-          <Form.Item label="Student Advisor Section 2 Name">
-            {selectedEntityDetails?.student_advsec_2_name}
-          </Form.Item>
-          <Form.Item label="Student Advisor Section 2 Email">
-            {selectedEntityDetails?.student_advsec_2_email}
-          </Form.Item>
-          <Form.Item label="Student Advisor Section 2 UID">
-            {selectedEntityDetails?.student_advsec_2_uid}
-          </Form.Item>
-          <Form.Item label="Student Advisor Section 2 Mobile">
-            {selectedEntityDetails?.student_advsec_2_mobile}
-          </Form.Item>
+                  {renderSection("Student Advisor Section 2", [
+                    ["Name", "student_advsec_2_name"],
+                    ["Email", "student_advsec_2_email"],
+                    ["UID", "student_advsec_2_uid"],
+                    ["Mobile", "student_advsec_2_mobile"],
+                  ])}
 
-          <Form.Item label="Faculty Advisor 1 Name">
-            {selectedEntityDetails?.faculty_adv_1_name}
-          </Form.Item>
-          <Form.Item label="Faculty Advisor 1 Email">
-            {selectedEntityDetails?.faculty_adv_1_email}
-          </Form.Item>
-          <Form.Item label="Faculty Advisor 1 Emp Code">
-            {selectedEntityDetails?.faculty_adv_1_empcode}
-          </Form.Item>
-          <Form.Item label="Faculty Advisor 1 Mobile">
-            {selectedEntityDetails?.faculty_adv_1_mobile}
-          </Form.Item>
+                  {renderSection("Faculty Advisor 1", [
+                    ["Name", "faculty_adv_1_name"],
+                    ["Email", "faculty_adv_1_email"],
+                    ["Emp Code", "faculty_adv_1_empcode"],
+                    ["Mobile", "faculty_adv_1_mobile"],
+                  ])}
 
-          <Form.Item label="Faculty Advisor 2 Name">
-            {selectedEntityDetails?.faculty_adv_2_name}
-          </Form.Item>
-          <Form.Item label="Faculty Advisor 2 Email">
-            {selectedEntityDetails?.faculty_adv_2_email}
-          </Form.Item>
-          <Form.Item label="Faculty Advisor 2 Emp Code">
-            {selectedEntityDetails?.faculty_adv_2_empcode}
-          </Form.Item>
-          <Form.Item label="Faculty Advisor 2 Mobile">
-            {selectedEntityDetails?.faculty_adv_2_mobile}
-          </Form.Item>
+                  {renderSection("Faculty Advisor 2", [
+                    ["Name", "faculty_adv_2_name"],
+                    ["Email", "faculty_adv_2_email"],
+                    ["Emp Code", "faculty_adv_2_empcode"],
+                    ["Mobile", "faculty_adv_2_mobile"],
+                  ])}
 
-          <Form.Item label="Faculty Co-Advisor 1 Name">
-            {selectedEntityDetails?.faculty_coadv_1_name}
-          </Form.Item>
-          <Form.Item label="Faculty Co-Advisor 1 Email">
-            {selectedEntityDetails?.faculty_coadv_1_email}
-          </Form.Item>
-          <Form.Item label="Faculty Co-Advisor 1 Emp Code">
-            {selectedEntityDetails?.faculty_coadv_1_empcode}
-          </Form.Item>
-          <Form.Item label="Faculty Co-Advisor 1 Mobile">
-            {selectedEntityDetails?.faculty_coadv_1_mobile}
-          </Form.Item>
+                  {renderSection("Faculty Co-Advisor 1", [
+                    ["Name", "faculty_coadv_1_name"],
+                    ["Email", "faculty_coadv_1_email"],
+                    ["Emp Code", "faculty_coadv_1_empcode"],
+                    ["Mobile", "faculty_coadv_1_mobile"],
+                  ])}
 
-          <Form.Item label="Faculty Co-Advisor 2 Name">
-            {selectedEntityDetails?.faculty_coadv_2_name}
-          </Form.Item>
-          <Form.Item label="Faculty Co-Advisor 2 Email">
-            {selectedEntityDetails?.faculty_coadv_2_email}
-          </Form.Item>
-          <Form.Item label="Faculty Co-Advisor 2 Emp Code">
-            {selectedEntityDetails?.faculty_coadv_2_empcode}
-          </Form.Item>
-          <Form.Item label="Faculty Co-Advisor 2 Mobile">
-            {selectedEntityDetails?.faculty_coadv_2_mobile}
-          </Form.Item>
-        </Form> */}
-         {viewMoreDrawerVisible && (
-        <div className="drawer-overlay" onClick={onViewMoreDrawerClose}>
-          <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
-            <h2>Entity Details</h2>
-            <table className="entity-details-table">
-              <tbody>
-                {renderSection("Entity Information", [
-                  ["Proposed Name", "proposed_name"],
-                  ["Proposed Date", "proposed_date"],
-                  ["Proposed By", "proposed_by"],
-                  ["Proposer Name", "proposer_name"],
-                  ["Entity Nature", "entity_nature"],
-                  ["Status", "status"],
-                  ["Entity Name", "entity_name"],
-                  ["Department", "department_name"]
-                ])}
-
-                {renderSection("Student Section 1", [
-                  ["Name", "student_sec_1_name"],
-                  ["Email", "student_sec_1_email"],
-                  ["UID", "student_sec_1_uid"],
-                  ["Mobile", "student_sec_1_mobile"]
-                ])}
-
-                {renderSection("Student Section 2", [
-                  ["Name", "student_sec_2_name"],
-                  ["Email", "student_sec_2_email"],
-                  ["UID", "student_sec_2_uid"],
-                  ["Mobile", "student_sec_2_mobile"]
-                ])}
-
-                {renderSection("Student Advisor Section 1", [
-                  ["Name", "student_advsec_1_name"],
-                  ["Email", "student_advsec_1_email"],
-                  ["UID", "student_advsec_1_uid"],
-                  ["Mobile", "student_advsec_1_mobile"]
-                ])}
-
-                {renderSection("Student Advisor Section 2", [
-                  ["Name", "student_advsec_2_name"],
-                  ["Email", "student_advsec_2_email"],
-                  ["UID", "student_advsec_2_uid"],
-                  ["Mobile", "student_advsec_2_mobile"]
-                ])}
-
-                {renderSection("Faculty Advisor 1", [
-                  ["Name", "faculty_adv_1_name"],
-                  ["Email", "faculty_adv_1_email"],
-                  ["Emp Code", "faculty_adv_1_empcode"],
-                  ["Mobile", "faculty_adv_1_mobile"]
-                ])}
-
-                {renderSection("Faculty Advisor 2", [
-                  ["Name", "faculty_adv_2_name"],
-                  ["Email", "faculty_adv_2_email"],
-                  ["Emp Code", "faculty_adv_2_empcode"],
-                  ["Mobile", "faculty_adv_2_mobile"]
-                ])}
-
-                {renderSection("Faculty Co-Advisor 1", [
-                  ["Name", "faculty_coadv_1_name"],
-                  ["Email", "faculty_coadv_1_email"],
-                  ["Emp Code", "faculty_coadv_1_empcode"],
-                  ["Mobile", "faculty_coadv_1_mobile"]
-                ])}
-
-                {renderSection("Faculty Co-Advisor 2", [
-                  ["Name", "faculty_coadv_2_name"],
-                  ["Email", "faculty_coadv_2_email"],
-                  ["Emp Code", "faculty_coadv_2_empcode"],
-                  ["Mobile", "faculty_coadv_2_mobile"]
-                ])}
-              </tbody>
-            </table>
-            <button className="close-button" onClick={onViewMoreDrawerClose}>Close</button>
+                  {renderSection("Faculty Co-Advisor 2", [
+                    ["Name", "faculty_coadv_2_name"],
+                    ["Email", "faculty_coadv_2_email"],
+                    ["Emp Code", "faculty_coadv_2_empcode"],
+                    ["Mobile", "faculty_coadv_2_mobile"],
+                  ])}
+                </tbody>
+              </table>
+              <button className="close-button" onClick={onViewMoreDrawerClose}>
+                Close
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </Drawer>
 
       <Modal
