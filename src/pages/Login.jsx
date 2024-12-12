@@ -71,13 +71,37 @@ const Login = ({ onLogin }) => {
       onLogin();
 
       // Redirect based on user role
-      if (data?.role_name === "Admin") {
-        window.location.href = "/admin-dashboard";
-      } else if (data?.role_name === "Student Secretary") {
-        window.location.href = "/student-secretary-dashboard";
-      } else {
+      // if (data?.role_name === "Admin") {
+      //   window.location.href = "/admin-dashboard";
+      // } else if (data?.role_name === "Student Secretary") {
+      //   window.location.href = "/student-secretary-dashboard";
+      // } else if (data?.role_name === "Faculty Advisory") {
+      //   window.location.href = "/faculty-advisory-dashboard";
+      // } else {
+      //   window?.location.href = "/"
+      // }
+
+      if (!data || !data.role_name) {
+        console.error("Role name is missing or undefined");
         window.location.href = "/";
+      } else {
+        switch (data.role_name) {
+          case "Admin":
+            window.location.href = "/admin-dashboard";
+            break;
+          case "Student Secretary":
+            window.location.href = "/student-secretary-dashboard";
+            break;
+          case "Faculty Advisory":
+            window.location.href = "/faculty-advisory-dashboard";
+            break;
+          default:
+            console.warn(`Unexpected role: ${data.role_name}`);
+            window.location.href = "/";
+            break;
+        }
       }
+      
 
       console.log("Login successful", data);
     } catch (err) {

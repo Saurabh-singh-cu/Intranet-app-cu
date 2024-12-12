@@ -579,7 +579,7 @@ const MyFormComponent = () => {
           <h1>User Configuration</h1>
         </header>
         <main className="main-content-user">
-          <section className="form-section">
+          <section className="form-section-user">
             <select
               value={selectedValue}
               onChange={handleSelectChange}

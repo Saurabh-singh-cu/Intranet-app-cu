@@ -31,6 +31,8 @@ import StudentUpdatedPage from "./pages/secretary/StudentUpdatedPage";
 import ProfessionalSociety from "./pages/ProfessionalSocietyList";
 import JoinNowDetail from "./pages/JoinNowDetail";
 import RegisterNewEntity from "./components/form/RegisterNewEntity";
+import FacultyDashboard from "./pages/FacultyDashboard";
+import MediaRequest from "./pages/MediaRequest";
 
 function AppContent() {
   const location = useLocation();
@@ -40,6 +42,7 @@ function AppContent() {
   const [showLogin, setShowLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isStudentSecretary, setIsStudentSecretary ] = useState(false);
+  const [isFaculty, setIsFaculty ] = useState(false);
   const [ user, setUser ] = useState([]);
 
   const handleLogin = () => {
@@ -68,6 +71,7 @@ function AppContent() {
     console.log(getUser, "USERERERRERRERRE")
     setIsAdmin(getUser?.role_name === 'Admin');
     setIsStudentSecretary(getUser?.role_name === 'Student Secretary')
+    setIsFaculty(getUser?.role_name === "Faculty Advisory");
   }, []);
 
   
@@ -80,7 +84,7 @@ function AppContent() {
       )}
 
       <div style={{ display: "flex" }}>
-        {isLoggedIn  && (isAdmin || isStudentSecretary) && <SideBar />}
+        {isLoggedIn  && (isAdmin || isStudentSecretary || isFaculty) && <SideBar />}
         <div style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<Dashboard onShowLogin={handleShowLogin} />} />
@@ -94,8 +98,16 @@ function AppContent() {
               element={<Dashboard onShowLogin={handleShowLogin} />}
             />
             <Route
+              path="/faculty-advisory-dashboard"
+              element={<FacultyDashboard onShowLogin={handleShowLogin} />}
+            />
+            <Route
               path="/join-now"
               element={<JoinNow onShowLogin={handleShowLogin} />}
+            />
+            <Route
+              path="/media-request"
+              element={<MediaRequest onShowLogin={handleShowLogin} />}
             />
             <Route
               path="/Register-New-Entity"

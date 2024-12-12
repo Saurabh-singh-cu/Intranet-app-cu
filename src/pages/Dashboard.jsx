@@ -53,6 +53,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import expo from "../assets/images/expo.jpg";
 import NewsViews from "./NewsViews";
+import FacultyDashboard from "./FacultyDashboard";
 
 const Dashboard = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -586,8 +587,12 @@ const Dashboard = () => {
         }
       );
 
-      if (response.status === 200) {
-        message.success("Media updated successfully");
+      if (response.status === 201) {
+       Swal.fire({
+        title: "Media updated successfully",
+        icon:"success"
+
+       })
         onCloseDrawer();
       } else {
         message.error("Failed to update media");
@@ -658,6 +663,7 @@ const Dashboard = () => {
         {(isLoggedIn === true && userName?.role_name === "Student Secretary") ||
         userName?.role_name === "Admin" ? (
           <>
+        
             <div style={{ marginTop: "-27px" }} className="club-details-page">
               <div
                 className="hero-section"
@@ -675,8 +681,7 @@ const Dashboard = () => {
                   <div className="hero-tagline"></div>
                   <p className="hero-subtitle"> </p>
                 </div>
-                <Popover
-                  title={`Update/Remove Banner Image for ${userDetails?.secretary_details?.registration_name}`}
+                <div
                 >
                   {" "}
                   <Popover
@@ -690,7 +695,7 @@ const Dashboard = () => {
                     </button>
                   </Popover>
                   {renderDrawerContent()}
-                </Popover>
+                </div>
                 <div className="hero-shapes">
                   <div className="shape shape-1"></div>
                   <div className="shape shape-2"></div>
@@ -1216,6 +1221,8 @@ const Dashboard = () => {
       >
         {renderDrawerContent()}
       </Drawer>
+
+    
     </>
   );
 };

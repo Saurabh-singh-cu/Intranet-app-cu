@@ -21,14 +21,26 @@ const routes = [
   {
     path: "/student-secretary-dashboard",
     name: "Dashboard",
-    icon: <FaHome style={{color:"#fff"}} />,
+    icon: <FaHome  />,
     allowedRoles: ["Student Secretary"]
+  },
+  {
+    path: "/faculty-advisory-dashboard",
+    name: "Dashboard",
+    icon: <FaHome  />,
+    allowedRoles: ["Faculty Advisory"]
   },
   {
     path: "/configuration",
     name: "Configuration",
     icon:<FaWpforms />,
     allowedRoles: ["Admin"]
+  },
+  {
+    path: "/media-request",
+    name: "Media Request",
+    icon:<FaWpforms />,
+    allowedRoles: ["Faculty Advisory"]
   },
   // {
   //   path: "/EntityCreationForm",

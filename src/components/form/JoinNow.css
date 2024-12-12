@@ -265,7 +265,7 @@
   }
 
   .main-content {
-    padding: 1rem;
+    /* padding: 1rem; */
   }
 
   .email-group,
@@ -280,7 +280,7 @@
 
 @media (max-width: 480px) {
   .form-section {
-    padding: 1rem;
+    /* padding: 1rem; */
   }
 
   .form-section h3 {
@@ -303,6 +303,7 @@
     position: static;
     width: 100%;
     height: auto;
+    display: none;
   }
 
   .main-content {
