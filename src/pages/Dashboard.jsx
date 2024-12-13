@@ -75,6 +75,9 @@ const Dashboard = () => {
   const [bannerFile, setBannerFile] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
 
+  const [regId, setRegId] = useState(null);
+  const [mediaData, setMediaData] = useState(null);
+
   const [filteredData, setFilteredData] = useState({
     club: 0,
     community: 0,
@@ -353,76 +356,94 @@ const Dashboard = () => {
     onCloseDrawer();
   };
 
+  useEffect(() => {
+    const getUserData = () => {
+      try {
+        const userData = localStorage.getItem("user");
+        if (userData) {
+          const parsedUserData = JSON.parse(userData);
+          if (
+            parsedUserData &&
+            parsedUserData.secretary_details &&
+            parsedUserData.secretary_details.reg_id
+          ) {
+            setRegId(parsedUserData.secretary_details.reg_id);
+          } else {
+            throw new Error("reg_id not found in user data");
+          }
+        } else {
+          throw new Error("User data not found in localStorage");
+        }
+      } catch (err) {
+        console.log(`Failed to get user data: ${err.message}`);
+      }
+    };
+
+    getUserData();
+  }, []);
+
+  useEffect(() => {
+    if (regId) {
+      approvedMedia(regId);
+      console.log(regId, "RRRRRRRRRRRRRRRRRRRRRRRRR");
+    }
+  }, [regId]);
+
+  const approvedMedia = async (regId) => {
+    try {
+      const fetch = await axios.get(
+        `http://172.17.2.247:8080/intranetapp/entity_media_approved/${regId}/`
+      );
+      setMediaData(fetch?.data[0]);
+      console.log(fetch?.data[0], "FETCH MEDIA");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const renderDrawerContent = () => {
     if (drawerContent === "media") {
       return (
         <>
-          <h3>Update Banner</h3>
-          <Upload.Dragger
-            name="banner"
-            className="banner-box"
-            multiple={false}
-            beforeUpload={(file) => {
-              setBannerFile(file);
-              return false;
-            }}
-            onChange={(info) => {
-              const { status } = info.file;
-              if (status !== "uploading") {
-                console.log(info.file, info.fileList);
-              }
-              if (status === "done") {
-                message.success(
-                  `${info.file.name} banner file ready for upload.`
-                );
-              } else if (status === "error") {
-                message.error(
-                  `${info.file.name} banner file failed to prepare.`
-                );
-              }
-            }}
-            action="/api/upload"
-          >
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to upload banner
-            </p>
-          </Upload.Dragger>
+          <form>
+            <h3>Update Banner</h3>
+            <Upload.Dragger
+              name="banner"
+              className="banner-box"
+              multiple={false}
+              beforeUpload={(file) => {
+                setBannerFile(file);
+                return false;
+              }}
+              onChange={(info) => {
+                const { status } = info.file;
+                if (status !== "uploading") {
+                  console.log(info.file, info.fileList);
+                }
+                if (status === "done") {
+                  message.success(
+                    `${info.file.name} banner file ready for upload.`
+                  );
+                } else if (status === "error") {
+                  message.error(
+                    `${info.file.name} banner file failed to prepare.`
+                  );
+                }
+              }}
+              action="/api/upload"
+            >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to upload banner
+              </p>
+            </Upload.Dragger>
 
-          <h3 style={{ marginTop: "20px" }}>Update Logo</h3>
-          <Upload.Dragger
-            name="logo"
-            multiple={false}
-            beforeUpload={(file) => {
-              setLogoFile(file);
-              return false;
-            }}
-            onChange={(info) => {
-              const { status } = info.file;
-              if (status !== "uploading") {
-                console.log(info.file, info.fileList);
-              }
-              if (status === "done") {
-                message.success(
-                  `${info.file.name} logo file ready for upload.`
-                );
-              } else if (status === "error") {
-                message.error(`${info.file.name} logo file failed to prepare.`);
-              }
-            }}
-            action="/api/upload"
-          >
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">Click or drag file to upload logo</p>
-          </Upload.Dragger>
-
-          <Button style={{ marginTop: 16 }} onClick={handleMediaUpload}>
-            Update Media
-          </Button>
+            <Button style={{ marginTop: 16 }} onClick={handleBannerUpload}>
+              Update Media
+            </Button>
+          </form>
         </>
       );
     }
@@ -465,32 +486,39 @@ const Dashboard = () => {
       case "logo":
         return (
           <>
+            <h3 style={{ marginTop: "20px" }}>Update Logo</h3>
             <Upload.Dragger
-              name="logoImage"
+              name="logo"
               multiple={false}
-              action="/api/upload" // Replace with your actual upload API endpoint
+              beforeUpload={(file) => {
+                setLogoFile(file);
+                return false;
+              }}
               onChange={(info) => {
                 const { status } = info.file;
+                if (status !== "uploading") {
+                  console.log(info.file, info.fileList);
+                }
                 if (status === "done") {
                   message.success(
-                    `${info.file.name} file uploaded successfully.`
+                    `${info.file.name} logo file ready for upload.`
                   );
                 } else if (status === "error") {
-                  message.error(`${info.file.name} file upload failed.`);
+                  message.error(
+                    `${info.file.name} logo file failed to prepare.`
+                  );
                 }
               }}
+              action="/api/upload"
             >
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">
-                Click or drag file to this area to upload
-              </p>
-              <p className="ant-upload-hint">
-                Upload a new logo image. Recommended size: 200x200px.
+                Click or drag file to upload logo
               </p>
             </Upload.Dragger>
-            <Button style={{ marginTop: 16 }} onClick={handleEditContent}>
+            <Button style={{ marginTop: 16 }} onClick={handleLogoUpload}>
               Update Logo
             </Button>
           </>
@@ -568,17 +596,16 @@ const Dashboard = () => {
     }
   };
 
-  const handleMediaUpload = async () => {
+  const handleBannerUpload = async () => {
     const formData = new FormData();
     formData.append("reg_id", userDetails?.secretary_details?.reg_id);
 
     // Append banner and logo files if they exist
     if (bannerFile) formData.append("banner", bannerFile);
-    if (logoFile) formData.append("logo", logoFile);
 
     try {
       const response = await axios.post(
-        "http://172.17.2.247:8080/intranetapp/entity-media/",
+        "http://172.17.2.247:8080/intranetapp/update_entity_media_banner/",
         formData,
         {
           headers: {
@@ -587,19 +614,50 @@ const Dashboard = () => {
         }
       );
 
-      if (response.status === 201) {
-       Swal.fire({
-        title: "Media updated successfully",
-        icon:"success"
-
-       })
-        onCloseDrawer();
-      } else {
-        message.error("Failed to update media");
-      }
+      Swal.fire({
+        title: "Banner updated successfully",
+        icon: "success",
+      });
+      onCloseDrawer();
     } catch (error) {
-      console.error("Error updating media:", error);
-      message.error("An error occurred while updating media");
+      console.error("Error updating Banner:", error);
+      message.error("An error occurred while updating Banner");
+      Swal.fire({
+        title: "An error occurred while updating Banner",
+        icon: "error",
+      });
+    }
+  };
+  const handleLogoUpload = async () => {
+    const formData = new FormData();
+    formData.append("reg_id", userDetails?.secretary_details?.reg_id);
+
+    // Append banner and logo files if they exist
+
+    if (logoFile) formData.append("logo", logoFile);
+
+    try {
+      const response = await axios.post(
+        "http://172.17.2.247:8080/intranetapp/update_entity_media_logo/",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      Swal.fire({
+        title: "Logo updated successfully",
+        icon: "success",
+      });
+      onCloseDrawer();
+    } catch (error) {
+      console.error("Error updating Logo:", error);
+      Swal.fire({
+        title: "An error occurred while updating Logo",
+        icon: "error",
+      });
     }
   };
 
@@ -663,12 +721,11 @@ const Dashboard = () => {
         {(isLoggedIn === true && userName?.role_name === "Student Secretary") ||
         userName?.role_name === "Admin" ? (
           <>
-        
             <div style={{ marginTop: "-27px" }} className="club-details-page">
               <div
                 className="hero-section"
                 style={{
-                  backgroundImage: `url(${bannerclub})`,
+                  backgroundImage: `url(${mediaData?.banner_url})`,
                   height: "250px",
                   justifyContent: "space-between",
                   display: "flex",
@@ -681,8 +738,7 @@ const Dashboard = () => {
                   <div className="hero-tagline"></div>
                   <p className="hero-subtitle"> </p>
                 </div>
-                <div
-                >
+                <div>
                   {" "}
                   <Popover
                     title={`Update Banner and Logo for ${userDetails?.secretary_details?.registration_name}`}
@@ -691,7 +747,7 @@ const Dashboard = () => {
                       onClick={() => showDrawer("media")}
                       className="btn-edit btn-1"
                     >
-                      Update Media
+                      Update Banner
                     </button>
                   </Popover>
                   {renderDrawerContent()}
@@ -708,7 +764,7 @@ const Dashboard = () => {
                 <div className="details-content">
                   <div className="program-header">
                     <img
-                      src={cc1}
+                      src={mediaData?.logo_url}
                       alt="Program Logo"
                       className="program-logo"
                     />
@@ -1221,8 +1277,6 @@ const Dashboard = () => {
       >
         {renderDrawerContent()}
       </Drawer>
-
-    
     </>
   );
 };

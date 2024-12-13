@@ -17,6 +17,9 @@ const ClubList = () => {
   const [societies, setSocieties] = useState([]);
   const [filteredSocieties, setFilteredSocieties] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [regId, setRegId] = useState(null);
+  const [mediaData, setMediaData] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,6 +57,52 @@ const ClubList = () => {
   const handleBack = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    const getUserData = () => {
+      try {
+        const userData = localStorage.getItem("user");
+        if (userData) {
+          const parsedUserData = JSON.parse(userData);
+          if (
+            parsedUserData &&
+            parsedUserData.secretary_details &&
+            parsedUserData.secretary_details.reg_id
+          ) {
+            setRegId(parsedUserData.secretary_details.reg_id);
+          } else {
+            throw new Error("reg_id not found in user data");
+          }
+        } else {
+          throw new Error("User data not found in localStorage");
+        }
+      } catch (err) {
+        console.log(`Failed to get user data: ${err.message}`);
+      }
+    };
+
+    getUserData();
+  }, []);
+
+  useEffect(() => {
+    if (regId) {
+      approvedMedia(regId);
+      console.log(regId, "RRRRRRRRRRRRRRRRRRRRRRRRR");
+    }
+  }, [regId]);
+
+  const approvedMedia = async (regId) => {
+    try {
+      const fetch = await axios.get(
+        `http://172.17.2.247:8080/intranetapp/entity_media_approved/${regId}/`
+      );
+      setMediaData(fetch?.data[0]);
+      console.log(fetch?.data[0], "FETCH MEDIA");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
 
   return (
     <div className="club-container">

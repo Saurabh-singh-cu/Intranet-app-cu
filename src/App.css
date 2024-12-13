@@ -340,7 +340,7 @@ main {
 /* scroller css  */
 /* For WebKit browsers */
 ::-webkit-scrollbar {
-  width: 12px; /* Width of the scrollbar */
+  width: 4px; /* Width of the scrollbar */
 }
 
 ::-webkit-scrollbar-track {

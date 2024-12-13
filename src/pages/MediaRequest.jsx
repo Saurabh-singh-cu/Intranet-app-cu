@@ -98,7 +98,7 @@ const MediaRequest = () => {
         title: "Status Changed",
         icon: "success",
       });
-      fetchEntityMedia();
+      fetchEntityMedia(regId);
     } catch (err) {
       const errorMessage = `Failed to update status: ${
         err.response?.data?.detail || err.message
@@ -178,9 +178,9 @@ const MediaRequest = () => {
                     }
                     className="status-select"
                   >
-                    <option value="Pending">Pending</option>
+                  <option value="">Request Pending</option>
                     <option value="Approved">Approved</option>
-                    <option value="Rejected">Rejected</option>
+                  
                   </select>
                 </td>
               </tr>

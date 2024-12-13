@@ -1,23 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Heart, Share2, Users, Trophy, Eye, Clock, Tag } from "lucide-react";
-import bannerclub from "../assets/images/bannerclub.jpg";
-import cc1 from "../assets/images/c3.png";
-import "./JoinNowDetail.css";
+import axios from "axios";
+import { Heart, Share2, Users, Trophy, Eye, Clock, Tag } from 'lucide-react';
+import { MdOutlineArrowBack } from "react-icons/md";
 import EventCardsDash from "./EventCardsDash";
 import Scroller from "../components/Scroller";
-import { MdOutlineArrowBack } from "react-icons/md";
+import bannerclub from "../assets/images/bannerclub.jpg"
+import "./JoinNowDetail.css";
 
 const JoinNowDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { society: selectedSociety } = location.state || {};
+  const [mediaData, setMediaData] = useState(null);
+  const [societies, setSocieties] = useState([]);
 
-  console.log(selectedSociety, "SELECTEDDDDDDDDDDDDDDDDDDD")
+  const selectedSociety = location.state?.society;
+
+  console.log(selectedSociety, "SELECTEDDDDDDDDDDDDDDDDDDD");
+
+  const approvedMedia = async () => {
+    if (!selectedSociety || !selectedSociety.reg_id) {
+      console.error("No reg_id available");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `http://172.17.2.247:8080/intranetapp/entity_media_approved/${selectedSociety.reg_id}/`
+      );
+      setMediaData(response.data[0]);
+      console.log(response.data[0], "FETCH MEDIA");
+    } catch (error) {
+      console.error("Error fetching approved media:", error);
+    }
+  };
+
+  const fetchSocieties = async () => {
+    try {
+      const response = await axios.get(
+        "http://172.17.2.247:8080/intranetapp/entity-registration-summary/?entity_id=1"
+      );
+      setSocieties(response.data);
+      console.log(response.data, "Fetched Societies");
+    } catch (error) {
+      console.error("Error fetching societies:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedSociety && selectedSociety.reg_id) {
+      approvedMedia();
+      console.log(selectedSociety.reg_id, "Society Reg ID");
+    }
+    fetchSocieties();
+  }, [selectedSociety]);
 
   if (!selectedSociety) {
     return <div>No society data available</div>;
   }
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   const categories = [
     { name: "Debate ", color: "#3498db" },
@@ -27,16 +71,12 @@ const JoinNowDetail = () => {
     { name: "Creative Expression", color: "#9b59b6" },
   ];
 
-  const handleBack = () => {
-    navigate(-1);
-  };
-
   return (
     <div className="club-details-page">
      
       <div
         className="hero-section"
-        style={{ backgroundImage: `url(${bannerclub})` }}
+        style={{ backgroundImage: `url(${mediaData?.banner_url ? mediaData?.banner_url : bannerclub})` }}
       >
         <div className="hero-content">
           <h1 className="hero-title">{selectedSociety.registration_name}</h1>
@@ -64,7 +104,7 @@ const JoinNowDetail = () => {
       <div className="details-container">
         <div className="details-content">
           <div className="program-header">
-            <img src={cc1} alt="Program Logo" className="program-logo" />
+            <img src={mediaData?.logo_url} alt="Program Logo" className="program-logo" />
             <div className="program-info">
               <h2>{selectedSociety.registration_name}</h2>
               <div className="program-meta">
