@@ -29,7 +29,7 @@ const ClubList = () => {
   const fetchSocieties = async () => {
     try {
       const response = await fetch(
-        "http://172.17.2.247:8080/intranetapp/entity-registration-summary/?entity_id=1"
+        "http://13.202.65.103/intranetapp/entity-registration-summary/?entity_id=1"
       );
       const data = await response.json();
       setSocieties(data);
@@ -94,7 +94,7 @@ const ClubList = () => {
   const approvedMedia = async (regId) => {
     try {
       const fetch = await axios.get(
-        `http://172.17.2.247:8080/intranetapp/entity_media_approved/${regId}/`
+        `http://13.202.65.103/intranetapp/entity_media_approved/${regId}/`
       );
       setMediaData(fetch?.data[0]);
       console.log(fetch?.data[0], "FETCH MEDIA");

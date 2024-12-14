@@ -26,7 +26,7 @@ const DeptList = () => {
   const fetchSocieties = async () => {
     try {
       const response = await fetch(
-        "http://172.17.2.247:8080/intranetapp/entity-registration-summary/?entity_id=2"
+        "http://13.202.65.103/intranetapp/entity-registration-summary/?entity_id=2"
       );
       const data = await response.json();
       setSocieties(data);

@@ -126,7 +126,7 @@ const AcademicAffairsForm = () => {
 
     try {
       const response = await axios.post(
-        "http://172.17.2.247:8080/intranetapp/entity-requests/",
+        "http://13.202.65.103/intranetapp/entity-requests/",
         formData
       );
 
@@ -309,7 +309,7 @@ const AcademicAffairsForm = () => {
   useEffect(() => {
     const fetchEntityData = async () => {
       const response = await fetch(
-        "http://172.17.2.247:8080/intranetapp/entity-types/"
+        "http://13.202.65.103/intranetapp/entity-types/"
       );
       const data = await response.json();
       setEntityData(data);
@@ -317,7 +317,7 @@ const AcademicAffairsForm = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          "http://172.17.2.247:8080/intranetapp/departments/"
+          "http://13.202.65.103/intranetapp/departments/"
         );
         setDepartments(response.data);
         console.log(response.data, "depart");
@@ -334,7 +334,7 @@ const AcademicAffairsForm = () => {
   const getCurrentSession = async () => {
     try{
       const response = await axios.get(
-        "http://172.17.2.247:8080/intranetapp/current_session/"
+        "http://13.202.65.103/intranetapp/current_session/"
       );
       setCurrentSession(response?.data?.session_code);
     }catch(error) {

@@ -71,7 +71,7 @@ const JoinNow = () => {
   const handleFinalSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://172.17.2.247:8080/intranetapp/final_submit/",
+        "http://13.202.65.103/intranetapp/final_submit/",
         {
           membership_id: membershipId,
           transaction_id:
@@ -106,7 +106,7 @@ const JoinNow = () => {
     try {
       setIsFormDisabled(true);
       const response = await axios.post(
-        "http://172.17.2.247:8080/intranetapp/send_otp_email/",
+        "http://13.202.65.103/intranetapp/send_otp_email/",
         {
           member_name: name,
           member_email: `${email}@cumail.in`,
@@ -150,7 +150,7 @@ const JoinNow = () => {
   const handleVerifyOTP = async () => {
     try {
       const response = await axios.post(
-        "http://172.17.2.247:8080/intranetapp/verify_otp/",
+        "http://13.202.65.103/intranetapp/verify_otp/",
         {
           membership_id: membershipId,
           otp: otp,
@@ -220,9 +220,9 @@ const JoinNow = () => {
   };
 
   const apiUrls = {
-    "entity-types": "http://172.17.2.247:8080/intranetapp/entity-types/",
-    departments: "http://172.17.2.247:8080/intranetapp/departments/",
-    currentSession: "http://172.17.2.247:8080/intranetapp/current_session/",
+    "entity-types": "http://13.202.65.103/intranetapp/entity-types/",
+    departments: "http://13.202.65.103/intranetapp/departments/",
+    currentSession: "http://13.202.65.103/intranetapp/current_session/",
   };
 
   const fetchDepartments = async () => {
@@ -253,7 +253,7 @@ const JoinNow = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://172.17.2.247:8080/intranetapp/entity-registration-name/?entity_id=${entity}`
+        `http://13.202.65.103/intranetapp/entity-registration-name/?entity_id=${entity}`
       );
       setEntityListData(response.data);
       console.log(response.data, "Updated entity list");

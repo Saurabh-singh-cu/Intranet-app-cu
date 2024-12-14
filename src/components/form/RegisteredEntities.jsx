@@ -36,7 +36,7 @@ function RegisteredEntities() {
   });
 
   useEffect(() => {
-    axios.get("http://172.17.2.247:8080/intranetapp/entity-registration/")
+    axios.get("http://13.202.65.103/intranetapp/entity-registration/")
       .then((response) => {
         setEntities(response.data);
       })
@@ -120,7 +120,7 @@ function RegisteredEntities() {
           user_id: user?.user_id || null,
         };
         axios
-          .post("http://172.17.2.247:8080/intranetapp/send-email/", payload)
+          .post("http://13.202.65.103/intranetapp/send-email/", payload)
 
           .then((response) => {
             message.success("Email sent successfully");

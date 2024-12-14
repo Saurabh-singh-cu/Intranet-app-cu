@@ -54,7 +54,7 @@ const MediaRequest = () => {
   const fetchEntityMedia = async (regId) => {
     try {
       const response = await axios.get(
-        `http://172.17.2.247:8080/intranetapp/entity_media_pending/?reg_id=${regId}`,
+        `http://13.202.65.103/intranetapp/entity_media_pending/?reg_id=${regId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -86,7 +86,7 @@ const MediaRequest = () => {
     }
     try {
       await axios.put(
-        `http://172.17.2.247:8080/intranetapp/entity-media/${id}/update-status/?reg_id=${regId}`,
+        `http://13.202.65.103/intranetapp/entity-media/${id}/update-status/?reg_id=${regId}`,
         { status: newStatus },
         {
           headers: {
@@ -138,13 +138,13 @@ const MediaRequest = () => {
                 <td>
                   <div className="image-container">
                     <img
-                      src={request.banner_url}
+                      src={request.temp_banner}
                       alt="Banner"
                       className="thumbnail"
                     />
                     <div className="image-hover">
                       <img
-                        src={request.banner_url}
+                        src={request.temp_banner}
                         alt="Banner"
                         className="full-image"
                       />
@@ -154,13 +154,13 @@ const MediaRequest = () => {
                 <td>
                   <div className="image-container">
                     <img
-                      src={request.logo_url}
+                      src={request.temp_logo}
                       alt="Logo"
                       className="thumbnail"
                     />
                     <div className="image-hover">
                       <img
-                        src={request.logo_url}
+                        src={request.temp_logo}
                         alt="Logo"
                         className="full-image"
                       />

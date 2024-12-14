@@ -71,7 +71,7 @@ function EntityTable() {
 
   // const fetchEntities = useCallback((token) => {
   //   console.log(token, "TOKENNNNNN")
-  //   fetch("http://172.17.2.247:8080/intranetapp/entity-requests/", {
+  //   fetch("http://13.202.65.103/intranetapp/entity-requests/", {
   //     headers: {
   //       'Authorization': `Bearer ${token}`,
   //       'Content-Type': 'application/json'
@@ -109,7 +109,7 @@ function EntityTable() {
   const fetchEntities = async () => {
     try {
       const response = await axios.get(
-        "http://172.17.2.247:8080/intranetapp/entity-requests/"
+        "http://13.202.65.103/intranetapp/entity-requests/"
       );
       setEntities(response.data);
     } catch (error) {
@@ -181,7 +181,7 @@ function EntityTable() {
           user_id: user?.user_id || null,
         };
         axios
-          .post("http://172.17.2.247:8080/intranetapp/send-email/", payload)
+          .post("http://13.202.65.103/intranetapp/send-email/", payload)
 
           .then((response) => {
             message.success("Email sent successfully");
@@ -266,7 +266,7 @@ function EntityTable() {
       };
 
       const response = await axios.put(
-        `http://172.17.2.247:8080/intranetapp/entity-request/${selectedEntityId}/`,
+        `http://13.202.65.103/intranetapp/entity-request/${selectedEntityId}/`,
         payload
       );
 

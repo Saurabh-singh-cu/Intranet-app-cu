@@ -159,7 +159,7 @@ const Dashboard = () => {
   const dashboardCardCount = async () => {
     try {
       const response = await axios.get(
-        "http://172.17.2.247:8080/intranetapp/entity_count/"
+        "http://13.202.65.103/intranetapp/entity_count/"
       );
       setDashboardCount(response.data);
       filterData(response.data);
@@ -392,7 +392,7 @@ const Dashboard = () => {
   const approvedMedia = async (regId) => {
     try {
       const fetch = await axios.get(
-        `http://172.17.2.247:8080/intranetapp/entity_media_approved/${regId}/`
+        `http://13.202.65.103/intranetapp/entity_media_approved/${regId}/`
       );
       setMediaData(fetch?.data[0]);
       console.log(fetch?.data[0], "FETCH MEDIA");
@@ -605,7 +605,7 @@ const Dashboard = () => {
 
     try {
       const response = await axios.post(
-        "http://172.17.2.247:8080/intranetapp/update_entity_media_banner/",
+        "http://13.202.65.103/intranetapp/update_entity_media_banner/",
         formData,
         {
           headers: {
@@ -638,7 +638,7 @@ const Dashboard = () => {
 
     try {
       const response = await axios.post(
-        "http://172.17.2.247:8080/intranetapp/update_entity_media_logo/",
+        "http://13.202.65.103/intranetapp/update_entity_media_logo/",
         formData,
         {
           headers: {
