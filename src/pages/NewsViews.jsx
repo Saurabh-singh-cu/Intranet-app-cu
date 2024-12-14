@@ -47,13 +47,13 @@ const NewsViews = () => {
     );
   };
 
-    // useEffect(() => {
-    //   const timer = setInterval(() => {
-    //     setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
-    //   }, 10000);
+    useEffect(() => {
+      const timer = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
+      }, 10000);
 
-    //   return () => clearInterval(timer);
-    // }, []);
+      return () => clearInterval(timer);
+    }, []);
 
   return (
     <div className="news-container">

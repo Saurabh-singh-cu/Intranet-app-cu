@@ -76,7 +76,7 @@ const JoinNowDetail = () => {
      
       <div
         className="hero-section"
-        style={{ backgroundImage: `url(${mediaData?.banner_url ? mediaData?.banner_url : bannerclub})` }}
+        style={{ backgroundImage: `url(${mediaData?.banner_url})` }}
       >
         <div className="hero-content">
           <h1 className="hero-title">{selectedSociety.registration_name}</h1>
@@ -153,9 +153,7 @@ const JoinNowDetail = () => {
           <div className="price-section">
             <span className="price-1">₹ {selectedSociety?.fee}</span>
             <div className="action-buttons">
-              <button className="like-button">
-                <Heart />
-              </button>
+             
               <button className="share-button">
                 <Share2 />
               </button>

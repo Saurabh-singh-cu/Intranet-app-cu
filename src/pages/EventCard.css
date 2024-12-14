@@ -118,5 +118,61 @@
       font-size: 0.7rem;
     }
   }
+  .edit-drawer .ant-drawer-body {
+    padding: 24px;
+  }
+  
+  .edit-drawer .ant-form-item {
+    margin-bottom: 24px;
+  }
+  
+  .edit-drawer .ant-upload-picture-card-wrapper {
+    width: 100%;
+  }
+  
+  .edit-drawer .ant-upload.ant-upload-select-picture-card {
+    width: 100%;
+    height: 200px;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+  
+  .edit-drawer .ant-upload-list-picture-card-container {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .edit-drawer .ant-upload-list-picture-card .ant-upload-list-item {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .edit-drawer .ant-upload-list-picture-card .ant-upload-list-item-info {
+    height: 100%;
+  }
+  
+  .edit-drawer .ant-upload-list-picture-card .ant-upload-list-item-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .reactEasyCrop_Container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .reactEasyCrop_CropArea {
+    color: rgba(255, 255, 255, 0.64);
+  }
+  
+  @media (max-width: 576px) {
+    .edit-drawer {
+      width: 100% !important;
+    }
+  }
   
   

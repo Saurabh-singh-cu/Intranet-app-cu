@@ -84,10 +84,12 @@ const FacultyDashboard = () => {
       console.log(error);
     }
   };
+
+  
   return (
     <>
      <div style={{height:"100vh", overflow:"scroll"}}>
-     <div style={{ padding: "5rem" }} className="secretary-info-container">
+     <div style={{ paddingRight: "2rem", paddingTop:"5rem" }} className="secretary-info-container">
         <div className="secretary-info">
           <div className="secretary-header">
             <h2>Welcome, {userDetails?.user_name}!</h2>
