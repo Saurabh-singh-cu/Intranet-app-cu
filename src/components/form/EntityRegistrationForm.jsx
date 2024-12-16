@@ -149,6 +149,7 @@ const EntityRegistrationForm = () => {
               value={formData.entity}
               onChange={handleChange}
               required
+              
             >
               <option value="">Select Entity</option>
               {entityData.map((entity) => (
@@ -171,6 +172,7 @@ const EntityRegistrationForm = () => {
               value={formData.registeration_code}
               onChange={handleChange}
               required
+              placeholder="Reg. Code"
             />
           </div>
         </div>
@@ -210,6 +212,7 @@ const EntityRegistrationForm = () => {
               value={formData.registeration_name}
               onChange={handleChange}
               required
+              placeholder="Registration Name"
             />
           </div>
         </div>
@@ -230,6 +233,7 @@ const EntityRegistrationForm = () => {
               value={formData.faculty_advisory_name}
               onChange={handleChange}
               required
+              placeholder="Faculty Advisory Name"
             />
           </div>
 
@@ -245,6 +249,7 @@ const EntityRegistrationForm = () => {
               value={formData.faculty_advisory_empcode}
               onChange={handleChange}
               required
+              placeholder="Fac Adv Emp Code"
             />
           </div>
         </div>
@@ -263,6 +268,7 @@ const EntityRegistrationForm = () => {
               value={formData.faculty_advisory_email}
               onChange={handleChange}
               required
+              placeholder="FA Email"
             />
           </div>
 
@@ -278,6 +284,7 @@ const EntityRegistrationForm = () => {
               value={formData.faculty_advisory_mobile}
               onChange={handleChange}
               required
+              placeholder="FA Mobile"
             />
           </div>
         </div>
@@ -298,6 +305,7 @@ const EntityRegistrationForm = () => {
               value={formData.faculty_co_advisory_name}
               onChange={handleChange}
               required
+              placeholder="FCA Name"
             />
           </div>
 
@@ -313,6 +321,7 @@ const EntityRegistrationForm = () => {
               value={formData.faculty_co_advisory_empcode}
               onChange={handleChange}
               required
+              placeholder="FCA Emp Code"
             />
           </div>
         </div>
@@ -331,6 +340,7 @@ const EntityRegistrationForm = () => {
               value={formData.faculty_co_advisory_email}
               onChange={handleChange}
               required
+              placeholder="FCA Email"
             />
           </div>
 
@@ -346,6 +356,7 @@ const EntityRegistrationForm = () => {
               value={formData.faculty_co_advisory_mobile}
               onChange={handleChange}
               required
+              placeholder="FCA Mobile"
             />
           </div>
         </div>
@@ -366,6 +377,7 @@ const EntityRegistrationForm = () => {
               value={formData.Secretary_name}
               onChange={handleChange}
               required
+              placeholder="Secretary Name"
             />
           </div>
 
@@ -381,6 +393,7 @@ const EntityRegistrationForm = () => {
               value={formData.Secretary_uid}
               onChange={handleChange}
               required
+              placeholder="Secretary UID"
             />
           </div>
         </div>
@@ -399,6 +412,7 @@ const EntityRegistrationForm = () => {
               value={formData.Secretary_email}
               onChange={handleChange}
               required
+              placeholder="Secretary Email"
             />
           </div>
 
@@ -414,6 +428,7 @@ const EntityRegistrationForm = () => {
               value={formData.Secretary_mobile}
               onChange={handleChange}
               required
+              placeholder="Secretary Mobile"
             />
           </div>
         </div>
@@ -434,6 +449,7 @@ const EntityRegistrationForm = () => {
               value={formData.Joint_Secretary_name}
               onChange={handleChange}
               required
+              placeholder="JS Name"
             />
           </div>
 
@@ -449,6 +465,7 @@ const EntityRegistrationForm = () => {
               value={formData.Joint_Secretary_uid}
               onChange={handleChange}
               required
+              placeholder="JS UID"
             />
           </div>
         </div>
@@ -467,6 +484,7 @@ const EntityRegistrationForm = () => {
               value={formData.Joint_Secretary_email}
               onChange={handleChange}
               required
+              placeholder="JS Email"
             />
           </div>
 
@@ -482,6 +500,7 @@ const EntityRegistrationForm = () => {
               value={formData.Joint_Secretary_mobile}
               onChange={handleChange}
               required
+              placeholder="JS Mobile"
             />
           </div>
         </div>
@@ -498,6 +517,7 @@ const EntityRegistrationForm = () => {
               name="remarks"
               value={formData.remarks}
               onChange={handleChange}
+              placeholder="Leave Remark..."
             ></textarea>
           </div>
         </div>

@@ -54,26 +54,21 @@ const MediaRequest = () => {
   const fetchEntityMedia = async (regId) => {
     try {
       const response = await axios.get(
-        `http://13.202.65.103/intranetapp/entity_media_pending/?reg_id=${regId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        `http://13.202.65.103/intranetapp/entity_media_pending/?reg_id=${regId}`
       );
-
-      console.log("API Response:", response.data);
       setRequests(response.data);
-      setLoading(false);
+      console.log("Updated data after fetch:", response.data);
     } catch (error) {
       setError(
         `Error fetching entity media: ${
           error.response?.data?.detail || error.message
         }`
       );
+    } finally {
       setLoading(false);
     }
   };
+  
 
   const handleStatusChange = async (id, newStatus) => {
     if (!regId) {
@@ -94,11 +89,15 @@ const MediaRequest = () => {
           },
         }
       );
+      await fetchEntityMedia(regId);
       Swal.fire({
         title: "Status Changed",
         icon: "success",
       });
-      fetchEntityMedia(regId);
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000)
+      
     } catch (err) {
       const errorMessage = `Failed to update status: ${
         err.response?.data?.detail || err.message

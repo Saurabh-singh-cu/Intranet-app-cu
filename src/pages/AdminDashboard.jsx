@@ -1,3 +1,264 @@
+// import React, { useEffect, useState } from 'react';
+// import styles from './AdminDashboard.module.css';
+// import axios from 'axios';
+
+
+// axios.interceptors.request.use((config) => {
+//   const user = JSON.parse(localStorage.getItem("user"));
+//   const token = user?.access;
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// });
+
+// const WelcomeCard = ({ name, sales, growth }) => {
+//   const [userName, setUserName] = useState([]);
+
+//   useEffect(() => {
+//     const getuser = JSON.parse(localStorage.getItem("user"));
+//     setUserName(getuser);
+//     console.log(getuser, "USER NAME");
+//   }, []);
+
+//   return (
+//     <div className={styles.card}>
+//       <div className={styles.leftContent}>
+//         <div className={styles.welcome}>
+//           <span>Welcome back</span>
+//           <h2>{userName?.user_name}!</h2>
+//         </div>
+//         <div className={styles.metrics}>
+//           <div className={styles.metric}>
+//             <span>Today's Sales</span>
+//             <h3>${sales}</h3>
+//             <div className={styles.progressBar}></div>
+//           </div>
+//           <div className={styles.metric}>
+//             <span>Growth Rate</span>
+//             <h3>{growth}</h3>
+//             <div className={styles.progressBar}></div>
+//           </div>
+//         </div>
+//       </div>
+//       <div className={styles.illustration}>
+//       <span>Today</span>
+//       <h3>${sales}</h3>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const MetricsCard = ({ title, value, percentage, trend, subtext }) => {
+//   return (
+//     <div className={styles.card}>
+//       <div className={styles.header}>
+//         <h3>{title}</h3>
+//         <button className={styles.menuButton} aria-label="More options">⋮</button>
+//       </div>
+//       <div className={styles.content}>
+//         <div className={styles.mainMetric}>
+//           <h2>{value}</h2>
+//           {percentage && (
+//             <div className={styles.gauge}>
+//               <svg viewBox="0 0 36 36" className={styles.circular}>
+//                 <path
+//                   d="M18 2.0845
+//                     a 15.9155 15.9155 0 0 1 0 31.831
+//                     a 15.9155 15.9155 0 0 1 0 -31.831"
+//                   fill="none"
+//                   stroke="#eee"
+//                   strokeWidth="3"
+//                 />
+//                 <path
+//                   d="M18 2.0845
+//                     a 15.9155 15.9155 0 0 1 0 31.831
+//                     a 15.9155 15.9155 0 0 1 0 -31.831"
+//                   fill="none"
+//                   stroke="#2196F3"
+//                   strokeWidth="3"
+//                   strokeDasharray={`${percentage}, 100`}
+//                 />
+//                 <text x="18" y="20.35" className={styles.percentage}>
+//                   {percentage}%
+//                 </text>
+//               </svg>
+//             </div>
+//           )}
+//         </div>
+//         {subtext && <p className={styles.subtext}>{subtext}</p>}
+//         {trend && (
+//           <div className={`${styles.trend} ${styles[trend]}`}>
+//             {trend === 'up' ? '↑' : '↓'} {percentage}%
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// const RevenueChart = () => {
+//   return (
+//     <div className={styles.card}>
+//       <div className={styles.header}>
+//         <h3>Monthly Revenue</h3>
+//         <button className={styles.menuButton} aria-label="More options">⋮</button>
+//       </div>
+//       <div className={styles.chartContainer}>
+//         <div className={styles.chart}>
+//           <div className={styles.bar} style={{ height: '30%' }}></div>
+//           <div className={styles.bar} style={{ height: '50%' }}></div>
+//           <div className={styles.bar} style={{ height: '70%' }}></div>
+//           <div className={styles.bar} style={{ height: '40%' }}></div>
+//           <div className={styles.bar} style={{ height: '60%' }}></div>
+//           <div className={styles.bar} style={{ height: '45%' }}></div>
+//           <div className={styles.bar} style={{ height: '35%' }}></div>
+//           <div className={styles.bar} style={{ height: '55%' }}></div>
+//           <div className={styles.bar} style={{ height: '25%' }}></div>
+//         </div>
+//         <div className={styles.labels}>
+//           <span>Jan</span>
+//           <span>Feb</span>
+//           <span>Mar</span>
+//           <span>Apr</span>
+//           <span>May</span>
+//           <span>Jun</span>
+//           <span>Jul</span>
+//           <span>Aug</span>
+//           <span>Sep</span>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const DeviceChart = () => {
+//   const devices = [
+//     { name: 'Desktop', percentage: 35, color: '#2196F3' },
+//     { name: 'Tablet', percentage: 48, color: '#FF5722' },
+//     { name: 'Mobile', percentage: 27, color: '#4CAF50' }
+//   ];
+
+//   return (
+//     <div className={styles.card}>
+//       <div className={styles.header}>
+//         <h3>Device Type</h3>
+//         <button className={styles.menuButton} aria-label="More options">⋮</button>
+//       </div>
+//       <div className={styles.content}>
+//         <div className={styles.donutChart}>
+//           <svg viewBox="0 0 36 36" className={styles.circular}>
+//             {devices.map((device, index) => (
+//               <circle
+//                 key={device.name}
+//                 cx="18"
+//                 cy="18"
+//                 r="16"
+//                 fill="none"
+//                 stroke={device.color}
+//                 strokeWidth="3.8"
+//                 strokeDasharray={`${device.percentage} 100`}
+//                 strokeDashoffset={index * -25}
+//               />
+//             ))}
+//             <text x="18" y="18" className={styles.percentage}>68%</text>
+//             <text x="18" y="22" className={styles.label}>Total Views</text>
+//           </svg>
+//         </div>
+//         <div className={styles.legend}>
+//           {devices.map(device => (
+//             <div key={device.name} className={styles.legendItem}>
+//               <span className={styles.dot} style={{ backgroundColor: device.color }}></span>
+//               <span>{device.name}</span>
+//               <span>{device.percentage}%</span>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const AdminDashboard = () => {
+//   const [isPreview, setIsPreview] = useState(false);
+
+//   const togglePreview = () => {
+//     setIsPreview(!isPreview);
+//   };
+
+//   return (
+//     <div className={styles.dashboard}>
+//       <nav className={styles.navbar}>
+//         <div className={styles.navLeft}>
+//           <span className={styles.active}>Dashboard</span>
+//           <span>Analysis</span>
+//         </div>
+//         <div className={styles.navRight}>
+//           <button className={styles.previewButton} onClick={togglePreview}>
+//             {isPreview ? 'Exit Preview' : 'Preview'}
+//           </button>
+//           <button className={styles.settingsButton}>
+//             Settings
+//             <span className={styles.chevron}>▼</span>
+//           </button>
+//         </div>
+//       </nav>
+
+//       <div className={`${styles.content} ${isPreview ? styles.preview : ''}`}>
+//         <div className={styles.mainSection}>
+//           <WelcomeCard 
+//             name="Jhon Anderson"
+//             sales="65.4K"
+//             growth="78.4%"
+//           />
+//         </div>
+
+//         <div className={styles.metricsRow}>
+//           <MetricsCard
+//             title="Active Users"
+//             value="42.5K"
+//             percentage="78"
+//             subtext="24K users increased from last month"
+//           />
+//           <MetricsCard
+//             title="Total Users"
+//             value="97.4K"
+//             trend="up"
+//             percentage="12.5"
+//             subtext="from last month"
+//           />
+//         </div>
+
+//         <div className={styles.chartsGrid}>
+//           <RevenueChart />
+//           <DeviceChart />
+//           <MetricsCard
+//             title="Total Clicks"
+//             value="82.7K"
+//             percentage="12.5"
+//             trend="up"
+//           />
+//           <MetricsCard
+//             title="Total Views"
+//             value="68.4K"
+//             subtext="35K users increased from last month"
+//           />
+//         </div>
+
+//         <div className={styles.bottomSection}>
+//           <MetricsCard
+//             title="Total Accounts"
+//             value="85,247"
+//             trend="down"
+//             percentage="23.7"
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default AdminDashboard;
 import React, { useEffect, useState } from "react";
 import diljeet1 from "../assets/images/diljeet1.png";
 import diljeet from "../assets/images/diljeet.png";

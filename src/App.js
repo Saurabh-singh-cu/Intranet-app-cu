@@ -33,6 +33,7 @@ import JoinNowDetail from "./pages/JoinNowDetail";
 import RegisterNewEntity from "./components/form/RegisterNewEntity";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import MediaRequest from "./pages/MediaRequest";
+import Home from "./pages/Home";
 
 function AppContent() {
   const location = useLocation();
@@ -92,6 +93,10 @@ function AppContent() {
             <Route
               path="/admin-dashboard"
               element={<AdminDashboard onShowLogin={handleShowLogin} />}
+            />
+             <Route
+              path="/home"
+              element={<Home onShowLogin={handleShowLogin} />}
             />
             <Route
               path="/student-secretary-dashboard"

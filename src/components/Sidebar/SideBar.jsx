@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
-import { MdMessage } from "react-icons/md";
+import { MdMessage, MdOutlineDashboardCustomize } from "react-icons/md";
 import { BiAnalyse, BiSearch, BiCog } from "react-icons/bi";
 import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
 import { BsCartCheck } from "react-icons/bs";
@@ -15,19 +15,25 @@ const routes = [
   {
     path: "/admin-dashboard",
     name: "Dashboard",
-    icon: <FaHome />,
+    icon: <MdOutlineDashboardCustomize />,
     allowedRoles: ["Admin"]
+  },
+  {
+    path: "/home",
+    name: "Home",
+    icon: <FaHome />,
+    allowedRoles: ["Admin", "Student Secretary"]
   },
   {
     path: "/student-secretary-dashboard",
     name: "Dashboard",
-    icon: <FaHome  />,
+    icon: <MdOutlineDashboardCustomize />,
     allowedRoles: ["Student Secretary"]
   },
   {
     path: "/faculty-advisory-dashboard",
     name: "Dashboard",
-    icon: <FaHome  />,
+    icon: <MdOutlineDashboardCustomize />,
     allowedRoles: ["Faculty Advisory"]
   },
   {
