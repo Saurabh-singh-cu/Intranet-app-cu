@@ -34,6 +34,9 @@ import RegisterNewEntity from "./components/form/RegisterNewEntity";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import MediaRequest from "./pages/MediaRequest";
 import Home from "./pages/Home";
+import UploadEventRequest from "./components/form/UploadEventRequest";
+import AdminEventApproval from "./components/form/AdminEventApproval";
+import ProtectedRoute from "./components/ProtectedRoutes";
 
 function AppContent() {
   const location = useLocation();
@@ -78,6 +81,11 @@ function AppContent() {
   
   const isLoginPage = location.pathname === "/login";
 
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(storedUser);
+  }, []);
+
   return (
     <div>
       {!isLoginPage && (
@@ -92,7 +100,15 @@ function AppContent() {
             <Route path="/dummy" element={<StudentUpdatedPage onShowLogin={handleShowLogin} />} />
             <Route
               path="/admin-dashboard"
-              element={<AdminDashboard onShowLogin={handleShowLogin} />}
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]} user={user}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/event-approval-request"
+              element={<AdminEventApproval onShowLogin={handleShowLogin} />}
             />
              <Route
               path="/home"
@@ -105,6 +121,10 @@ function AppContent() {
             <Route
               path="/faculty-advisory-dashboard"
               element={<FacultyDashboard onShowLogin={handleShowLogin} />}
+            />
+             <Route
+              path="/upload-event-request"
+              element={<UploadEventRequest onShowLogin={handleShowLogin} />}
             />
             <Route
               path="/join-now"
@@ -132,16 +152,7 @@ function AppContent() {
                 )
               }
             />
-            {/* <Route
-              path="/EntityCreationForm"
-              element={
-                isLoggedIn ? (
-                  <AcademicAffairsForm />
-                ) : (
-                  <Dashboard onShowLogin={handleShowLogin} />
-                )
-              }
-            /> */}
+           
             <Route
               path="/entityTable"
               element={

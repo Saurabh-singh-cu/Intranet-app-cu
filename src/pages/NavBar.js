@@ -11,8 +11,7 @@ import "./NavBar.css";
 import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
-
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [filteredResults, setFilteredResults] = useState([]);
   const searchRef = useRef(null);
@@ -86,14 +85,14 @@ const NavBar = () => {
   ];
 
   const pages = [
-    { title: 'Dashboard', path: '/' },
-    { title: 'Clubs', path: '/clubs' },
-    { title: 'Departments', path: '/department-society' },
-    { title: 'Communities', path: '/communities' },
-    { title: 'Professional Society', path: '/professional-society' },
-    { title: 'Join Now', path: '/join-now' },
-    { title: 'Settings', path: '/settings' },
-    { title: 'Profile', path: '/profile' },
+    { title: "Dashboard", path: "/" },
+    { title: "Clubs", path: "/clubs" },
+    { title: "Departments", path: "/department-society" },
+    { title: "Communities", path: "/communities" },
+    { title: "Professional Society", path: "/professional-society" },
+    { title: "Join Now", path: "/join-now" },
+    { title: "Settings", path: "/settings" },
+    { title: "Profile", path: "/profile" },
   ];
 
   useEffect(() => {
@@ -103,16 +102,16 @@ const NavBar = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
-    
+
     if (query.trim()) {
-      const results = pages.filter(page => 
+      const results = pages.filter((page) =>
         page.title.toLowerCase().includes(query.toLowerCase())
       );
       setFilteredResults(results);
@@ -124,10 +123,9 @@ const NavBar = () => {
 
   const handleResultClick = (path) => {
     navigate(path);
-    setSearchQuery('');
+    setSearchQuery("");
     setShowResults(false);
   };
-
 
   return (
     <nav className="navbar">
@@ -174,68 +172,88 @@ const NavBar = () => {
       </div>
 
       <div className="navbar-right">
-        {(isLoggedIn === true && userName?.role_name === "Student Secretary") ||
-        userName?.role_name === "Admin" ? null : (
-          <>
-            {" "}
-            <button onClick={() => navigate("/join-now")} className="nav-button">
-          Join as New Member
-        </button>
-          </>
-        )}
-        {isLoggedIn === true &&
-        userName?.role_name === "Student Secretary" ? null : (
-          <> {isLoggedIn === false ? null : <></>}</>
-        )}
-
-        {isLoggedIn === true && userName ? (
-          <button className="icon-button desktop-only">
-            <span className="greenDot"></span>
-            <Dropdown
-              menu={{
-                items,
-              }}
-            >
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>
-                  <span className="userOnNav">{userName?.user_name} </span>
-                </Space>
-              </a>
-            </Dropdown>
-          </button>
-        ) : null}
-
-        <button
-          onClick={() => navigate("/Register-New-Entity")}
-          className="nav-button"
-        >
-          Register New Entity
-        </button>
-      
-
-        <div className="user-profile desktop-only">
-          <span
-            style={{ cursor: "pointer" }}
-            onClick={handleLoginLogout}
-            className="user-name"
+  {/* Check role and logged-in status */}
+  {isLoggedIn ? (
+    // If logged in, show only the username for certain roles
+    <>
+      {["Admin", "Faculty Advisory", "Student Secretary"].includes(
+        userName?.role_name
+      ) ? null : (
+        <>
+          {/* Buttons only for roles other than the above */}
+          <button
+            onClick={() => navigate("/join-now")}
+            className="nav-button"
           >
-            {isLoggedIn ? (
-              <div className="logout1">
-                Log out{" "}
-                <span style={{ marginLeft: "10px" }}>
-                  <IoIosLogOut />
-                </span>
-              </div>
-            ) : (
-              <div className="logout1">Login</div>
-            )}
+            Join as New Member
+          </button>
+          <button
+            onClick={() => navigate("/Register-New-Entity")}
+            className="nav-button"
+          >
+            Register New Entity
+          </button>
+        </>
+      )}
+
+      {/* Dropdown for logged-in user */}
+      {userName && (
+        <button className="icon-button desktop-only">
+          <span className="greenDot"></span>
+          <Dropdown menu={{ items }}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                <span className="userOnNav">{userName?.user_name}</span>
+              </Space>
+            </a>
+          </Dropdown>
+        </button>
+      )}
+    </>
+  ) : (
+    // If not logged in, show buttons
+    <>
+      <button
+        onClick={() => navigate("/join-now")}
+        className="nav-button"
+      >
+        Join as New Member
+      </button>
+      <button
+        onClick={() => navigate("/Register-New-Entity")}
+        className="nav-button"
+      >
+        Register New Entity
+      </button>
+    </>
+  )}
+
+  {/* Login/Logout Button */}
+  <div className="user-profile desktop-only">
+    <span
+      style={{ cursor: "pointer" }}
+      onClick={handleLoginLogout}
+      className="user-name"
+    >
+      {isLoggedIn ? (
+        <div className="logout1">
+          Log out{" "}
+          <span style={{ marginLeft: "10px" }}>
+            <IoIosLogOut />
           </span>
         </div>
+      ) : (
+        <div className="logout1">Login</div>
+      )}
+    </span>
+  </div>
 
-        <button className="menu-button mobile-only" onClick={toggleMenu}>
-          <FaBars />
-        </button>
-      </div>
+  {/* Mobile Menu */}
+  <button className="menu-button mobile-only" onClick={toggleMenu}>
+    <FaBars />
+  </button>
+</div>
+
 
       {isMenuOpen && (
         <div className="mobile-menu">
@@ -246,7 +264,7 @@ const NavBar = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="search-input"
           />
-        
+
           {isLoggedIn === true && userName ? (
             <button className="icon-button">
               <span className="greenDot"></span>

@@ -54,7 +54,7 @@ const MediaRequest = () => {
   const fetchEntityMedia = async (regId) => {
     try {
       const response = await axios.get(
-        `http://13.202.65.103/intranetapp/entity_media_pending/?reg_id=${regId}`
+        `http://172.17.2.247:8080/intranetapp/entity_media_pending/?reg_id=${regId}`
       );
       setRequests(response.data);
       console.log("Updated data after fetch:", response.data);
@@ -81,7 +81,7 @@ const MediaRequest = () => {
     }
     try {
       await axios.put(
-        `http://13.202.65.103/intranetapp/entity-media/${id}/update-status/?reg_id=${regId}`,
+        `http://172.17.2.247:8080/intranetapp/entity-media/${id}/update-status/?reg_id=${regId}`,
         { status: newStatus },
         {
           headers: {

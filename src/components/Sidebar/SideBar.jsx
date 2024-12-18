@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
-import { MdMessage, MdOutlineDashboardCustomize } from "react-icons/md";
+import { MdCloudUpload, MdEventNote, MdMessage, MdOutlineDashboardCustomize } from "react-icons/md";
 import { BiAnalyse, BiSearch, BiCog } from "react-icons/bi";
 import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
 import { BsCartCheck } from "react-icons/bs";
@@ -48,6 +48,12 @@ const routes = [
     icon:<FaWpforms />,
     allowedRoles: ["Faculty Advisory"]
   },
+  {
+    path: "/upload-event-request",
+    name: "Upload Event Request",
+    icon:<MdCloudUpload />,
+    allowedRoles: ["Faculty Advisory"]
+  },
   // {
   //   path: "/EntityCreationForm",
   //   name: "Entity Creation Form",
@@ -74,14 +80,14 @@ const routes = [
   },
   {
     path: "/file-manager",
-    name: "File Manager",
+    name: "Documents",
     icon: <AiTwotoneFileExclamation />,
-    allowedRoles: ["Admin", "Student Secretary"],
+    allowedRoles: ["Admin"],
     subRoutes: [
       {
-        path: "/settings/profile",
-        name: "Profile ",
-        icon: <FaUser />,
+        path: "/event-approval-request",
+        name: "Event Approval Request ",
+        icon: <MdEventNote />,
       },
       {
         path: "/settings/2fa",

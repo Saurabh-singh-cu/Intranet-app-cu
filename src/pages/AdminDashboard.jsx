@@ -270,6 +270,7 @@ import circle from "../assets/images/circle.svg";
 import { MdCardMembership, MdEventAvailable, MdGroupAdd, MdOutlineAttachMoney } from "react-icons/md";
 import { BsBank, BsBuildingsFill, BsCreditCard2Front, BsFillFilePptFill } from "react-icons/bs";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 
 const AdminDashboard = () => {
@@ -353,7 +354,7 @@ const AdminDashboard = () => {
   const dashboardCardCount = async () => {
     try {
       const response = await axios.get(
-        "http://13.202.65.103/intranetapp/entity_count/"
+        "http://172.17.2.247:8080/intranetapp/entity_count/"
       );
       setDashboardCount(response.data);
       filterData(response.data);
@@ -380,8 +381,18 @@ const AdminDashboard = () => {
   };
 
   const getEntityCount = async() => {
-    const response = await axios.get("http://13.202.65.103/intranetapp/entity-registration/")
-    setEntityCount(response?.data);
+    try{
+      const response = await axios.get("http://172.17.2.247:8080/intranetapp/entity-registration/")
+      setEntityCount(response?.data);
+    }catch(error){
+      Swal.fire({
+        title: "Something Wrong Here...!",
+        text:`${error?.response?.data?.detail}`,
+        icon : "error"
+      })
+      console.log(error)
+    }
+   
   }
 
   console.log(userRoleName, "ROLENAME")
@@ -390,20 +401,18 @@ const AdminDashboard = () => {
     <div style={{overflow:"scroll"}} className="dashboard-home">
       <div className="loggedInAss">{userName?.role_name}</div>
       <div  className="metric-cards-home-admin">
-      <div  onClick={redirectClubs} className="metric-card-home adminDash">
+      <div  className="metric-card-home adminDash">
           <img src={circle} />
-          {/* <h2>{filteredData?.club}</h2> */}
-          {/* <p>CLUB</p> */}
+         
           <h2>{entityCount?.length}+</h2>
           <p>Entity</p>
           <span className="icon-home">
           <MdGroupAdd size={50} />
           </span>
         </div>
-        <div onClick={redirectClubs} className="metric-card-home adminDash">
+        <div className="metric-card-home adminDash">
           <img src={circle} />
-          {/* <h2>{filteredData?.club}</h2> */}
-          {/* <p>CLUB</p> */}
+         
           <h2>1000+</h2>
           <p>Members</p>
           <span className="icon-home">
@@ -411,10 +420,9 @@ const AdminDashboard = () => {
           </span>
         </div>
 
-        <div onClick={redirectSociety} className="metric-card-home adminDash">
+        <div className="metric-card-home adminDash">
           <img src={circle} />
-          {/* <h2>{filteredData?.departmentSociety}</h2> */}
-          {/* <p>DEPARTMENT SOCIETY</p> */}
+         
           <h2>1500+</h2>
           <p>Events</p>
           <span className="icon-home">
@@ -424,8 +432,7 @@ const AdminDashboard = () => {
         </div>
         <div className="metric-card-home adminDash">
           <img src={circle} />
-          {/* <h2>{filteredData?.professionalSociety}</h2> */}
-          {/* <p>PROFESSIONAL SOCIETY</p> */}
+         
           <h2>52,000</h2>
           <p>Financial Budget</p>
           <span className="icon-home">
@@ -433,10 +440,9 @@ const AdminDashboard = () => {
             <MdOutlineAttachMoney  size={50} />
           </span>
         </div>
-        <div onClick={redirectComm} className="metric-card-home adminDash">
+        <div className="metric-card-home adminDash">
           <img src={circle} />
-          {/* <h2>{filteredData?.community}</h2> */}
-          {/* <p>COMMUNITY</p> */}
+         
           <h3>4000/50,000</h3>
           <p style={{marginTop:"30px"}}>Assessment</p>
           <span className="icon-home">

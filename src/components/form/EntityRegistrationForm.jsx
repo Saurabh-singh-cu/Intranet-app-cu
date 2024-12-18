@@ -37,9 +37,9 @@ const EntityRegistrationForm = () => {
   });
 
   const apiUrls = {
-    "entity-types": "http://13.202.65.103/intranetapp/entity-types/",
-    departments: "http://13.202.65.103/intranetapp/departments/",
-    currentSession: "http://13.202.65.103/intranetapp/current_session/",
+    "entity-types": "http://172.17.2.247:8080/intranetapp/entity-types/",
+    departments: "http://172.17.2.247:8080/intranetapp/departments/",
+    currentSession: "http://172.17.2.247:8080/intranetapp/current_session/",
   };
 
   const handleChange = (e) => {
@@ -66,7 +66,7 @@ const EntityRegistrationForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://13.202.65.103/intranetapp/entity-registration/", {
+      const response = await axios.post("http://172.17.2.247:8080/intranetapp/entity-registration/", {
         ...formData,
         session_code: currentSession,
       });

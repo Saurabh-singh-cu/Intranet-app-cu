@@ -36,7 +36,7 @@ function RegisteredEntities() {
   });
 
   useEffect(() => {
-    axios.get("http://13.202.65.103/intranetapp/entity-registration/")
+    axios.get("http://172.17.2.247:8080/intranetapp/entity-registration/")
       .then((response) => {
         setEntities(response.data);
       })
@@ -120,7 +120,7 @@ function RegisteredEntities() {
           user_id: user?.user_id || null,
         };
         axios
-          .post("http://13.202.65.103/intranetapp/send-email/", payload)
+          .post("http://172.17.2.247:8080/intranetapp/send-email/", payload)
 
           .then((response) => {
             message.success("Email sent successfully");
@@ -376,7 +376,8 @@ function RegisteredEntities() {
           <button className="clear-button">Add Entity</button>
         </div>
       </div>
-      <div className="ag-theme-alpine" style={{ height: 400, width: "100%" }}>
+     <div  style={{ height: "20vh", width: "100%" }}>
+     <div className="ag-theme-alpine">
         <AgGridReact
           columnDefs={columnDefs}
           rowData={entities}
@@ -388,6 +389,7 @@ function RegisteredEntities() {
           enableBrowserTooltips={true}
         />
       </div>
+     </div>
       <Drawer
         title="Edit Entity"
         placement="right"

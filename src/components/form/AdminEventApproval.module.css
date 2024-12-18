@@ -1,0 +1,200 @@
+.adminEventApproval {
+    max-width: 90vw;
+    margin: 0 auto;
+    padding: 89px 0px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .pageTitle {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+  }
+  
+  .eventTable {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .viewPdf {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .viewPdf:hover {
+    text-decoration: underline;
+  }
+  
+  .status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .status.pending {
+    background-color: #ffeeba;
+    color: #856404;
+  }
+  
+  .status.approved {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .status.rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .actionButtons {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+  }
+  
+  /* Ant Design Overrides */
+  :global(.ant-table-thead > tr > th) {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: bold;
+  }
+  
+  :global(.ant-table-tbody > tr:hover > td) {
+    background-color: #f1f3f5;
+  }
+  
+  :global(.ant-btn) {
+    border-radius: 4px;
+  }
+  
+  :global(.ant-modal-content) {
+    border-radius: 8px;
+  }
+  
+  :global(.ant-modal-header) {
+    border-radius: 8px 8px 0 0;
+  }
+  
+  :global(.ant-modal-title) {
+    font-size: 18px;
+    color: #333;
+  }
+  
+  @media (max-width: 768px) {
+    .adminEventApproval {
+      padding: 20px 10px;
+    }
+  
+    .actionButtons {
+      flex-direction: column;
+    }
+  }
+
+  .adminEventApproval {
+    padding: 24px;
+  }
+  
+  .pageTitle {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .eventTable {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .actionButtons {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .eventDrawer {
+    background: #f0f2f5;
+  }
+  
+  .eventDetails {
+    padding: 16px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .eventDetails h3 {
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: #1890ff;
+  }
+  
+  .eventDetails p {
+    margin-bottom: 8px;
+  }
+
+  .eventDetails strong {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .pdfLink {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 8px 16px;
+    background: #1890ff;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  
+  .pdfLink:hover {
+    background: #40a9ff;
+  }
+  
+  .pending {
+    color: #faad14;
+  }
+  
+  .approved {
+    color: #52c41a;
+  }
+  
+  .rejected {
+    color: #f5222d;
+  }
+  
+  .status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  
+  .status.pending {
+    background: #fffbe6;
+    border: 1px solid #faad14;
+  }
+  
+  .status.approved {
+    background: #f6ffed;
+    border: 1px solid #52c41a;
+  }
+  
+  .status.rejected {
+    background: #fff1f0;
+    border: 1px solid #f5222d;
+  }
+  .status.cancelled {
+    background: #ecc9c9;
+    border: 1px solid #d9d9d9;
+  }
+  .cancelled {
+    color: #ec5454;
+  }
+  
+  
+  

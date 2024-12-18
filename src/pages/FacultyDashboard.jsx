@@ -76,7 +76,7 @@ const FacultyDashboard = () => {
   const approvedMedia = async (regId) => {
     try {
       const fetch = await axios.get(
-        `http://13.202.65.103/intranetapp/entity_media_approved/${regId}/`
+        `http://172.17.2.247:8080/intranetapp/entity_media_approved/${regId}/`
       );
       setMediaData(fetch?.data[0]);
       console.log(fetch?.data[0], "FETCH MEDIA");
@@ -170,7 +170,7 @@ const FacultyDashboard = () => {
             <div className="prize-section">
               <div className="prize-details">
                 <div
-                  onClick={() => showDrawer("description")}
+                 
                   style={{ display: "flex" }}
                   className="prize-label"
                 >

@@ -39,7 +39,7 @@ const Login = ({ onLogin }) => {
 
     try {
       const response = await fetch(
-        "http://13.202.65.103/intranetapp/login/",
+        "http://172.17.2.247:8080/intranetapp/login/",
         {
           method: "POST",
           headers: {
@@ -85,7 +85,7 @@ const Login = ({ onLogin }) => {
         console.error("Role name is missing or undefined");
         window.location.href = "/";
       } else {
-        switch (data.role_name) {
+        switch (data?.role_name) {
           case "Admin":
             window.location.href = "/admin-dashboard";
             break;

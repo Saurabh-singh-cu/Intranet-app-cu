@@ -26,7 +26,7 @@ const JoinNowDetail = () => {
 
     try {
       const response = await axios.get(
-        `http://13.202.65.103/intranetapp/entity_media_approved/${selectedSociety.reg_id}/`
+        `http://172.17.2.247:8080/intranetapp/entity_media_approved/${selectedSociety.reg_id}/`
       );
       setMediaData(response.data[0]);
       console.log(response.data[0], "FETCH MEDIA");
@@ -38,7 +38,7 @@ const JoinNowDetail = () => {
   const fetchSocieties = async () => {
     try {
       const response = await axios.get(
-        "http://13.202.65.103/intranetapp/entity-registration-summary/?entity_id=1"
+        "http://172.17.2.247:8080/intranetapp/entity-registration-summary/?entity_id=1"
       );
       setSocieties(response.data);
       console.log(response.data, "Fetched Societies");
