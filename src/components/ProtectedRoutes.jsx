@@ -1,5 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
+import PageNotFound from "../PageNotFound";
 
 // ProtectedRoute Component
 const ProtectedRoute = ({ children, allowedRoles, user }) => {
@@ -10,7 +11,7 @@ const ProtectedRoute = ({ children, allowedRoles, user }) => {
 
   if (!allowedRoles.includes(user.role_name)) {
     // Show "Unauthorized" page if user role is not allowed
-    return <div>Unauthorized Access</div>;
+    return <div><PageNotFound /></div>;
   }
 
   return children;

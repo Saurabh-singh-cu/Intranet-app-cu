@@ -37,6 +37,7 @@ import Home from "./pages/Home";
 import UploadEventRequest from "./components/form/UploadEventRequest";
 import AdminEventApproval from "./components/form/AdminEventApproval";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import PageNotFound from "./PageNotFound";
 
 function AppContent() {
   const location = useLocation();
@@ -45,9 +46,9 @@ function AppContent() {
   });
   const [showLogin, setShowLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isStudentSecretary, setIsStudentSecretary ] = useState(false);
-  const [isFaculty, setIsFaculty ] = useState(false);
-  const [ user, setUser ] = useState([]);
+  const [isStudentSecretary, setIsStudentSecretary] = useState(false);
+  const [isFaculty, setIsFaculty] = useState(false);
+  const [user, setUser] = useState([]);
 
   const handleLogin = () => {
     console.log("Login success");
@@ -72,13 +73,12 @@ function AppContent() {
   useEffect(() => {
     const getUser = JSON.parse(localStorage?.getItem("user"));
     setUser(getUser);
-    console.log(getUser, "USERERERRERRERRE")
-    setIsAdmin(getUser?.role_name === 'Admin');
-    setIsStudentSecretary(getUser?.role_name === 'Student Secretary')
+    console.log(getUser, "USERERERRERRERRE");
+    setIsAdmin(getUser?.role_name === "Admin");
+    setIsStudentSecretary(getUser?.role_name === "Student Secretary");
     setIsFaculty(getUser?.role_name === "Faculty Advisory");
   }, []);
 
-  
   const isLoginPage = location.pathname === "/login";
 
   useEffect(() => {
@@ -93,11 +93,19 @@ function AppContent() {
       )}
 
       <div style={{ display: "flex" }}>
-        {isLoggedIn  && (isAdmin || isStudentSecretary || isFaculty) && <SideBar />}
+        {isLoggedIn && (isAdmin || isStudentSecretary || isFaculty) && (
+          <SideBar />
+        )}
         <div style={{ flex: 1 }}>
           <Routes>
-            <Route path="/" element={<Dashboard onShowLogin={handleShowLogin} />} />
-            <Route path="/dummy" element={<StudentUpdatedPage onShowLogin={handleShowLogin} />} />
+            <Route
+              path="/"
+              element={<Dashboard onShowLogin={handleShowLogin} />}
+            />
+            <Route
+              path="/dummy"
+              element={<StudentUpdatedPage onShowLogin={handleShowLogin} />}
+            />
             <Route
               path="/admin-dashboard"
               element={
@@ -108,9 +116,13 @@ function AppContent() {
             />
             <Route
               path="/event-approval-request"
-              element={<AdminEventApproval onShowLogin={handleShowLogin} />}
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]} user={user}>
+                  <AdminEventApproval onShowLogin={handleShowLogin} />
+                </ProtectedRoute>
+              }
             />
-             <Route
+            <Route
               path="/home"
               element={<Home onShowLogin={handleShowLogin} />}
             />
@@ -122,7 +134,7 @@ function AppContent() {
               path="/faculty-advisory-dashboard"
               element={<FacultyDashboard onShowLogin={handleShowLogin} />}
             />
-             <Route
+            <Route
               path="/upload-event-request"
               element={<UploadEventRequest onShowLogin={handleShowLogin} />}
             />
@@ -144,23 +156,41 @@ function AppContent() {
             />
             <Route
               path="/configuration"
+              // element={
+              //   isLoggedIn ? (
+              //     <Users />
+              //   ) : (
+              //     <Dashboard onShowLogin={handleShowLogin} />
+              //   )
+              // }
               element={
-                isLoggedIn ? (
-                  <Users />
-                ) : (
-                  <Dashboard onShowLogin={handleShowLogin} />
-                )
+                <ProtectedRoute allowedRoles={["Admin"]} user={user}>
+                  {isLoggedIn ? (
+                    <Users />
+                  ) : (
+                    <Dashboard onShowLogin={handleShowLogin} />
+                  )}
+                </ProtectedRoute>
               }
             />
-           
+
             <Route
               path="/entityTable"
+              // element={
+              //   isLoggedIn ? (
+              //     <EntityTable />
+              //   ) : (
+              //     <Dashboard onShowLogin={handleShowLogin} />
+              //   )
+              // }
               element={
-                isLoggedIn ? (
-                  <EntityTable />
-                ) : (
-                  <Dashboard onShowLogin={handleShowLogin} />
-                )
+                <ProtectedRoute allowedRoles={["Admin"]} user={user}>
+                  {isLoggedIn ? (
+                    <EntityTable />
+                  ) : (
+                    <Dashboard onShowLogin={handleShowLogin} />
+                  )}
+                </ProtectedRoute>
               }
             />
             <Route
@@ -205,12 +235,18 @@ function AppContent() {
             />
             <Route path="/clubs" element={<ClubList />} />
             <Route path="/department-society" element={<DeptList />} />
-            <Route path="/professional-society" element={<ProfessionalSociety />} />
+            <Route
+              path="/professional-society"
+              element={<ProfessionalSociety />}
+            />
             <Route path="/communities" element={<CommList />} />
             <Route path="/communities" element={<CommList />} />
-            <Route path="/join-now-detailed-page/" element={<JoinNowDetail />} />
+            <Route
+              path="/join-now-detailed-page/"
+              element={<JoinNowDetail />}
+            />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
-           
+
             <Route
               path="/af"
               element={
@@ -233,15 +269,24 @@ function AppContent() {
             />
             <Route
               path="/registered-entities"
+              // element={
+              //   isLoggedIn ? (
+              //     <RegisteredEntities />
+              //   ) : (
+              //     <Dashboard onShowLogin={handleShowLogin} />
+              //   )
+              // }
               element={
-                isLoggedIn ? (
-                  <RegisteredEntities />
-                ) : (
-                  <Dashboard onShowLogin={handleShowLogin} />
-                )
+                <ProtectedRoute allowedRoles={["Admin"]} user={user}>
+                  {isLoggedIn ? (
+                    <RegisteredEntities />
+                  ) : (
+                    <Dashboard onShowLogin={handleShowLogin} />
+                  )}
+                </ProtectedRoute>
               }
             />
-            <Route path="*" element={<div>Not found</div>} />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </div>
       </div>
