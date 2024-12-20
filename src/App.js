@@ -38,6 +38,7 @@ import UploadEventRequest from "./components/form/UploadEventRequest";
 import AdminEventApproval from "./components/form/AdminEventApproval";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import PageNotFound from "./PageNotFound";
+import EventPublishedRequest from "./components/form/EventPublishedRequest";
 
 function AppContent() {
   const location = useLocation();
@@ -119,6 +120,14 @@ function AppContent() {
               element={
                 <ProtectedRoute allowedRoles={["Admin"]} user={user}>
                   <AdminEventApproval onShowLogin={handleShowLogin} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/event-published-request"
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]} user={user}>
+                  <EventPublishedRequest onShowLogin={handleShowLogin} />
                 </ProtectedRoute>
               }
             />

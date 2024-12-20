@@ -3,6 +3,8 @@
     margin: 0 auto;
     padding: 89px 0px;
     font-family: 'Arial', sans-serif;
+    height: 90vh;
+    overflow: scroll;
   }
   
   .pageTitle {
@@ -193,7 +195,7 @@
     border: 1px solid #d9d9d9;
   }
   .cancelled {
-    color: #ec5454;
+    color: #fc0000;
   }
   
   

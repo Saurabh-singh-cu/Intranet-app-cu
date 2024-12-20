@@ -1,10 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { MdCloudUpload, MdInsertDriveFile } from "react-icons/md";
-import { Modal, Button, Form, Input, DatePicker, Upload, Drawer, Select, TimePicker } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import {
+  MdCloudUpload,
+  MdInsertDriveFile,
+  MdOutlineAccessTime,
+  MdOutlineCancel,
+} from "react-icons/md";
+import {
+  Modal,
+  Button,
+  Form,
+  Input,
+  DatePicker,
+  Upload,
+  Drawer,
+  Select,
+  TimePicker,
+  InputNumber,
+  Slider,
+  message,
+} from "antd";
+import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
 import styles from "./UploadEventRequest.module.css";
+import { FaEyeDropper } from "react-icons/fa";
+import { FaCheck, FaRegFilePdf } from "react-icons/fa6";
 
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
@@ -21,6 +41,7 @@ const UploadEventRequest = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [posterFile, setPosterFile] = useState(null);
   const [form] = Form.useForm();
 
   axios.interceptors.request.use((config) => {
@@ -64,9 +85,17 @@ const UploadEventRequest = () => {
   const handleFileChange = (info) => {
     if (info.file.status === "done") {
       setFile(info.file.originFileObj);
-      message.success(`${info.file.name} file uploaded successfully`);
+      Swal.fire({
+        title: "Uploaded Success",
+        text: `${info.file.name} file uploaded successfully`,
+        icon: "success",
+      });
     } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
+      Swal.fire({
+        title: "Uploaded Failed",
+        text: `${info.file.name} file upload failed.`,
+        icon: "error",
+      });
     }
   };
   const handleDrop = (e) => {
@@ -199,28 +228,6 @@ const UploadEventRequest = () => {
     setIsDrawerVisible(true);
   };
 
-  const handleRegisterSubmit = async (values) => {
-    const reg_id = getRegId();
-    const entityId = JSON.parse(localStorage.getItem("user"))?.entity_id;
-
-    const payload = {
-      ...values,
-      upload_id: selectedEvent.uploads_id,
-      reg_id: reg_id,
-      entity_id: entityId,
-    };
-
-    try {
-      const response = await axios.post("/api/new-event-register", payload);
-      message.success("Event registered successfully");
-      setIsDrawerVisible(false);
-      fetchUploads();
-    } catch (error) {
-      console.error("Registration error:", error);
-      message.error("Failed to register event");
-    }
-  };
-
   useEffect(() => {
     fetchUploads();
     fetchCategories();
@@ -254,7 +261,6 @@ const UploadEventRequest = () => {
   };
 
   const fetchCategories = async () => {
-    
     try {
       const entityId = getEntityId();
       // const entityId = JSON.parse(localStorage.getItem("user"))?.entity_id;
@@ -264,7 +270,56 @@ const UploadEventRequest = () => {
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
-      message.error("Failed to load categories");
+      Swal.fire({
+        title: "Failed to load data!",
+        text: `${error?.message}`,
+        icon: "error",
+      });
+    }
+  };
+
+  const handleRegisterSubmit = async (values) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("uploads_id", selectedEvent.uploads_id);
+      formData.append("reg_id", getRegId());
+      formData.append("act_id", values.category[0]); // Assuming single category selection
+      formData.append("event_name", values.event_name);
+      formData.append("status", "Pending");
+      formData.append("start_date", values.date_range[0].format("YYYY-MM-DD"));
+      formData.append("start_time", values.time_range[0].format("HH:mm:ss"));
+      formData.append("end_date", values.date_range[1].format("YYYY-MM-DD"));
+      formData.append("end_time", values.time_range[1].format("HH:mm:ss"));
+      formData.append("limit", values.member_limit);
+      formData.append("description", values.description);
+ 
+      if (posterFile) formData.append("poster", posterFile);
+      const reg_id = getRegId();
+
+      const response = await axios.post(
+        `http://172.17.2.247:8080/intranetapp/event-request/?reg_id=${reg_id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      Swal.fire({
+        title: "Event registered successfully",
+
+        icon: "success",
+      });
+      setIsDrawerVisible(false);
+    } catch (error) {
+      console.error("Registration error:", error);
+      Swal.fire({
+        title: "Failed to register event",
+        text: error.response?.data?.message || "Failed to register event",
+        icon: "error",
+      });
     }
   };
 
@@ -272,6 +327,7 @@ const UploadEventRequest = () => {
     <div className={styles.uploadPage}>
       <div className={styles.uploadContainer}>
         <h2 className={styles.pageTitle}>Upload Event Request</h2>
+    
         <div className={styles.formContainer}>
           <div className={styles.inputGroup}>
             <label htmlFor="eventName">Event Name</label>
@@ -320,6 +376,20 @@ const UploadEventRequest = () => {
 
       <div className={styles.uploadsContainer}>
         <h3 className={styles.uploadsTitle}>Uploaded Files</h3>
+        <div className={styles.colorLegend}>
+        <span className={styles.legendItem}>
+          <span className={styles.colorBox} style={{backgroundColor: '#ffcccb'}}></span>
+          Cancelled
+        </span>
+        <span className={styles.legendItem}>
+          <span className={styles.colorBox} style={{backgroundColor: '#ffe5b4'}}></span>
+          Pending
+        </span>
+        <span className={styles.legendItem}>
+          <span className={styles.colorBox} style={{backgroundColor: '#90ee90'}}></span>
+          Ready for Publishing
+        </span>
+      </div>
         <div className={styles.tableContainer}>
           <table className={styles.uploadsTable}>
             <thead>
@@ -336,7 +406,19 @@ const UploadEventRequest = () => {
               {uploads.length > 0 ? (
                 uploads.map((upload) => (
                   <tr key={upload.uploads_id}>
-                    <td>{upload.event_name}</td>
+                    <td>
+                      <span
+                        className={`${
+                          upload?.status === "Approved"
+                            ? styles.greenText
+                            : upload?.status === "Pending"
+                            ? styles.orangeText
+                            : styles.redText
+                        }`}
+                      >
+                        {upload.event_name}
+                      </span>
+                    </td>
                     <td>
                       <a
                         href={upload.pdf_file}
@@ -344,7 +426,7 @@ const UploadEventRequest = () => {
                         rel="noopener noreferrer"
                         className={styles.viewPdf}
                       >
-                        View PDF
+                        <FaRegFilePdf />
                       </a>
                     </td>
                     <td>
@@ -353,15 +435,22 @@ const UploadEventRequest = () => {
                           styles[upload.status.toLowerCase()]
                         }`}
                       >
-                        {upload.status}
+                        {upload.status === "Approved" ? (
+                          <FaCheck />
+                        ) : upload.status === "Pending" ? (
+                          <MdOutlineAccessTime />
+                        ) : (
+                          <MdOutlineCancel />
+                        )}
                       </span>
                       {upload.status === "Approved" && (
-                        <Button
-                          onClick={() => handleRegisterEvent(upload)}
-                          className={styles.registerButton}
-                        >
-                          Register Event Now
-                        </Button>
+                        // <Button
+                        //   onClick={() => handleRegisterEvent(upload)}
+                        //   className={styles.registerButton}
+                        // >
+                        //   Publish Event
+                        // </Button>
+                        <p onClick={() => handleRegisterEvent(upload)} className={styles.textPub} >Publish Event</p>
                       )}
                     </td>
                     <td>{new Date(upload.uploaded_at).toLocaleString()}</td>
@@ -444,20 +533,31 @@ const UploadEventRequest = () => {
         visible={isDrawerVisible}
         width={600}
       >
-        <Form form={form} layout="vertical" onFinish={handleRegisterSubmit}>
-          <Form.Item
-            name="event_name"
-            label="Event Name"
-            initialValue={selectedEvent?.event_name}
-          >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleRegisterSubmit}
+          initialValues={{
+            event_name: selectedEvent?.event_name,
+            member_limit: 100,
+          }}
+          className="event-registration-form"
+        >
+          <Form.Item name="event_name" label="Event Name">
             <Input disabled />
           </Form.Item>
+
           <Form.Item
             name="category"
             label="Category"
-            rules={[{ required: true }]}
+            rules={[
+              {
+                required: true,
+                message: "Please select at least one category",
+              },
+            ]}
           >
-            <Select mode="multiple">
+            <Select mode="multiple" placeholder="Select categories">
               {categories.map((category) => (
                 <Select.Option key={category.act_id} value={category.act_id}>
                   {category.activity_name}
@@ -465,35 +565,95 @@ const UploadEventRequest = () => {
               ))}
             </Select>
           </Form.Item>
+
+          <Form.Item
+            name="member_limit"
+            label="Member Limit"
+            rules={[{ required: true, message: "Please set the member limit" }]}
+          >
+            <Slider
+              min={10}
+              max={10000}
+              marks={{
+                10: "10",
+                2500: "2.5K",
+                5000: "5K",
+                7500: "7.5K",
+                10000: "10K+",
+              }}
+              className="member-limit-slider"
+            />
+          </Form.Item>
+
           <Form.Item
             name="date_range"
             label="Date Range"
-            rules={[{ required: true }]}
+            rules={[
+              { required: true, message: "Please select the date range" },
+            ]}
           >
-            <RangePicker />
+            <DatePicker.RangePicker />
           </Form.Item>
+
           <Form.Item
             name="time_range"
             label="Time Range"
-            rules={[{ required: true }]}
+            rules={[
+              { required: true, message: "Please select the time range" },
+            ]}
           >
-            <TimePicker.RangePicker />
+            <TimePicker.RangePicker format="HH:mm:ss" />
           </Form.Item>
+
           <Form.Item
             name="description"
             label="Description"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Please enter a description" }]}
           >
             <TextArea rows={4} />
           </Form.Item>
-          <Form.Item name="poster" label="Poster" rules={[{ required: true }]}>
-            <Upload beforeUpload={() => false}>
-              <Button icon={<UploadOutlined />}>Upload Poster</Button>
-            </Upload>
+
+          <Form.Item
+            name="poster"
+            label="Poster"
+            rules={[{ required: true, message: "Please upload a poster" }]}
+          >
+            <Upload.Dragger
+              name="poster"
+              multiple={false}
+              beforeUpload={(file) => {
+                setPosterFile(file);
+                return false;
+              }}
+              onChange={(info) => {
+                const { status } = info.file;
+                if (status === "done") {
+                  Swal.fire({
+                    title: "Uploaded Success",
+                    text: `${info.file.name} poster file uploaded successfully.`,
+                    icon: "success",
+                  });
+                } else if (status === "error") {
+                  Swal.fire({
+                    title: "Uploaded Failed",
+                    text: `${info.file.name} poster file upload failed.`,
+                    icon: "error",
+                  });
+                }
+              }}
+            >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to upload poster
+              </p>
+            </Upload.Dragger>
           </Form.Item>
+
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Register Event
+              Submit Event Request
             </Button>
           </Form.Item>
         </Form>

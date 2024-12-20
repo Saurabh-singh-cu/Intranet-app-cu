@@ -90,9 +90,9 @@ const routes = [
         icon: <MdEventNote />,
       },
       {
-        path: "/settings/2fa",
-        name: "2FA",
-        icon: <FaLock />,
+        path: "/event-published-request",
+        name: "Event Published Request ",
+        icon: <MdEventNote />,
       },
       {
         path: "/settings/billing",

@@ -1,9 +1,9 @@
+import styles from './AdminEventApproval.module.css';
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Drawer, Input, message, Select, Modal, Form } from 'antd';
 import { EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import styles from './AdminEventApproval.module.css';
 
 const { TextArea } = Input;
 
@@ -187,7 +187,7 @@ const columns = [
   },
 ];
   return (
-    <div className={styles.adminEventApproval}>
+    <div style={{padding:"70px"}} className={styles.adminEventApproval}>
     <h2 className={styles.pageTitle}>Admin Event Approval</h2>
     <Input
       placeholder="Search by Event Name"
