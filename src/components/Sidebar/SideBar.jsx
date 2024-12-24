@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
-import { MdCloudUpload, MdEventNote, MdMessage, MdOutlineDashboardCustomize } from "react-icons/md";
+import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser, FaUsers } from "react-icons/fa";
+import { MdCloudUpload, MdEmojiEvents, MdEventNote, MdMessage, MdOutlineDashboardCustomize } from "react-icons/md";
 import { BiAnalyse, BiSearch, BiCog } from "react-icons/bi";
 import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
 import { BsCartCheck } from "react-icons/bs";
@@ -52,6 +52,18 @@ const routes = [
     path: "/upload-event-request",
     name: "Upload Event Request",
     icon:<MdCloudUpload />,
+    allowedRoles: ["Faculty Advisory"]
+  },
+  {
+    path: "/registered-members-list",
+    name: "Registered Members",
+    icon:<FaUsers />,
+    allowedRoles: ["Student Secretary"]
+  },
+  {
+    path: "/event-published",
+    name: "Event Published",
+    icon:<MdEmojiEvents />,
     allowedRoles: ["Faculty Advisory"]
   },
   // {

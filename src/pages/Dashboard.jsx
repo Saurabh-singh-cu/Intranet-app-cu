@@ -718,8 +718,7 @@ const Dashboard = () => {
           </div>
         )}
 
-        {(isLoggedIn === true && userName?.role_name === "Student Secretary") ||
-        userName?.role_name === "Admin" ? (
+        {(isLoggedIn === true && userName?.role_name === "Student Secretary")  ? (
           <>
             <div style={{ marginTop: "-27px" }} className="club-details-page">
               <div
@@ -759,7 +758,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Details Section */}
+            
               <div className="details-container">
                 <div className="details-content">
                   <div className="program-header">
@@ -1201,32 +1200,7 @@ const Dashboard = () => {
               </div>
 
               <div className="carousel-card-home">
-                {/* <div className="card-header-home">
-                  <h4>News&Views</h4>
-                </div>
-                <div className="carousel-container">
-                  <button onClick={prevSlide} className="carousel-button prev">
-                    ❮
-                  </button>
-                  <div className="carousel-home">
-                    {slides.map((slide, index) => (
-                      <div
-                        key={index}
-                        className={`carousel-slide-home ${
-                          index === currentSlide ? "active" : ""
-                        }`}
-                        style={{ backgroundImage: `url(${slide.image})` }}
-                      >
-                        <div className="carousel-content">
-                          <h4>{slide.title}</h4>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <button onClick={nextSlide} className="carousel-button next">
-                    ❯
-                  </button>
-                </div> */}
+               
                 <NewsViews />
               </div>
             </div>

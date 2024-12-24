@@ -1,6 +1,7 @@
 .club-details-page {
-  min-height: 100vh;
+  /* height: 100vh; */
   background: #fff;
+  /* overflow: scroll; */
 }
 
 /* Hero Section */

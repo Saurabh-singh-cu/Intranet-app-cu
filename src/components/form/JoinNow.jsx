@@ -140,7 +140,7 @@ const JoinNow = () => {
       console.error("Failed to send OTP:", error);
       Swal.fire({
         title: "Failed to send OTP",
-        text: `Please try again! ${error?.response?.data?.error}`,
+        text: ` ${error?.response?.data?.error}`,
         icon: "warning",
       });
       setIsFormDisabled(false);

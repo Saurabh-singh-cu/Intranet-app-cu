@@ -39,6 +39,8 @@ import AdminEventApproval from "./components/form/AdminEventApproval";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import PageNotFound from "./PageNotFound";
 import EventPublishedRequest from "./components/form/EventPublishedRequest";
+import EventPublished from "./components/form/EventPublished";
+import RegisteredMemberList from "./components/form/RegisteredMemberList";
 
 function AppContent() {
   const location = useLocation();
@@ -128,6 +130,22 @@ function AppContent() {
               element={
                 <ProtectedRoute allowedRoles={["Admin"]} user={user}>
                   <EventPublishedRequest onShowLogin={handleShowLogin} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/event-published"
+              element={
+                <ProtectedRoute allowedRoles={["Faculty Advisory"]} user={user}>
+                  <EventPublished onShowLogin={handleShowLogin} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/registered-members-list"
+              element={
+                <ProtectedRoute allowedRoles={["Student Secretary"]} user={user}>
+                  <RegisteredMemberList onShowLogin={handleShowLogin} />
                 </ProtectedRoute>
               }
             />

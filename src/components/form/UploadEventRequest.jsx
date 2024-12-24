@@ -74,30 +74,30 @@ const UploadEventRequest = () => {
     return true;
   };
 
-  // const handleFileChange = (e) => {
-  //   const uploadedFile = e.target.files[0];
-  //   if (validateFile(uploadedFile)) {
-  //     setFile(uploadedFile);
-  //   } else {
-  //     setFile(null);
-  //   }
-  // };
-  const handleFileChange = (info) => {
-    if (info.file.status === "done") {
-      setFile(info.file.originFileObj);
-      Swal.fire({
-        title: "Uploaded Success",
-        text: `${info.file.name} file uploaded successfully`,
-        icon: "success",
-      });
-    } else if (info.file.status === "error") {
-      Swal.fire({
-        title: "Uploaded Failed",
-        text: `${info.file.name} file upload failed.`,
-        icon: "error",
-      });
+  const handleFileChange = (e) => {
+    const uploadedFile = e.target.files[0];
+    if (validateFile(uploadedFile)) {
+      setFile(uploadedFile);
+    } else {
+      setFile(null);
     }
   };
+  // const handleFileChange = (info) => {
+  //   if (info.file.status === "done") {
+  //     setFile(info.file.originFileObj);
+  //     Swal.fire({
+  //       title: "Uploaded Success",
+  //       text: `${info.file.name} file uploaded successfully`,
+  //       icon: "success",
+  //     });
+  //   } else if (info.file.status === "error") {
+  //     Swal.fire({
+  //       title: "Uploaded Failed",
+  //       text: `${info.file.name} file upload failed.`,
+  //       icon: "error",
+  //     });
+  //   }
+  // };
   const handleDrop = (e) => {
     e.preventDefault();
     const uploadedFile = e.dataTransfer.files[0];
@@ -267,6 +267,7 @@ const UploadEventRequest = () => {
       const response = await axios.get(
         `http://172.17.2.247:8080/intranetapp/entity-activities/?entity_id=${entityId}`
       );
+      console.log(response.data, "ACT IDDDDDDDD");
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -284,7 +285,7 @@ const UploadEventRequest = () => {
 
       formData.append("uploads_id", selectedEvent.uploads_id);
       formData.append("reg_id", getRegId());
-      formData.append("act_id", values.category[0]); // Assuming single category selection
+      formData.append("act_id", values.category); // Assuming single category selection
       formData.append("event_name", values.event_name);
       formData.append("status", "Pending");
       formData.append("start_date", values.date_range[0].format("YYYY-MM-DD"));
@@ -293,7 +294,7 @@ const UploadEventRequest = () => {
       formData.append("end_time", values.time_range[1].format("HH:mm:ss"));
       formData.append("limit", values.member_limit);
       formData.append("description", values.description);
- 
+
       if (posterFile) formData.append("poster", posterFile);
       const reg_id = getRegId();
 
@@ -313,11 +314,12 @@ const UploadEventRequest = () => {
         icon: "success",
       });
       setIsDrawerVisible(false);
+      console.log(formData, "FFFFFFFFFFFF");
     } catch (error) {
       console.error("Registration error:", error);
       Swal.fire({
         title: "Failed to register event",
-        text: error.response?.data?.message || "Failed to register event",
+        text: error.response?.data?.errors?.uploads_id || "Failed to register event",
         icon: "error",
       });
     }
@@ -327,7 +329,7 @@ const UploadEventRequest = () => {
     <div className={styles.uploadPage}>
       <div className={styles.uploadContainer}>
         <h2 className={styles.pageTitle}>Upload Event Request</h2>
-    
+
         <div className={styles.formContainer}>
           <div className={styles.inputGroup}>
             <label htmlFor="eventName">Event Name</label>
@@ -377,19 +379,28 @@ const UploadEventRequest = () => {
       <div className={styles.uploadsContainer}>
         <h3 className={styles.uploadsTitle}>Uploaded Files</h3>
         <div className={styles.colorLegend}>
-        <span className={styles.legendItem}>
-          <span className={styles.colorBox} style={{backgroundColor: '#ffcccb'}}></span>
-          Cancelled
-        </span>
-        <span className={styles.legendItem}>
-          <span className={styles.colorBox} style={{backgroundColor: '#ffe5b4'}}></span>
-          Pending
-        </span>
-        <span className={styles.legendItem}>
-          <span className={styles.colorBox} style={{backgroundColor: '#90ee90'}}></span>
-          Ready for Publishing
-        </span>
-      </div>
+          <span className={styles.legendItem}>
+            <span
+              className={styles.colorBox}
+              style={{ backgroundColor: "#ffcccb" }}
+            ></span>
+            Cancelled
+          </span>
+          <span className={styles.legendItem}>
+            <span
+              className={styles.colorBox}
+              style={{ backgroundColor: "#ffe5b4" }}
+            ></span>
+            Pending
+          </span>
+          <span className={styles.legendItem}>
+            <span
+              className={styles.colorBox}
+              style={{ backgroundColor: "#90ee90" }}
+            ></span>
+            Ready for Publishing
+          </span>
+        </div>
         <div className={styles.tableContainer}>
           <table className={styles.uploadsTable}>
             <thead>
@@ -450,7 +461,12 @@ const UploadEventRequest = () => {
                         // >
                         //   Publish Event
                         // </Button>
-                        <p onClick={() => handleRegisterEvent(upload)} className={styles.textPub} >Publish Event</p>
+                        <p
+                          onClick={() => handleRegisterEvent(upload)}
+                          className={styles.textPub}
+                        >
+                          Ready For Publish
+                        </p>
                       )}
                     </td>
                     <td>{new Date(upload.uploaded_at).toLocaleString()}</td>
@@ -539,7 +555,7 @@ const UploadEventRequest = () => {
           onFinish={handleRegisterSubmit}
           initialValues={{
             event_name: selectedEvent?.event_name,
-            member_limit: 100,
+            member_limit: 0,
           }}
           className="event-registration-form"
         >
@@ -553,11 +569,12 @@ const UploadEventRequest = () => {
             rules={[
               {
                 required: true,
-                message: "Please select at least one category",
+                message: "Please select a category",
               },
             ]}
           >
-            <Select mode="multiple" placeholder="Select categories">
+            <Select placeholder="Select Category">
+              <Select.Option value="">Select Category</Select.Option>
               {categories.map((category) => (
                 <Select.Option key={category.act_id} value={category.act_id}>
                   {category.activity_name}
@@ -572,16 +589,21 @@ const UploadEventRequest = () => {
             rules={[{ required: true, message: "Please set the member limit" }]}
           >
             <Slider
-              min={10}
+              min={0}
               max={10000}
               marks={{
-                10: "10",
+                0: "No Limit",
                 2500: "2.5K",
                 5000: "5K",
                 7500: "7.5K",
-                10000: "10K+",
+                10000: "10K",
               }}
-              className="member-limit-slider"
+              tooltip={{
+                formatter: (value) => (value === 0 ? "No Limit" : value),
+              }}
+              onChange={(value) => {
+                form.setFieldsValue({ member_limit: value });
+              }}
             />
           </Form.Item>
 
