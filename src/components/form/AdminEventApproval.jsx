@@ -22,6 +22,7 @@ const AdminEventApproval = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
   const [modalVisible, setModalVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -98,14 +99,22 @@ const AdminEventApproval = () => {
   const closeDrawer = () => {
     setDrawerVisible(false);
   };
+  const handleStatusFilter = (status) => {
+    setStatusFilter(status);
+  };
 
   const handleSearch = (value) => {
     setSearchText(value);
   };
 
-  const filteredEvents = events.filter((event) =>
-    event.Event_Name.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const filteredEvents = events.filter((event) => {
+    const matchesSearch = event.Event_Name.toLowerCase().includes(
+      searchText.toLowerCase()
+    );
+    const matchesStatus =
+      statusFilter === "All" || event.Status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const columns = [
     {
@@ -128,11 +137,11 @@ const AdminEventApproval = () => {
       dataIndex: "Faculty_Advisory_Email",
       key: "Faculty_Advisory_Email",
     },
-    {
-      title: "Fac. Mobile",
-      dataIndex: "Faculty_Advisory_Mobile",
-      key: "Faculty_Advisory_Mobile",
-    },
+    // {
+    //   title: "Fac. Mobile",
+    //   dataIndex: "Faculty_Advisory_Mobile",
+    //   key: "Faculty_Advisory_Mobile",
+    // },
     {
       title: "Dept. Name",
       dataIndex: "Department_Name",
@@ -144,21 +153,21 @@ const AdminEventApproval = () => {
       key: "Cluster_Name",
     },
 
-    {
-      title: "File",
-      dataIndex: "PDF_File_URL",
-      key: "PDF_File_URL",
-      render: (text) => (
-        <a
-          href={text}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.viewPdf}
-        >
-          <EyeOutlined />
-        </a>
-      ),
-    },
+    // {
+    //   title: "File",
+    //   dataIndex: "PDF_File_URL",
+    //   key: "PDF_File_URL",
+    //   render: (text) => (
+    //     <a
+    //       href={text}
+    //       target="_blank"
+    //       rel="noopener noreferrer"
+    //       className={styles.viewPdf}
+    //     >
+    //       <EyeOutlined />
+    //     </a>
+    //   ),
+    // },
     {
       title: "View Full Detail",
       render: (record) => (
@@ -177,12 +186,12 @@ const AdminEventApproval = () => {
         </span>
       ),
     },
-    {
-      title: "Date",
-      dataIndex: "Date",
-      key: "Date",
-      render: (text) => new Date(text).toLocaleString(),
-    },
+    // {
+    //   title: "Date",
+    //   dataIndex: "Date",
+    //   key: "Date",
+    //   render: (text) => new Date(text).toLocaleString(),
+    // },
     {
       title: "Action",
       key: "action",
@@ -200,98 +209,132 @@ const AdminEventApproval = () => {
     },
   ];
   return (
-    <div
-      style={{ padding: "40px", marginTop: "40px" }}
-      className={styles.adminEventApproval}
-    >
-      <h2 className={styles.pageTitle}>Admin Event Approval</h2>
-      <Input
-        placeholder="Search by Event Name"
-        prefix={<SearchOutlined />}
-        onChange={(e) => handleSearch(e.target.value)}
-        style={{ marginBottom: 16 }}
-      />
-      <Table
-        columns={columns}
-        dataSource={filteredEvents}
-        rowKey="uploads_id"
-        loading={loading}
-        className={styles.eventTable}
-      />
-      <Drawer
-        title="Event Details"
-        placement="right"
-        closable={true}
-        onClose={closeDrawer}
-        visible={drawerVisible}
-        width={500}
-        className={styles.eventDrawer}
+    <>
+      <div
+        style={{ padding: "40px", marginTop: "40px" }}
+        className={styles.adminEventApproval}
       >
-        {selectedEvent && (
-          <div className={styles.eventDetails}>
-            <h3>{selectedEvent.Event_Name}</h3>
-            <p>
-              <strong>Entity Name:</strong> {selectedEvent.Entity_Name}
-            </p>
-            <p>
-              <strong>Faculty Advisory:</strong>{" "}
-              {selectedEvent.Faculty_Advisory_Name}
-            </p>
-            <p>
-              <strong>Email:</strong> {selectedEvent.Faculty_Advisory_Email}
-            </p>
-            <p>
-              <strong>Mobile:</strong> {selectedEvent.Faculty_Advisory_Mobile}
-            </p>
-            <p>
-              <strong>Department:</strong> {selectedEvent.Department_Name}
-            </p>
-            <p>
-              <strong>Cluster:</strong> {selectedEvent.Cluster_Name}
-            </p>
-            <p>
-              <strong>Status:</strong>{" "}
-              <span className={styles[selectedEvent.Status.toLowerCase()]}>
-                {selectedEvent.Status}
-              </span>
-            </p>
-            <p>
-              <strong>Uploaded At:</strong>{" "}
-              {new Date(selectedEvent.uploaded_at).toLocaleString()}
-            </p>
-            <a
-              href={selectedEvent.PDF_File_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.pdfLink}
-            >
-              View PDF
-            </a>
-          </div>
-        )}
-      </Drawer>
-      <Modal
-        title="Change Event Status"
-        visible={modalVisible}
-        onOk={handleModalOk}
-        onCancel={() => setModalVisible(false)}
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item
-            rules={[
-              {
-                required: true,
-                message: "Please Add Remark",
-              },
-            ]}
-            name="remark"
-            label="Give Remark"
+        <h2 className={styles.pageTitle}>Admin Event Approval</h2>
+
+        <Input
+          placeholder="Search by Event Name"
+          prefix={<SearchOutlined />}
+          onChange={(e) => handleSearch(e.target.value)}
+          style={{ marginBottom: 16 }}
+        />
+
+        <div style={{ marginBottom: 16 }}>
+          <Button
+            type={statusFilter === "Approved" ? "primary" : "default"}
+            onClick={() => handleStatusFilter("Approved")}
           >
-            <TextArea rows={4} />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
+            Approved
+          </Button>
+          <Button
+            type={statusFilter === "Cancelled" ? "primary" : "default"}
+            onClick={() => handleStatusFilter("Cancelled")}
+            style={{ marginLeft: 8 }}
+          >
+            Cancelled
+          </Button>
+          <Button
+            type={statusFilter === "Pending" ? "primary" : "default"}
+            onClick={() => handleStatusFilter("Pending")}
+            style={{ marginLeft: 8 }}
+          >
+            Pending
+          </Button>
+          <Button
+            type={statusFilter === "All" ? "primary" : "default"}
+            onClick={() => handleStatusFilter("All")}
+            style={{ marginLeft: 8 }}
+          >
+            All
+          </Button>
+        </div>
+
+        <Table
+          columns={columns}
+          dataSource={filteredEvents}
+          rowKey="uploads_id"
+          loading={loading}
+          className={styles.eventTable}
+        />
+        <Drawer
+          title="Event Details"
+          placement="right"
+          closable={true}
+          onClose={closeDrawer}
+          visible={drawerVisible}
+          width={500}
+          className={styles.eventDrawer}
+        >
+          {selectedEvent && (
+            <div className={styles.eventDetails}>
+              <h3>{selectedEvent.Event_Name}</h3>
+              <p>
+                <strong>Entity Name:</strong> {selectedEvent.Entity_Name}
+              </p>
+              <p>
+                <strong>Faculty Advisory:</strong>{" "}
+                {selectedEvent.Faculty_Advisory_Name}
+              </p>
+              <p>
+                <strong>Email:</strong> {selectedEvent.Faculty_Advisory_Email}
+              </p>
+              <p>
+                <strong>Mobile:</strong> {selectedEvent.Faculty_Advisory_Mobile}
+              </p>
+              <p>
+                <strong>Department:</strong> {selectedEvent.Department_Name}
+              </p>
+              <p>
+                <strong>Cluster:</strong> {selectedEvent.Cluster_Name}
+              </p>
+              <p>
+                <strong>Status:</strong>{" "}
+                <span className={styles[selectedEvent.Status.toLowerCase()]}>
+                  {selectedEvent.Status}
+                </span>
+              </p>
+              <p>
+                <strong>Uploaded At:</strong>{" "}
+                {new Date(selectedEvent.uploaded_at).toLocaleString()}
+              </p>
+              <a
+                href={selectedEvent.PDF_File_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.pdfLink}
+              >
+                View PDF
+              </a>
+            </div>
+          )}
+        </Drawer>
+        <Modal
+          title="Change Event Status"
+          visible={modalVisible}
+          onOk={handleModalOk}
+          onCancel={() => setModalVisible(false)}
+        >
+          <Form form={form} layout="vertical">
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Please Add Remark",
+                },
+              ]}
+              name="remark"
+              label="Give Remark"
+            >
+              <TextArea rows={4} />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+    </>
   );
 };
 

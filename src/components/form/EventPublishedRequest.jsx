@@ -14,6 +14,7 @@ const EventPublishedRequest = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
   const [modalVisible, setModalVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -56,7 +57,6 @@ const EventPublishedRequest = () => {
 
   const handleModalOk = async () => {
     try {
-     
       const values = await form.validateFields();
       const payload = {
         status: selectedEvent.newStatus,
@@ -97,13 +97,22 @@ const EventPublishedRequest = () => {
     setDrawerVisible(false);
   };
 
+  const handleStatusFilter = (status) => {
+    setStatusFilter(status);
+  };
+
   const handleSearch = (value) => {
     setSearchText(value);
   };
 
-  const filteredEvents = events.filter((event) =>
-    event.event_name.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const filteredEvents = events.filter((event) => {
+    const matchesSearch = event.event_name.toLowerCase().includes(
+      searchText.toLowerCase()
+    );
+    const matchesStatus =
+      statusFilter === "All" || event.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const columns = [
     {
@@ -227,13 +236,42 @@ const EventPublishedRequest = () => {
         onChange={(e) => handleSearch(e.target.value)}
         style={{ marginBottom: 16 }}
       />
+      <div style={{ marginBottom: 16 }}>
+        <Button
+          type={statusFilter === "Approved" ? "primary" : "default"}
+          onClick={() => handleStatusFilter("Approved")}
+        >
+          Approved
+        </Button>
+        <Button
+          type={statusFilter === "Cancelled" ? "primary" : "default"}
+          onClick={() => handleStatusFilter("Cancelled")}
+          style={{ marginLeft: 8 }}
+        >
+          Cancelled
+        </Button>
+        <Button
+          type={statusFilter === "Pending" ? "primary" : "default"}
+          onClick={() => handleStatusFilter("Pending")}
+          style={{ marginLeft: 8 }}
+        >
+          Pending
+        </Button>
+        <Button
+          type={statusFilter === "All" ? "primary" : "default"}
+          onClick={() => handleStatusFilter("All")}
+          style={{ marginLeft: 8 }}
+        >
+          All
+        </Button>
+      </div>
       <Table
         columns={columns}
         dataSource={filteredEvents}
         rowKey="uploads_id"
         loading={loading}
         className={styles.eventTable}
-        scroll={{ x: true }}
+       
       />
       <Drawer
         title="Event Details"
@@ -252,8 +290,7 @@ const EventPublishedRequest = () => {
               <strong>Description:</strong> {selectedEvent.description}
             </p>
             <p>
-              <strong>Duration:</strong>{" "}
-              {Number(selectedEvent.duration)} Hrs
+              <strong>Duration:</strong> {Number(selectedEvent.duration)} Hrs
             </p>
             <p>
               <strong>Start Date:</strong> {selectedEvent.start_date}
@@ -325,8 +362,7 @@ const EventPublishedRequest = () => {
         onCancel={() => setModalVisible(false)}
       >
         <Form form={form} layout="vertical">
-
-        {selectedEvent?.newStatus === "Approved" && (
+          {selectedEvent?.newStatus === "Approved" && (
             <Form.Item
               name="priority"
               label="Select Priority"
@@ -343,12 +379,16 @@ const EventPublishedRequest = () => {
               </Select>
             </Form.Item>
           )}
-          <Form.Item  rules={[
-                {
-                  required: true,
-                  message: "Please give remark",
-                },
-              ]} name="remark" label="Remark Please">
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please give remark",
+              },
+            ]}
+            name="remark"
+            label="Remark Please"
+          >
             <TextArea rows={4} />
           </Form.Item>
         </Form>

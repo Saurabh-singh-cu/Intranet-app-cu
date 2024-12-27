@@ -10,6 +10,15 @@ const RegisteredMemberList = () => {
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
 
+  axios.interceptors.request.use((config) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = user?.access;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
+
   useEffect(() => {
     fetchRegisteredList();
   }, []);
@@ -38,11 +47,7 @@ const RegisteredMemberList = () => {
       setMembers(response.data);
     } catch (error) {
       console.error("Error fetching members:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Failed to load members. Please try again later.",
-      });
+     
     } finally {
       setLoading(false);
     }

@@ -163,179 +163,73 @@ const EventCardsDash = () => {
   };
 
   return (
-    // <div className="events-container">
-    //   <section className="events-section">
-    //     <div className="section-header-detail">
-    //       <h2>Ongoing Events</h2>
-    //     </div>
-    //     <div className="cards-grid">
-    //       {currentEvent.map((event, index) => (
-    //         <div key={index} className="event-card">
-    //           <img
-    //             src={event.poster_url}
-    //             alt={event.event_name}
-    //             className="event-image"
-    //           />
-    //           <div className="event-content">
-    //             <h3 className="event-title">{event.event_name}</h3>
-    //             <div className="event-company">{event.company}</div>
-    //             <div className="event-stats">
-    //               <div className="stat">
-    //                 <span className="stat-value">{event.limit && event?.limit === "0" ? "No Limit" : event?.limit}</span>
-
-    //               </div>
-    //               <div className="stat">
-    //                 <span className="stat-value">{event.start_date}</span>
-    //                 <span className="stat-label">Start Date</span>
-    //               </div>
-    //             </div>
-    //             <div className="prize-pool">Register Now</div>
-    //           </div>
-    //         </div>
-    //       ))}
-    //     </div>
-    //   </section>
-
-    //   <section className="events-section">
-    //     <div className="section-header-detail">
-    //       <h2>Previous Events</h2>
-    //     </div>
-    //     <div className="cards-grid">
-    //       {previousEvents.map((event, index) => (
-    //         <div key={index} className="event-card previous">
-    //           <div className="event-image-container">
-    //             <img
-    //               src={event.image}
-    //               alt={event.title}
-    //               layout="fill"
-    //               objectFit="cover"
-    //             />
-    //             <div className="event-title-overlay">
-    //               <h3>{event.title}</h3>
-    //               <p
-    //                 style={{
-    //                   display: "flex",
-    //                   justifyContent: "center",
-    //                   color: "white",
-    //                   fontSize: "12px",
-    //                 }}
-    //               >
-    //                 Closed
-    //               </p>
-    //             </div>
-    //           </div>
-    //         </div>
-    //       ))}
-    //     </div>
-    //   </section>
-
-    //   <section className="events-section">
-    //     <div className="section-header-detail">
-    //       <h2>Core Committee</h2>
-    //     </div>
-    //     <div className="cards-grid-core">
-    //       {committeeMembers.map((member, index) => (
-    //         <div key={index} className="committee-card">
-    //           <div className="member-image-wrapper">
-    //             <img
-    //               src={member.image}
-    //               alt={member.name}
-    //               className="member-image"
-    //             />
-    //           </div>
-    //           <div className="member-content">
-    //             <h3 className="member-name">{member.name}</h3>
-    //             <div className="member-position">{member.position}</div>
-    //             <div className="member-social">
-    //               {member.facebook && <FaFacebook size={20} />}
-    //               {member.instagram && <FaInstagram size={20} />}
-    //               {member.linkedin && <FaLinkedinIn size={20} />}
-    //               {member.gmail && <CgMail size={20} />}
-    //             </div>
-    //            {userDetail &&  <Button
-    //               onClick={() => handleEdit(member)}
-    //               type="primary"
-    //               className="edit-button"
-    //             >
-    //               Edit
-    //             </Button>}
-    //           </div>
-    //         </div>
-    //       ))}
-    //     </div>
-    //   </section>
-    //   {editMember && (
-    //     <EventCardEdit
-    //       visible={!!editMember}
-    //       onClose={handleCloseDrawer}
-    //       member={editMember}
-    //       onSubmit={handleSubmit}
-    //     />
-    //   )}
-    // </div>
     <div className="events-container">
       <section className="events-section">
         <div className="section-header-detail">
           <h2>Ongoing Events</h2>
         </div>
         <div className="cards-grid">
-          {currentEvent.map((event, index) => {
-            const startDate = new Date(event.start_date);
-            const endDate = new Date(event.end_date);
-            const options = { year: "numeric", month: "short", day: "numeric" };
-            const formattedStartDate = startDate.toLocaleDateString(
-              undefined,
-              options
-            );
-            const formattedEndDate = endDate.toLocaleDateString(
-              undefined,
-              options
-            );
-            const daysLeft = Math.ceil(
-              (endDate - new Date()) / (1000 * 60 * 60 * 24)
-            );
+              {currentEvent.map((event, index) => {
+                const startDate = new Date(event.start_date);
+                const endDate = new Date(event.end_date);
+                const options = {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                };
+                const formattedStartDate = startDate.toLocaleDateString(
+                  undefined,
+                  options
+                );
+                const formattedEndDate = endDate.toLocaleDateString(
+                  undefined,
+                  options
+                );
+                const daysLeft = Math.ceil(
+                  (endDate - new Date()) / (1000 * 60 * 60 * 24)
+                );
 
-            return (
-              <div key={index} className="event-card">
-                <img
-                  src={event.poster_url}
-                  alt={event.event_name}
-                  className="event-image"
-                />
-                <div className="event-content">
-                  <h3 className="event-title">{event.event_name}</h3>
-                  <div className="event-dates">
-                    <span>
-                      {formattedStartDate} - {formattedEndDate}
-                    </span>
-                  </div>
-                  {/* <div className="event-description">{event.description}</div> */}
-                  <div className="event-stats">
-                    <div className="stat">
-                      <span className="stat-value">
-                        {event.limit === "0" ? "No Limit" : event.limit}
-                      </span>
-                      <span className="stat-label">Spots Left</span>
+                return (
+                  <div key={index} className="event-card">
+                    <img
+                      src={event.poster_url}
+                      alt={event.event_name}
+                      className="event-image"
+                    />
+                    <div className="event-content">
+                      <h3 className="event-title">{event.event_name}</h3>
+                      <div className="event-dates">
+                        <span>
+                          {formattedStartDate} - {formattedEndDate}
+                        </span>
+                      </div>
+                      {/* <div className="event-description">{event.description}</div> */}
+                      <div className="event-stats">
+                        <div className="stat">
+                          <span className="stat-value">
+                            {event.limit === "0" ? "No Limit" : event.limit}
+                          </span>
+                          <span className="stat-label">Spots Left</span>
+                        </div>
+                        <div className="stat">
+                          <span className="stat-value">{daysLeft}</span>
+                          <span className="stat-label">Days Left</span>
+                        </div>
+                      </div>
+                      <div className="event-duration">
+                        <span>Duration: {event.duration} hours</span>
+                      </div>
+                      <button
+                        className="register-button-e"
+                        onClick={() => handleRegisterClick(event)}
+                      >
+                        Register Now
+                      </button>
                     </div>
-                    <div className="stat">
-                      <span className="stat-value">{daysLeft}</span>
-                      <span className="stat-label">Days Left</span>
-                    </div>
                   </div>
-                  <div className="event-duration">
-                    <span>Duration: {event.duration} hours</span>
-                  </div>
-                  <button
-                    className="register-button-e"
-                    onClick={() => handleRegisterClick(event)}
-                  >
-                    Register Now
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                );
+              })}
+            </div>
       </section>
 
       <section className="events-section">
@@ -407,7 +301,7 @@ const EventCardsDash = () => {
         />
       )}
 
-<RegisterModal
+      <RegisterModal
         isOpen={isRegisterModalOpen}
         onClose={() => {
           setIsRegisterModalOpen(false);

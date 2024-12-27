@@ -1,10 +1,10 @@
 .adminEventApproval {
-    max-width: 90vw;
+    max-width: 70vw;
     margin: 0 auto;
-    padding: 89px 0px;
+    padding: 40px 0px;
     font-family: 'Arial', sans-serif;
     height: 90vh;
-    overflow: scroll;
+    /* overflow: scroll; */
   }
   
   .pageTitle {
@@ -13,11 +13,19 @@
     margin-bottom: 30px;
     font-size: 24px;
   }
+  .ant-table-wrapper{
+    width: 60vw !important;
+    overflow: scroll !important;
+    height: 61vh !important;
+  }
   
   .eventTable {
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 85vw;
+    overflow: scroll;
+    height: 61vh;
   }
   
   .viewPdf {

@@ -458,6 +458,7 @@ button{
 /* Customize scrollbar */
 .scrollable-cards::-webkit-scrollbar {
   width: 8px;
+  height: 10px;
 }
 
 .scrollable-cards::-webkit-scrollbar-track {
@@ -470,7 +471,7 @@ button{
 }
 
 .scrollable-cards::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #464545;
 }
 .ant-modal-close {
   position: absolute;

@@ -41,6 +41,8 @@ import PageNotFound from "./PageNotFound";
 import EventPublishedRequest from "./components/form/EventPublishedRequest";
 import EventPublished from "./components/form/EventPublished";
 import RegisteredMemberList from "./components/form/RegisteredMemberList";
+import Swal from "sweetalert2";
+import MarkAttendance from "./pages/MarkAttendance";
 
 function AppContent() {
   const location = useLocation();
@@ -87,6 +89,44 @@ function AppContent() {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     setUser(storedUser);
+  }, []);
+
+  useEffect(() => {
+    // Check if there is no internet connection
+    if (!navigator.onLine) {
+      // Display a Swal notification if offline
+      Swal.fire({
+        title: "No Internet Connection",
+        text: "You are not connected to the internet.",
+        icon: "warning",
+        confirmButtonText: "OK",
+      });
+    }
+
+    // Optional: Listen for changes in the network status
+    window.addEventListener("offline", () => {
+      Swal.fire({
+        title: "No Internet Connection",
+        text: "You are now offline.",
+        icon: "warning",
+        confirmButtonText: "OK",
+      });
+    });
+
+    window.addEventListener("online", () => {
+      Swal.fire({
+        title: "Back Online",
+        text: "You are now connected to the internet.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    });
+
+    // Cleanup event listeners when component is unmounted
+    return () => {
+      window.removeEventListener("offline", () => {});
+      window.removeEventListener("online", () => {});
+    };
   }, []);
 
   return (
@@ -144,8 +184,22 @@ function AppContent() {
             <Route
               path="/registered-members-list"
               element={
-                <ProtectedRoute allowedRoles={["Student Secretary"]} user={user}>
+                <ProtectedRoute
+                  allowedRoles={["Student Secretary"]}
+                  user={user}
+                >
                   <RegisteredMemberList onShowLogin={handleShowLogin} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mark-event-attendance"
+              element={
+                <ProtectedRoute
+                  allowedRoles={["Student Secretary"]}
+                  user={user}
+                >
+                  <MarkAttendance onShowLogin={handleShowLogin} />
                 </ProtectedRoute>
               }
             />

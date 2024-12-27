@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser, FaUsers } from "react-icons/fa";
-import { MdCloudUpload, MdEmojiEvents, MdEventNote, MdMessage, MdOutlineDashboardCustomize } from "react-icons/md";
+import { MdCloudUpload, MdEmojiEvents, MdEventNote, MdMessage, MdOutlineDashboardCustomize, MdQrCodeScanner } from "react-icons/md";
 import { BiAnalyse, BiSearch, BiCog } from "react-icons/bi";
 import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
 import { BsCartCheck } from "react-icons/bs";
@@ -58,6 +58,12 @@ const routes = [
     path: "/registered-members-list",
     name: "Registered Members",
     icon:<FaUsers />,
+    allowedRoles: ["Student Secretary"]
+  },
+  {
+    path: "/mark-event-attendance",
+    name: "Mark Attendance",
+    icon:<MdQrCodeScanner />,
     allowedRoles: ["Student Secretary"]
   },
   {

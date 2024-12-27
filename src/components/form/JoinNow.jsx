@@ -109,12 +109,12 @@ const JoinNow = () => {
         "http://172.17.2.247:8080/intranetapp/send_otp_email/",
         {
           member_name: name,
-          member_email: `${email}@cumail.in`,
+          member_email: `${email.toLocaleLowerCase()}@cumail.in`,
           dept_id: department,
           entity_id: entity,
           reg_id: entityType,
           member_mobile: mobileNumber,
-          member_uid: uid,
+          member_uid: uid?.toLowerCase(),
         }
       );
       setIsOtpSent(true);

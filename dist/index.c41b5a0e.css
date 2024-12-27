@@ -445,6 +445,7 @@ button {
 
 .scrollable-cards::-webkit-scrollbar {
   width: 8px;
+  height: 10px;
 }
 
 .scrollable-cards::-webkit-scrollbar-track {
@@ -457,7 +458,7 @@ button {
 }
 
 .scrollable-cards::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #464545;
 }
 
 .ant-modal-close {
@@ -14507,12 +14508,11 @@ h3.ATA9uq_pageTitle:before {
 }
 
 .LjdXrG_adminEventApproval {
-  max-width: 90vw;
+  max-width: 70vw;
   height: 90vh;
   margin: 0 auto;
-  padding: 89px 0;
+  padding: 40px 0;
   font-family: Arial, sans-serif;
-  overflow: scroll;
 }
 
 .LjdXrG_pageTitle {
@@ -14522,9 +14522,18 @@ h3.ATA9uq_pageTitle:before {
   font-size: 24px;
 }
 
+.LjdXrG_ant-table-wrapper {
+  width: 60vw !important;
+  height: 61vh !important;
+  overflow: scroll !important;
+}
+
 .LjdXrG_eventTable {
   background-color: #fff;
   border-radius: 8px;
+  width: 85vw;
+  height: 61vh;
+  overflow: scroll;
   box-shadow: 0 4px 6px #0000001a;
 }
 
@@ -14748,5 +14757,63 @@ h3.ATA9uq_pageTitle:before {
 
 .home-link:hover {
   background-color: #2980b9;
+}
+
+.attendance-container {
+  background-color: #f0f0f0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  display: flex;
+}
+
+.attendance-title {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+}
+
+.camera-status {
+  color: #666;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.scan-button {
+  color: #fff;
+  cursor: pointer;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  transition: background-color .3s;
+}
+
+.scan-button:hover {
+  background-color: #45a049;
+}
+
+.scan-button:disabled {
+  cursor: not-allowed;
+  background-color: #ccc;
+}
+
+.qr-container {
+  border: 2px solid #333;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  margin-top: 1rem;
+  display: flex;
+}
+
+.qr-placeholder {
+  color: #666;
+  text-align: center;
+  font-size: 1.2rem;
 }
 /*# sourceMappingURL=index.c41b5a0e.css.map */
