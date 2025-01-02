@@ -252,11 +252,11 @@ const UploadEventRequest = () => {
         setUploads(response.data);
       })
       .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Failed to Load Uploads",
-          text: error.response?.data?.message || "Error fetching upload data.",
-        });
+        // Swal.fire({
+        //   icon: "error",
+        //   title: "Failed to Load Uploads",
+        //   text: error.response?.data?.message || "Error fetching upload data.",
+        // });
       });
   };
 

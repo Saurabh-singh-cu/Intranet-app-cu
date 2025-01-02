@@ -31,14 +31,14 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!recaptchaValue) {
-      openNotification(
-        "warning",
-        "reCAPTCHA Required",
-        "Please complete the reCAPTCHA verification."
-      );
-      return;
-    }
+    // if (!recaptchaValue) {
+    //   openNotification(
+    //     "warning",
+    //     "reCAPTCHA Required",
+    //     "Please complete the reCAPTCHA verification."
+    //   );
+    //   return;
+    // }
 
     setIsLoading(true);
 
@@ -53,7 +53,7 @@ const Login = ({ onLogin }) => {
           body: JSON.stringify({
             user_email: email.toLowerCase(),
             password: password,
-            recaptcha: recaptchaValue,
+            // recaptcha: recaptchaValue,
           }),
         }
       );
@@ -187,13 +187,13 @@ const Login = ({ onLogin }) => {
             <p className="forgot-password-link">
             <a href="#" onClick={handleForgotPassword}>Forgot Password?</a>
           </p>
-            <div className="recaptcha-container">
+            {/* <div className="recaptcha-container">
               <ReCAPTCHA
                 ref={recaptchaRef}
                 sitekey="6LeComoqAAAAAM7fMSrGeagGkmaDdtqdt12MzRjE"
                 onChange={handleRecaptchaChange}
               />
-            </div>
+            </div> */}
             <button
               type="submit"
               className="submit-button"

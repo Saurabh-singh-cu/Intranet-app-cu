@@ -192,7 +192,7 @@ function AppContent() {
                 </ProtectedRoute>
               }
             />
-            <Route
+            {/* <Route
               path="/mark-event-attendance"
               element={
                 <ProtectedRoute
@@ -202,7 +202,7 @@ function AppContent() {
                   <MarkAttendance onShowLogin={handleShowLogin} />
                 </ProtectedRoute>
               }
-            />
+            /> */}
             <Route
               path="/home"
               element={<Home onShowLogin={handleShowLogin} />}
@@ -315,6 +315,7 @@ function AppContent() {
               }
             />
             <Route path="/clubs" element={<ClubList />} />
+            <Route path="/mark-event-attendance" element={<MarkAttendance />} />
             <Route path="/department-society" element={<DeptList />} />
             <Route
               path="/professional-society"
