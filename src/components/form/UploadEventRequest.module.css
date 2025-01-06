@@ -1,0 +1,501 @@
+.uploadPage {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
+  height: 100vh;
+  overflow: scroll;
+}
+
+.uploadContainer, .uploadsContainer {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin-bottom: 40px;
+}
+
+.pageTitle, .uploadsTitle {
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup label {
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.inputGroup input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.dropZone {
+  border: 2px dashed #007bff;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  color: #555;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dropZone:hover {
+  background-color: #e9ecef;
+}
+
+.dropZone.hasFile {
+  border-color: #28a745;
+  background-color: #e9f7ef;
+}
+
+.uploadIcon, .fileIcon {
+  font-size: 48px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.fileIcon {
+  color: #28a745;
+}
+
+.fileName {
+  font-weight: bold;
+  color: #28a745;
+}
+
+.fileInput {
+  display: none;
+}
+
+.submitButton, .replaceButton {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  justify-content: center;
+}
+
+.submitButton:hover, .replaceButton:hover {
+  background-color: #0056b3;
+}
+
+.submitButton:disabled, .replaceButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.uploadsTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.uploadsTable th, .uploadsTable td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.uploadsTable th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  color: #495057;
+}
+
+.uploadsTable tr:last-child td {
+  border-bottom: none;
+}
+
+.uploadsTable tr:hover {
+  background-color: #f1f3f5;
+}
+
+.viewPdf {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.viewPdf:hover {
+  text-decoration: underline;
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.status.pending {
+  background-color: #ffeeba;
+  color: #856404;
+}
+
+.status.approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status.rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.noFiles {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .uploadContainer, .uploadsContainer {
+    padding: 20px;
+  }
+
+  .dropZone {
+    padding: 20px;
+  }
+
+  .uploadsTable th, .uploadsTable td {
+    padding: 8px;
+  }
+
+  .submitButton, .replaceButton {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+}
+
+/* Ant Design Modal Overrides */
+:global(.ant-modal-content) {
+  border-radius: 8px;
+}
+
+:global(.ant-modal-header) {
+  border-radius: 8px 8px 0 0;
+}
+
+:global(.ant-modal-title) {
+  font-size: 18px;
+  color: #333;
+}
+
+:global(.ant-btn) {
+  border-radius: 4px;
+}
+
+:global(.ant-btn-primary) {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+:global(.ant-btn-primary:hover) {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+.status.cancelled {
+  background: #ecacac;
+  border: 1px solid #d9d9d9;
+}
+.cancelled {
+  color: #ff0000;
+}
+
+
+.registerButton {
+  margin-left: 10px;
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.registerButton:hover {
+  background-color: #40a9ff;
+}
+
+/* You may need to adjust these styles to fit your existing CSS */
+
+.ant-modal-content {
+  border-radius: 8px;
+}
+
+.ant-modal-header {
+  background-color: #f0f2f5;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 16px 24px;
+}
+
+.ant-modal-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.ant-form-item-label > label {
+  font-weight: 500;
+}
+
+.ant-input,
+.ant-picker {
+  border-radius: 4px;
+}
+
+.ant-btn-primary {
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}
+
+.ant-upload {
+  width: 100%;
+}
+
+.ant-upload-select-picture-card {
+  width: 100%;
+  height: 120px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ant-modal {
+    width: 90% !important;
+    max-width: none;
+  }
+
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
+}
+
+/* Ensure the table is responsive */
+.tableContainer {
+  overflow-x: auto;
+}
+
+.uploadsTable {
+  min-width: 800px;
+}
+
+/* Add some spacing between form elements */
+.formContainer > * {
+  margin-bottom: 16px;
+}
+
+/* Style the drop zone to be more visually appealing */
+.dropZone {
+  border: 2px dashed #d9d9d9;
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+.dropZone:hover {
+  border-color: #40a9ff;
+}
+
+.hasFile {
+  border-color: #52c41a;
+}
+
+/* Improve the appearance of the file icon and name */
+.fileIcon {
+  font-size: 48px;
+  color: #1890ff;
+}
+
+.fileName {
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* Style the status indicators */
+.status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.textPub{
+  color: #468ef5;
+  font-size: 12px;
+  letter-spacing: .7px;
+  cursor: pointer;
+
+  
+}
+
+.pending {
+  background-color: #faad14;
+  color: #fff;
+}
+
+.approved {
+  background-color: #52c41a;
+  color: #fff;
+}
+.greenText{
+  color: green;
+}
+.orangeText{
+  color: #faad14;
+}
+.redText {
+ color: red;
+}
+
+.rejected {
+  background-color: #f5222d;
+  color: #fff;
+}
+
+/* Improve the appearance of the "View PDF" link */
+.viewPdf {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+.viewPdf:hover {
+  text-decoration: underline;
+}
+
+/* Add some spacing to the page title */
+.pageTitle {
+  margin-bottom: 24px;
+}
+
+/* Style the "No files uploaded yet" message */
+.noFiles {
+  text-align: center;
+  padding: 20px;
+  color: #8c8c8c;
+  font-style: italic;
+}
+span.ant-select-selection-item .ant-select-selection-item-content {
+  color: #f00 !important;
+}
+
+.colorLegend {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+  position: relative;
+  padding-left: 15px;
+}
+
+h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background-color: #3498db;
+  border-radius: 2px;
+}
+
+h3.pageTitle {
+  font-size: 2rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  padding-left: 0;
+}
+
+h3.pageTitle::before {
+  display: none;
+}
+.legendItem {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  font-size: 13px;
+}
+
+
+.ant-drawer .ant-drawer-header {
+  margin-top: 21px;
+}
+
+.uploadsTitle::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 70%;
+  background-color: #3498db;
+  border-radius: 2px;
+}
+
+.colorBox {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  margin-right: 5px;
+  /* border: 1px solid #000; */
+}
+
+.tableRow {
+  transition: background-color 0.3s;
+}
+
+.approvedRow {
+  background-color: #90ee90;
+}
+
+.pendingRow {
+  background-color: #ffe5b4;
+}
+
+.cancelledRow {
+  background-color: #ffcccb;
+}
+
+

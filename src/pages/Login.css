@@ -1,0 +1,239 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  font-family: "Roboto", sans-serif !important;
+  width: 100vw;
+}
+
+.login-form-container {
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form-wrapper {
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  /* margin-bottom: 2rem; */
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  /* margin-bottom: 0.5rem; */
+  color: #4a5568;
+}
+
+.form-input {
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #77747e;
+  box-shadow: 0 0 0 3px rgba(147, 112, 219, 0.1);
+}
+
+.recaptcha-container {
+  margin-top: 1rem;
+}
+
+.submit-button {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #4e4c52;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #8A2BE2;
+}
+
+.sign-in-link {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #4a5568;
+}
+
+.sign-in-anchor {
+  color: #9370DB;
+  text-decoration: none;
+}
+
+.sign-in-anchor:hover {
+  text-decoration: underline;
+}
+
+.login-image-container {
+  display: none;
+  width: 70%;
+  background-image: url('../assets/images/loginback.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.login-image-overlay {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.image-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.image-subtitle {
+  font-size: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .login-form-container {
+    width: 30%;
+  }
+
+  .login-image-container {
+    display: block;
+  }
+}
+
+.typewriter {
+	width: 600px;
+	white-space: nowrap;
+	overflow: hidden;
+	border-right: 4px solid #212121;
+	animation: cursor 1s step-start infinite, 
+    text 5s steps(40) alternate infinite;
+}
+
+@keyframes cursor {
+	0%, 100% { 
+    border-color: #686464; 
+ 
+  }
+}
+
+@keyframes text {
+	0% { 
+    width: 0; 
+  }
+	100% { 
+    width: 470px; 
+  }
+}
+/* ... (existing styles) ... */
+
+.forgot-password-link {
+  text-align: right;
+  /* margin-top: 1rem; */
+}
+
+.forgot-password-link a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+}
+
+/* Styles for the Ant Design Drawer */
+.ant-drawer-content-wrapper {
+  width: 400px !important;
+}
+
+.ant-drawer-header {
+  background-color: #f0f2f5;
+}
+
+.ant-drawer-title {
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.forgot-password-form {
+  padding: 1rem;
+}
+
+.forgot-password-form p {
+  /* margin-bottom: 1rem; */
+  color: #555;
+}
+
+.forgot-password-form .form-group {
+  /* margin-bottom: 1rem; */
+}
+
+.forgot-password-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.forgot-password-form .form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.forgot-password-form .submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.forgot-password-form .submit-button:hover {
+  background-color: #357abd;
+}
+
+.forgot-password-form .submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* ... (rest of the existing styles) ... */
+

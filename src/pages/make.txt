@@ -1,0 +1,124 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaBell, FaBars } from 'react-icons/fa';
+import { MdMessage } from 'react-icons/md';
+
+import logoImage from '../assets/images/intralogonew.jpeg';
+import './NavBar.css';
+
+const NavBar = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showResults, setShowResults] = useState(false);
+  const [filteredResults, setFilteredResults] = useState([]);
+  const searchRef = useRef(null);
+  const navigate = useNavigate();
+
+
+  const pages = [
+    { title: 'Dashboard', path: '/' },
+    { title: 'Clubs', path: '/clubs' },
+    { title: 'Departments', path: '/department-society' },
+    { title: 'Communities', path: '/communities' },
+    { title: 'Professional Society', path: '/professional-society' },
+    { title: 'Join Now', path: '/join-now' },
+    { title: 'Settings', path: '/settings' },
+    { title: 'Profile', path: '/profile' },
+  ];
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    
+    if (query.trim()) {
+      const results = pages.filter(page => 
+        page.title.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredResults(results);
+      setShowResults(true);
+    } else {
+      setShowResults(false);
+    }
+  };
+
+  const handleResultClick = (path) => {
+    navigate(path);
+    setSearchQuery('');
+    setShowResults(false);
+  };
+
+  return (
+    <nav className="navbar">
+      <div className="navbar-left">
+        <div className="logo" onClick={() => navigate('/')}>
+          <img src={logoImage} alt="Intranet Logo" />
+        </div>
+      </div>
+
+      <div className="search-wrapper" ref={searchRef}>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search & Bookmark your page"
+            value={searchQuery}
+            onChange={handleSearch}
+            className="search-input"
+            onFocus={() => searchQuery.trim() && setShowResults(true)}
+          />
+        </div>
+        {showResults && (
+          <div className="search-results">
+            {filteredResults.length > 0 ? (
+              filteredResults.map((result, index) => (
+                <div
+                  key={index}
+                  className="search-result-item"
+                  onClick={() => handleResultClick(result.path)}
+                >
+                  {result.title}
+                </div>
+              ))
+            ) : (
+              <div className="search-result-item no-results">
+                No results found
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="navbar-right">
+        <button 
+          onClick={() => navigate('/EntityRegistrationForm')} 
+          className="nav-button"
+        >
+          Register New Entity
+        </button>
+        <button 
+          onClick={() => navigate('/join-now')} 
+          className="nav-button"
+        >
+          Join as New Member
+        </button>
+        <button 
+          onClick={() => navigate('/login')} 
+          className="login-button"
+        >
+          Login
+        </button>
+      </div>
+    </nav>
+  );
+};
+
+export default NavBar;

@@ -1,0 +1,178 @@
+.events-card-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .events-card-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .events-list {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  
+  .event-item {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .event-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .event-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: #007bff;
+    color: #ffffff;
+    border-radius: 8px;
+    margin-right: 15px;
+  }
+  
+  .event-day {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .event-month {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+  
+  .event-details {
+    flex-grow: 1;
+  }
+  
+  .event-title {
+    font-size: 1rem;
+    color: #333;
+    margin: 0 0 5px 0;
+  }
+  
+  .event-time,
+  .event-location {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0;
+  }
+  
+  .view-all-events {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+  }
+  
+  .view-all-events:hover {
+    background-color: #0056b3;
+  }
+  
+  @media (max-width: 768px) {
+    .events-card-container {
+      padding: 15px;
+    }
+  
+    .event-date {
+      width: 50px;
+      height: 50px;
+    }
+  
+    .event-day {
+      font-size: 1.2rem;
+    }
+  
+    .event-month {
+      font-size: 0.7rem;
+    }
+  
+    .event-title {
+      font-size: 0.9rem;
+    }
+  
+    .event-time,
+    .event-location {
+      font-size: 0.7rem;
+    }
+  }
+  .edit-drawer .ant-drawer-body {
+    padding: 24px;
+  }
+  
+  .edit-drawer .ant-form-item {
+    margin-bottom: 24px;
+  }
+  
+  .edit-drawer .ant-upload-picture-card-wrapper {
+    width: 100%;
+  }
+  
+  .edit-drawer .ant-upload.ant-upload-select-picture-card {
+    width: 100%;
+    height: 200px;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+  
+  .edit-drawer .ant-upload-list-picture-card-container {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .edit-drawer .ant-upload-list-picture-card .ant-upload-list-item {
+    width: 100%;
+    height: 200px;
+  }
+  
+  .edit-drawer .ant-upload-list-picture-card .ant-upload-list-item-info {
+    height: 100%;
+  }
+  
+  .edit-drawer .ant-upload-list-picture-card .ant-upload-list-item-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .reactEasyCrop_Container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .reactEasyCrop_CropArea {
+    color: rgba(255, 255, 255, 0.64);
+  }
+  
+  @media (max-width: 576px) {
+    .edit-drawer {
+      width: 100% !important;
+    }
+  }
+  
+  

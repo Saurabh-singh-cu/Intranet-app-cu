@@ -1,0 +1,197 @@
+import React, { useState, useEffect } from "react";
+import { Search, Users, Building, BookOpen, Clock, Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import cc1 from "../assets/images/hackthon.jpg";
+import cc2 from "../assets/images/c3.png";
+import "./ClubList.css";
+import {
+  MdGroup,
+  MdOutlineArrowBack,
+  MdOutlineOutlinedFlag,
+} from "react-icons/md";
+import { BsActivity } from "react-icons/bs";
+import Scroller from "../components/Scroller";
+import Footer from "../components/Footer";
+
+const ClubList = () => {
+  const [societies, setSocieties] = useState([]);
+  const [filteredSocieties, setFilteredSocieties] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [regId, setRegId] = useState(null);
+  const [mediaData, setMediaData] = useState(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchSocieties();
+  }, []);
+
+  const fetchSocieties = async () => {
+    try {
+      const response = await fetch(
+        "http://172.17.2.247:8080/intranetapp/entity-registration-summary/?entity_id=1"
+      );
+      const data = await response.json();
+      setSocieties(data);
+      setFilteredSocieties(data);
+    } catch (error) {
+      console.error("Error fetching societies:", error);
+    }
+  };
+
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    const filtered = societies.filter((society) =>
+      society.registration_name.toLowerCase().includes(term.toLowerCase())
+    );
+    setFilteredSocieties(filtered);
+  };
+
+  const handleCardClick = (clubSociety) => {
+    console.log(clubSociety, "DEKH")
+    navigate("/join-now-detailed-page", { state: { society: clubSociety } });
+   
+  };
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  useEffect(() => {
+    const getUserData = () => {
+      try {
+        const userData = localStorage.getItem("user");
+        if (userData) {
+          const parsedUserData = JSON.parse(userData);
+          if (
+            parsedUserData &&
+            parsedUserData.secretary_details &&
+            parsedUserData.secretary_details.reg_id
+          ) {
+            setRegId(parsedUserData.secretary_details.reg_id);
+          } else {
+            throw new Error("reg_id not found in user data");
+          }
+        } else {
+          throw new Error("User data not found in localStorage");
+        }
+      } catch (err) {
+        console.log(`Failed to get user data: ${err.message}`);
+      }
+    };
+
+    getUserData();
+  }, []);
+
+  useEffect(() => {
+    if (regId) {
+      approvedMedia(regId);
+      console.log(regId, "RRRRRRRRRRRRRRRRRRRRRRRRR");
+    }
+  }, [regId]);
+
+  const approvedMedia = async (regId) => {
+    try {
+      const fetch = await axios.get(
+        `http://172.17.2.247:8080/intranetapp/entity_media_approved/${regId}/`
+      );
+      setMediaData(fetch?.data[0]);
+      console.log(fetch?.data[0], "FETCH MEDIA");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+
+  return (
+    <div className="club-container">
+      {/* Fixed Sidebar */}
+      <aside className="sidebar-list">
+        <div className="club-details-list">
+          <h2 className="entity-name-head"> Club</h2>
+          <p className="club-description">
+            Join our most active clubs and participate in exciting events and
+            activities.
+          </p>
+          <div className="club-stats-list">
+            <div className="stat-item-list">
+              <MdGroup style={{ color: "white" }} size={20} />
+              <span className="member-list-count">
+                6748 Active Members in Club
+              </span>
+            </div>
+            <div className="stat-item-list">
+              <MdOutlineOutlinedFlag style={{ color: "white" }} size={20} />
+              <span>{societies.length} Clubs</span>
+            </div>
+            <div className="stat-item-list">
+              <BsActivity style={{ color: "white" }} size={20} />
+              <span>50 Activities</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="main-content-list">
+        <div className="search-container-list">
+          <div className="search-wrapper-list">
+            <Search className="search-icon-list" />
+            <input
+              type="text"
+              placeholder="Search clubs..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="search-input"
+            />
+          </div>
+        </div>
+        <div className="back-button">
+          <button onClick={handleBack}>
+            <MdOutlineArrowBack />
+            Back
+          </button>
+        </div>
+
+        <div className="cards-grid-list">
+          {filteredSocieties.map((clubSociety) => (
+            <div
+              key={clubSociety.registration_code}
+              className="club-card-list"
+              onClick={() => handleCardClick(clubSociety)}
+            >
+              <div className="club-numbers">
+                <div className="club-card-image">
+                  <h1>{clubSociety.registration_name?.charAt(0)}</h1>
+                </div>
+                <div className="card-content-list">
+                  <h3>{clubSociety.registration_name}</h3>
+                  <p style={{ fontWeight: "bold" }} className="club-location">
+                    Owner : {clubSociety.dept_name}
+                  </p>
+                  <div className="card-stats-list">
+                    <div className="stat">
+                      <MdGroup size={16} />
+                      <span>82 Registered Member</span>
+                    </div>
+                  </div>
+                  <div className="tags"></div>
+                </div>
+              </div>
+              <div className="price">Know More</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="scroller-i">
+          <Scroller />
+        </div>
+      </main>
+
+      <Footer theme="clubTheme" />
+    </div>
+  );
+};
+
+export default ClubList;

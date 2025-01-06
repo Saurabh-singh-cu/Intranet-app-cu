@@ -1,0 +1,269 @@
+.mark-attendance {
+  font-family: 'Roboto', sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2em;
+  color: #6c757d;
+  padding: 40px;
+}
+
+.events-title {
+  text-align: center;
+  color: #343a40;
+  font-size: 2em;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.events-container {
+  margin-top: 20px;
+ 
+}
+
+.event-item-1 {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.event-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.event-header {
+  width: 100%;
+  padding: 15px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  text-align: left;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.event-header:hover, .event-header.active {
+  background-color: #0056b3;
+}
+
+.event-header:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.event-name {
+  flex: 1;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.arrow.active {
+  transform: rotate(180deg);
+}
+
+.event-details {
+  background-color: white;
+  padding: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.time-cards {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.time-card {
+  flex: 1;
+  min-width: 200px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #e9ecef;
+  transition: transform 0.3s ease;
+}
+
+.time-card:hover {
+  transform: translateY(-5px);
+}
+.check-green {
+  color: green !important;
+}
+.check-red{
+  color: red !important;
+}
+
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #495057;
+}
+
+.card-icon {
+  margin-right: 8px;
+  font-size: 1.2em;
+}
+
+.card-time {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #343a40;
+}
+
+.card-date {
+  color: #6c757d;
+}
+
+.mark-attendance-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.mark-attendance-btn:hover {
+  background-color: #218838;
+}
+
+.scanner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.scanner-container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 90%;
+  width: 400px;
+}
+
+.scanner-title {
+  font-size: 1.8em;
+  margin-bottom: 20px;
+  color: #343a40;
+}
+
+.qr-container {
+  width: 100%;
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.qr-scanner-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.qr-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.qr-placeholder-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qr-placeholder {
+  width: 200px;
+  height: 200px;
+  border: 3px solid #28a745;
+  border-radius: 20px;
+}
+
+.custom-message {
+  /* margin: 15px 0; */
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.custom-message.success {
+  color: #28a745;
+}
+
+.custom-message.error {
+  color: #dc3545;
+}
+
+.cancel-scan-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-scan-button:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 600px) {
+  .time-cards {
+    flex-direction: column;
+  }
+
+  .time-card {
+    width: 100%;
+  }
+
+  .qr-container {
+    width: 250px;
+    height: 250px;
+  }
+
+  .qr-placeholder {
+    width: 180px;
+    height: 180px;
+  }
+}
+

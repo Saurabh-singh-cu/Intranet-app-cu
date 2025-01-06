@@ -1,0 +1,142 @@
+.news-container {
+  width: 100%;
+  height: 311px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.news-header {
+  padding: 15px 20px;
+  background: white;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.news-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.news-content {
+  height: calc(100% - 51px);
+  overflow: hidden;
+  position: relative;
+}
+
+.news-item {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: all 0.5s ease;
+}
+
+.news-item.active {
+  opacity: 1;
+  transform: translateY(0);
+  padding: 5px;
+  background: white !important;
+}
+
+.news-image {
+  flex: 0 0 40%;
+  overflow: hidden;
+}
+
+.news-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.news-text {
+    background-color: #fff;
+    flex-direction: column;
+    flex: 0 0 60%;
+    /* justify-content: space-between; */
+    padding: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.news-text h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.news-text p {
+  color: #000;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  display: flex;
+  text-align: justify;
+  padding: 7px;
+}
+
+.read-more {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
+  margin-top: 10px;
+  align-self: flex-start;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+.news-footer {
+    flex-direction: column;
+    /* justify-content: space-between; */
+    display: flex;
+    position: absolute;
+    float: right;
+    right: 0px;
+    bottom: 0;
+    gap: 5px;
+}
+.leftRightArrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1e1313;
+  border: navajowhite;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transform: translateY(-50%);
+
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

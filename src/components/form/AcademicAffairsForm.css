@@ -1,0 +1,378 @@
+.form-container-form {
+  max-width: 60vw;
+  min-width: 60vw;
+  margin: 0 auto;
+  padding: 20px;
+  color: black;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.university-logo {
+  width: 160px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.tab-container {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tab:hover {
+}
+
+.form-content {
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  flex: 1;
+}
+
+.labelName {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.inputForm,
+.input.inputForm {
+  width: 67%;
+  padding: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  /* background-color: #818181; */
+  color: #050505;
+}
+
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  border: 1px solid black;
+  padding: 1px;
+  transition: background-color 0.3s;
+  font-size: 14px;
+}
+.radio-group label.active {
+  background-color: blue;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 5px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.clear-button,
+.next-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.clear-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.clear-button:hover {
+  background-color: #e0e0e0;
+}
+
+.next-button {
+  background-color: #4caf50;
+  color: rgb(0, 0, 0);
+}
+
+.next-button:hover {
+  background-color: #45a049;
+}
+
+/* additional custom css radio buttons  */
+.btn_choose_sent input {
+  -webkit-appearance: none;
+  display: block;
+  margin: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  vertical-align: middle;
+  box-shadow: hsla(0, 0%, 100%, 0.15) 0 1px 1px,
+    inset hsla(0, 0%, 0%, 0.5) 0 0 0 1px;
+  background-color: hsla(0, 0%, 0%, 0.2);
+  background-image: -webkit-radial-gradient(
+    #fff 0%,
+    #fff 15%,
+    #fff 28%,
+    #fff 70%
+  );
+  background-repeat: no-repeat;
+  -webkit-transition: background-position 0.15s cubic-bezier(0.8, 0, 1, 1),
+    -webkit-transform 0.25s cubic-bezier(0.8, 0, 1, 1);
+  outline: none;
+}
+.btn_choose_sent input:checked {
+  -webkit-transition: background-position 0.2s 0.15s cubic-bezier(0, 0, 0.2, 1),
+    -webkit-transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+}
+.btn_choose_sent input:active {
+  -webkit-transform: scale(1.5);
+  -webkit-transition: -webkit-transform 0.1s cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+/* The up/down direction logic */
+
+.btn_choose_sent input,
+.btn_choose_sent input:active {
+  background-position: 0 24px;
+}
+.btn_choose_sent input:checked {
+  background-position: 0 0;
+}
+.btn_choose_sent input:checked ~ input,
+.btn_choose_sent input:checked ~ input:active {
+  background-position: 0 -24px;
+}
+
+.btn_choose_sent {
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(125, 147, 178, 0.3);
+  border: none;
+  border-radius: 3px;
+  font-size: 11px;
+  line-height: 10px;
+  padding: 16px 20px 16px 38px;
+  text-align: center;
+  display: inline-block;
+  text-decoration: none;
+
+  transition: all 0.3s;
+  height: auto;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+}
+
+.btn_choose_sent input {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  top: 2px;
+}
+
+.btn_choose_sent input:after {
+  position: absolute;
+  content: "";
+  width: 15rem;
+  left: 0;
+  right: 0;
+  /* background: red; */
+  /* z-index: -1; */
+  height: 40px;
+  top: -10px;
+}
+
+.bg_btn_chose_3 {
+  background-color: #818181 !important;
+}
+.form-content-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.add-button,
+.remove-button {
+  font-size: 20px;
+}
+/* entity guide card custom  */
+.entity-card {
+  /* padding: 20px; */
+  box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset,
+    rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  background-color: #dadee1;
+}
+.sider-card {
+  width: 100%;
+  max-width: 400px;
+  min-height: 300px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 5%;
+  font-family: "Roboto", sans-serif !important;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* margin-bottom: 4%; */
+}
+
+.llogo {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.brain-icon {
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 0.5em;
+  color: #8e44ad;
+}
+
+.options-button {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  color: #666;
+}
+
+.card-buttons {
+  display: flex;
+  gap: 2%;
+  margin-bottom: 4%;
+}
+
+.h2tag {
+  font-size: 1.2em;
+  margin-bottom: 2%;
+}
+
+.ptag {
+  font-size: 0.9em;
+  line-height: 1.4;
+  color: #333;
+  margin-bottom: 4%;
+  flex-grow: 1;
+}
+
+.related-questions {
+  margin-top: auto;
+}
+
+.related-questions h3 {
+  font-size: 1em;
+  margin-bottom: 2%;
+}
+
+.related-questions ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.related-questions li {
+  font-size: 0.9em;
+  color: #333;
+}
+
+.related-questions li::before {
+  content: "•";
+  color: #8e44ad;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+@media (max-width: 600px) {
+  .sider-card {
+    padding: 4%;
+  }
+
+  .llogo {
+    font-size: 1em;
+  }
+
+  .button {
+    font-size: 0.8em;
+  }
+
+  .h2tag {
+    font-size: 1.1em;
+  }
+
+  .ptag,
+  .related-questions li {
+    font-size: 0.8em;
+  }
+}
+
+@media (max-width: 400px) {
+  .sider-card {
+    padding: 3%;
+  }
+
+  .llogo {
+    font-size: 0.9em;
+  }
+
+  .button {
+    font-size: 0.7em;
+  }
+
+  .h2tag {
+    font-size: 1em;
+  }
+
+  .ptag,
+  .related-questions li {
+    font-size: 0.7em;
+  }
+}
+.form-scroller {
+  overflow: scroll;
+  height: 68vh;
+}

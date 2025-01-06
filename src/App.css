@@ -1,0 +1,498 @@
+/* 
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css"; */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif !important;
+}
+
+
+.main-container {
+  display: flex;
+  margin-top: 50px;
+
+}
+
+main {
+  padding: 10px;
+}
+
+.title {
+  font-size: 3rem;
+  display: grid;
+  place-items: center;
+}
+
+/* Sidebar */
+.sidebar {
+  background: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  height: 93vh;
+  /* overflow-y: auto; */
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  
+}
+.main-scroller{
+  margin-top: 57px;
+  height: 90vh;
+  overflow: scroll;
+}
+@media (max-width: 800px) {
+  .sidebar {
+    position: fixed;
+    z-index: 999;
+  }
+  .main-scroller{
+    margin-left: 30px;
+  }
+  .my-form-component{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+}
+
+.logo-name {
+  color: red;
+}
+
+
+
+.top_section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 19px;
+ 
+}
+
+.logo {
+  font-size: 18px;
+  line-height: 0;
+  animation-name: logoshow;
+  animation-duration: 3s;
+}
+
+.bars {
+  width: 30px;
+}
+
+.hide {
+  display: none;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  height: 30px;
+  padding: 10px;
+}
+
+.search input {
+  border: none;
+  margin-left: 10px;
+  border-radius: 5px;
+  background: rgb(238, 238, 238);
+
+  color: rgb(0, 0, 0);
+}
+
+.routes {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.link {
+  display: flex;
+  color: rgb(0, 0, 0);
+  gap: 10px;
+  padding: 5px 10px;
+  border-right: 4px solid transparent;
+  transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.link:hover {
+  border-right: 4px solid white;
+  /* background: linear-gradient(to bottom left, #EF8D9C 40%, #FFC39E 100%); */
+  transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.active {
+  border-right: 4px solid white;
+  background: linear-gradient(to bottom left, #999999 40%, #6d6d6d 100%);
+  color: white;
+}
+
+.link_text {
+  white-space: nowrap;
+  font-size: 15px;
+}
+
+.menu {
+  display: flex;
+  color: rgb(0, 0, 0);
+
+  padding: 5px 10px;
+  border-right: 4px solid transparent;
+  transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  justify-content: space-between;
+}
+
+.menu_item {
+  display: flex;
+  gap: 10px;
+}
+
+.menu_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu_container .link {
+  padding-left: 20px;
+  border-bottom: #fff 0.5px solid;
+}
+
+/* Dashboard  */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: space-around;
+}
+
+.cards_item {
+  display: flex;
+  padding: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .cards_item {
+    width: 50%;
+  }
+}
+
+@media (min-width: 56rem) {
+  .cards_item {
+    width: 23.3333%;
+  }
+}
+
+.card {
+  background-color: white;
+  border-radius: 0.25rem;
+  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+
+
+
+
+
+
+.card-body {
+  width: 360px;
+  height: 130px;
+  /* background: linear-gradient(to bottom left, #EF8D9C 40%, #FFC39E 100%); */
+  background: linear-gradient(to bottom left, #363636 40%, #FFC39E 100%);
+  border-radius: 7px;
+  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-count {
+  display: flex;
+  width: 50%;
+  /* background-color: red; */
+  display: flex;
+  padding: 20px;
+
+
+}
+
+.count- {
+  font-size: 45px;
+  color: white;
+  font-family: "Roboto", sans-serif !important;
+  font-weight: 100;
+  position: relative;
+
+
+
+}
+
+.plus-sign {
+  top: -8px;
+  font-family: "Roboto", sans-serif !important;
+  position: absolute;
+  font-size: 30px;
+}
+
+.card-desc {
+  display: flex;
+  width: 50%;
+  /* background-color: red; */
+  display: flex;
+  padding: 14px;
+  margin-top: 70px;
+  justify-content: end;
+  color: rgb(255, 255, 255);
+}
+
+
+
+.notification-ad {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; 
+  width: 100%;
+}
+
+.big-noti, .big-noti-1 {
+  padding: 1rem;
+  height: 370px; 
+}
+
+.big-noti {
+  width: 60%; 
+  margin-left: 10px;
+  box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.25);
+}
+
+.big-noti-1 {
+  width: 40%; 
+}
+
+.noti, .noti-1 {
+  /* border-radius: 10px; */
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  width: 100%; /* Full width inside their containers */
+  height: 100%; /* Full height to fill the container */
+  object-fit: cover; /* Ensure the image covers the div while maintaining aspect ratio */
+}
+.noti-1{
+ 
+  position: relative;
+ 
+}
+.bignoti-heading{
+  display: flex;
+  background-color: #999999;
+  height: 30px;
+  color: rgb(255, 255, 255);
+  letter-spacing: 1px;
+  font-weight: 600;
+  padding: 3px;
+  font-size: 16px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .notification-ad {
+    flex-direction: column; /* Stack vertically on smaller screens */
+  }
+
+  .big-noti, .big-noti-1 {
+    width: 100%; /* Full width on smaller screens */
+    height: auto; /* Allow height to adjust naturally on smaller screens */
+  }
+}
+
+
+/* small ad  */
+.card-img- {
+  overflow: hidden; 
+}
+
+.card-img- img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+.date-{
+  display: flex;
+  flex-direction: column;
+  
+}
+.card-body-{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  bottom: 0;
+  position: absolute;
+  
+
+}
+/* scroller css  */
+/* For WebKit browsers */
+::-webkit-scrollbar {
+  width: 4px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+  border-radius: 10px; /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar handle */
+  border-radius: 10px; /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color on hover */
+}
+button{
+  display: flex;
+}
+
+
+/* second dashboiard notification centre  */
+.dive-container {
+  display: flex;
+  height: 50vh;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.left-section {
+  width: 55%;
+  padding: 20px;
+  background-color: #f0f0f0;
+  overflow-y: hidden;
+}
+
+.right-section {
+  width: 45%;
+  padding: 20px;
+  background-color: #f0f0f0;
+  overflow-y: hidden;
+}
+
+.card {
+  background-color: white;
+  /* border-radius: 8px; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-body {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.card-footer {
+  background-color: #f8f8f8;
+  padding: 10px;
+  text-align: center;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.thumbs-up-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.thumbs-up-button:hover {
+  background-color: #45a049;
+}
+
+.scrollable-cards {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.scroll-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+.scroll-card-1{
+  background-color: #383837;
+  /* border-radius: 8px; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  /* padding: 15px; */
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+
+.scroll-card h3 {
+  margin-top: 0;
+}
+
+/* Customize scrollbar */
+.scrollable-cards::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+.scrollable-cards::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollable-cards::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.scrollable-cards::-webkit-scrollbar-thumb:hover {
+  background: #464545;
+}
+.ant-modal-close {
+  position: absolute;
+  top: 12px;
+  inset-inline-end: 12px;
+  z-index: 1010;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.45);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  background: transparent;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
