@@ -19,10 +19,10 @@ const CreditModal = ({ isOpen, onClose, onSubmit }) => {
   };
 
   const animateScore = () => {
-    const targetScore = 89; // This can be dynamic based on actual data
+    const targetScore = 95;
     let currentScore = 0;
-    const duration = 2000; // 2 seconds
-    const interval = 20; // Update every 20ms
+    const duration = 1500; // Reduced to 1.5 seconds for snappier feedback
+    const interval = 16; // Smoother animation (60fps)
     const steps = duration / interval;
     const increment = targetScore / steps;
 
@@ -38,6 +38,7 @@ const CreditModal = ({ isOpen, onClose, onSubmit }) => {
 
   useEffect(() => {
     if (showScore) {
+      // Synchronize needle and color fill
       const rotation = (score / 100) * 180 - 90;
       if (needleRef.current) {
         needleRef.current.style.transform = `rotate(${rotation}deg)`;
@@ -49,10 +50,10 @@ const CreditModal = ({ isOpen, onClose, onSubmit }) => {
   }, [score, showScore]);
 
   const getScoreColor = () => {
-    if (score <= 25) return '#FF4136'; // Red
-    if (score <= 50) return '#FFDC00'; // Yellow
-    if (score <= 75) return '#0074D9'; // Blue
-    return '#2ECC40'; // Green
+    if (score <= 25) return '#FF4136';
+    if (score <= 50) return '#FFDC00';
+    if (score <= 75) return '#0074D9';
+    return '#2ECC40';
   };
 
   const getRating = () => {
@@ -104,10 +105,23 @@ const CreditModal = ({ isOpen, onClose, onSubmit }) => {
             </div>
             
             <div className="score-circle">
-              <div className="circle" ref={scoreRef} style={{ '--score-color': getScoreColor() }}>
-                <div className="percentage">{score}%</div>
-                <div className="rating">{getRating()}</div>
-                <div className="needle" ref={needleRef}></div>
+              <div 
+                className={`circle ${score <= 25 ? 'blink-poor' : score > 75 ? 'blink-excellent' : ''}`} 
+                ref={scoreRef} 
+                style={{ '--score-color': getScoreColor() }}
+              >
+                <div className="meter-background"></div>
+                <div className="meter-fill"></div>
+                <div className="center-content">
+                  <div className="percentage">{score}%</div>
+                  <div className="rating">{getRating()}</div>
+                </div>
+                {/* <div className="needle-container">
+                  <div className="needle" ref={needleRef}>
+                    <div className="needle-head"></div>
+                  </div>
+                </div> */}
+                <div className="meter-marks"></div>
               </div>
             </div>
             
@@ -147,4 +161,3 @@ const CreditModal = ({ isOpen, onClose, onSubmit }) => {
 };
 
 export default CreditModal;
-
