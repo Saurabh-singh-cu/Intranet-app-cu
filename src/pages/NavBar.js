@@ -9,11 +9,13 @@ import { DownOutlined, SettingOutlined } from "@ant-design/icons";
 import { Dropdown, Space } from "antd";
 import "./NavBar.css";
 import { useNavigate } from "react-router-dom";
+import CreditModal from "../CreditScore/CreditModal";
 
 const NavBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [filteredResults, setFilteredResults] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const searchRef = useRef(null);
   const navigate = useNavigate();
 
@@ -127,6 +129,10 @@ const NavBar = () => {
     setShowResults(false);
   };
 
+  const handleCreditScoreCheck = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -172,88 +178,87 @@ const NavBar = () => {
       </div>
 
       <div className="navbar-right">
-  {/* Check role and logged-in status */}
-  {isLoggedIn ? (
-    // If logged in, show only the username for certain roles
-    <>
-      {["Admin", "Faculty Advisory", "Student Secretary"].includes(
-        userName?.role_name
-      ) ? null : (
-        <>
-          {/* Buttons only for roles other than the above */}
-          <button
-            onClick={() => navigate("/join-now")}
-            className="nav-button"
-          >
-            Join as New Member
-          </button>
-          <button
-            onClick={() => navigate("/Register-New-Entity")}
-            className="nav-button"
-          >
-            Register New Entity
-          </button>
-        </>
-      )}
+        {isLoggedIn ? (
+          <>
+            {["Admin", "Faculty Advisory", "Student Secretary"].includes(
+              userName?.role_name
+            ) ? null : (
+              <>
+                <button
+                  onClick={() => navigate("/join-now")}
+                  className="nav-button"
+                >
+                  Join as New Member
+                </button>
+                <button
+                  onClick={() => navigate("/Register-New-Entity")}
+                  className="nav-button"
+                >
+                  Register New Entity
+                </button>
+              </>
+            )}
 
-      {/* Dropdown for logged-in user */}
-      {userName && (
-        <button className="icon-button desktop-only">
-          <span className="greenDot"></span>
-          <Dropdown menu={{ items }}>
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>
-                <span className="userOnNav">{userName?.user_name}</span>
-              </Space>
-            </a>
-          </Dropdown>
-        </button>
-      )}
-    </>
-  ) : (
-    // If not logged in, show buttons
-    <>
-      <button
-        onClick={() => navigate("/join-now")}
-        className="nav-button"
-      >
-        Join as New Member
-      </button>
-      <button
-        onClick={() => navigate("/Register-New-Entity")}
-        className="nav-button"
-      >
-        Register New Entity
-      </button>
-    </>
-  )}
+            {/* Dropdown for logged-in user */}
+            {userName && (
+              <button className="icon-button desktop-only">
+                <span className="greenDot"></span>
+                <Dropdown menu={{ items }}>
+                  <a onClick={(e) => e.preventDefault()}>
+                    <Space>
+                      <span className="userOnNav">{userName?.user_name}</span>
+                    </Space>
+                  </a>
+                </Dropdown>
+              </button>
+            )}
+          </>
+        ) : (
+          // If not logged in, show buttons
+          <>
+            <button onClick={handleCreditScoreCheck} className="nav-button">
+              Check Credit Score
+            </button>
+            <button
+              onClick={() => navigate("/join-now")}
+              className="nav-button"
+            >
+              Join as New Member
+            </button>
+            <button
+              onClick={() => navigate("/Register-New-Entity")}
+              className="nav-button"
+            >
+              Register New Entity
+            </button>
+          </>
+        )}
 
-  {/* Login/Logout Button */}
-  <div className="user-profile desktop-only">
-    <span
-      style={{ cursor: "pointer" }}
-      onClick={handleLoginLogout}
-      className="user-name"
-    >
-      {isLoggedIn ? (
-        <div className="logout1">
-          Log out{" "}
-          <span style={{ marginLeft: "10px" }}>
-            <IoIosLogOut />
+        {/* Login/Logout Button */}
+        <div className="user-profile desktop-only">
+          <span
+            style={{ cursor: "pointer" }}
+            onClick={handleLoginLogout}
+            className="user-name"
+          >
+            {isLoggedIn ? (
+              <div className="logout1">
+                Log out{" "}
+                <span style={{ marginLeft: "10px" }}>
+                  <IoIosLogOut />
+                </span>
+              </div>
+            ) : (
+              <div className="logout1">Login</div>
+            )}
           </span>
         </div>
-      ) : (
-        <div className="logout1">Login</div>
-      )}
-    </span>
-  </div>
 
-  {/* Mobile Menu */}
-  <button className="menu-button mobile-only" onClick={toggleMenu}>
-    <FaBars />
-  </button>
-</div>
-
+        {/* Mobile Menu */}
+        <button className="menu-button mobile-only" onClick={toggleMenu}>
+          <FaBars />
+        </button>
+      </div>
 
       {isMenuOpen && (
         <div className="mobile-menu">
@@ -281,6 +286,7 @@ const NavBar = () => {
           </button>
         </div>
       )}
+      <CreditModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </nav>
   );
 };

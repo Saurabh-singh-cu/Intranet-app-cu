@@ -21,6 +21,7 @@ import "./EntityTable.css";
 import { useCallback, useEffect, useState } from "react";
 import { Color } from "antd/es/color-picker";
 import axios from "axios";
+import { sendDynamicEmailsSwift } from "./sendDynamicEmailsSwift";
 
 const { TextArea } = Input;
 
@@ -43,6 +44,9 @@ function EntityTable() {
   const [remark, setRemark] = useState("");
   const [selectedEntityId, setSelectedEntityId] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [textAreaValue, setTextAreaValue] = useState("");
+  const [isValid, setIsValid] = useState(false);
 
   axios.interceptors.request.use((config) => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -68,43 +72,6 @@ function EntityTable() {
       navigate("/login");
     }
   }, [navigate]);
-
-  // const fetchEntities = useCallback((token) => {
-  //   console.log(token, "TOKENNNNNN")
-  //   fetch("http://172.17.2.247:8080/intranetapp/entity-requests/", {
-  //     headers: {
-  //       'Authorization': `Bearer ${token}`,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //     .then((response) => {
-  //       if (response.ok) {
-  //         return response.json();
-  //       } else if (response.status === 403) {
-  //         throw new Error('Forbidden: You do not have permission to access this resource');
-  //       } else if (response.status === 401) {
-  //         throw new Error('Unauthorized');
-  //       }
-  //       throw new Error('Network response was not ok');
-  //     })
-  //     .then((data) => {
-  //       if (Array.isArray(data)) {
-  //         setEntities(data);
-  //       } else {
-  //         console.error('Received data is not an array:', data);
-  //         setEntities([]);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching data:", error);
-  //       if (error.message === 'Unauthorized' || error.message.includes('Forbidden')) {
-  //         message.error(error.message);
-  //         localStorage.removeItem('user');
-  //         navigate('/login');
-  //       }
-  //       setEntities([]);
-  //     });
-  // }, [navigate]);
 
   const fetchEntities = async () => {
     try {
@@ -195,62 +162,35 @@ function EntityTable() {
     });
   };
 
-  const handleEmailInputChange = (e) => {
-    const inputValue = e.target.value;
-    if (inputValue.endsWith(",") || inputValue.endsWith(" ")) {
-      const newEmail = inputValue.slice(0, -1).trim();
-      if (isValidEmail(newEmail) && !emails.includes(newEmail)) {
-        setEmails([...emails, newEmail]);
-        e.target.value = "";
-      }
-    }
-  };
+  // const handleEmailInputChange = (e) => {
+  //   const inputValue = e.target.value;
+  //   if (inputValue.endsWith(",") || inputValue.endsWith(" ")) {
+  //     const newEmail = inputValue.slice(0, -1).trim();
+  //     if (isValidEmail(newEmail) && !emails.includes(newEmail)) {
+  //       setEmails([...emails, newEmail]);
+  //       e.target.value = "";
+  //     }
+  //   }
+  // };
 
-  const isValidEmail = (email) => {
-    const re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const removeEmail = (emailToRemove) => {
-    setEmails(emails.filter((email) => email !== emailToRemove));
-  };
+  // const removeEmail = (emailToRemove) => {
+  //   setEmails(emails.filter((email) => email !== emailToRemove));
+  // };
 
   const handleView = (params) => {
-    setEditingEntity(params.data); 
-    setViewModalVisible(true); 
-  };
-
-  const updateStatusAPI = async (entityId, newStatus) => {
-    try {
-      const payload = {
-        entity_id: entityId,
-        status: newStatus,
-      };
-
-      const response = await axios.put("/api/update-status", payload);
-
-      if (response.status === 200) {
-        const result = response.data;
-        console.log("Status updated successfully:", result);
-      } else {
-        console.error("Failed to update status");
-      }
-    } catch (error) {
-      console.error("Error updating status:", error);
-    }
+    setEditingEntity(params.data);
+    setViewModalVisible(true);
   };
 
   const handleViewMore = (params) => {
-    setSelectedEntityDetails(params.data); 
-    setViewMoreDrawerVisible(true); 
+    setSelectedEntityDetails(params.data);
+    setViewMoreDrawerVisible(true);
   };
 
   const onViewMoreDrawerClose = () => {
     setViewMoreDrawerVisible(false);
     setSelectedEntityDetails(null);
   };
-
 
   const handleStatusChange = useCallback((params) => {
     setSelectedEntityId(params.data.entcr_id);
@@ -466,6 +406,92 @@ function EntityTable() {
     </>
   );
 
+  // const handleEmailInputChange = (e) => {
+  //   const inputValue = e.target.value;
+  //   if (inputValue.endsWith("\n")) {
+  //     const newEmail = inputValue.slice(0, -1).trim();
+  //     if (isValidEmail(newEmail) && !emails.includes(newEmail)) {
+  //       setEmails([...emails, newEmail]);
+  //       e.target.value = "";
+  //     }
+  //   }
+  // };
+
+  // const onMailFinish = (values) => {
+  //   Modal.confirm({
+  //     title: "Are you sure you want to send emails?",
+  //     onOk() {
+  //       setIsLoading(true);
+  //       const payload = {
+  //         ...values,
+  //         receiver_emails: emails,
+  //         user_id: user?.user_id || null,
+  //       };
+  //       axios
+  //         .post("http://172.17.2.247:8080/intranetapp/send-email/", payload)
+  //         .then((response) => {
+  //           setIsLoading(false);
+  //           message.success("Email sent successfully");
+  //           // Do not close the drawer here
+  //         })
+  //         .catch((error) => {
+  //           setIsLoading(false);
+  //           console.error("Error sending email:", error);
+  //           message.error("Failed to send email");
+  //         });
+  //     },
+  //   });
+  // };
+
+  // bulk mailer
+
+  const isValidEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const processEmails = (text) => {
+    const emailList = text.split(/[\n,\s]+/).filter(Boolean);
+
+    const processedEmails = emailList.map((email) => {
+      email = email.trim();
+      if (!email.includes("@")) {
+        email = `${email}@cuchd.in`;
+      }
+      return email;
+    });
+
+    const uniqueEmails = [...new Set(processedEmails)];
+    const validEmails = uniqueEmails.filter((email) => isValidEmail(email));
+
+    setEmails(validEmails);
+    return validEmails;
+  };
+
+  const handlePaste = (e) => {
+    const pastedText = e.clipboardData.getData("text");
+    const newValue = textAreaValue + pastedText;
+    setTextAreaValue(newValue);
+    processEmails(newValue);
+  };
+
+  const handleEmailInputChange = (e) => {
+    const inputValue = e.target.value;
+    setTextAreaValue(inputValue);
+    const validEmails = processEmails(inputValue);
+    setIsValid(
+      validEmails.length > 0 &&
+        validEmails.length ===
+          inputValue.split(/[\n,\s]+/).filter(Boolean).length
+    );
+  };
+
+  const removeEmail = (emailToRemove) => {
+    const updatedEmails = emails.filter((email) => email !== emailToRemove);
+    setEmails(updatedEmails);
+    setTextAreaValue(updatedEmails.join("\n"));
+  };
+
   return (
     <div className="entity-table-container">
       <div className="table-header-entity">
@@ -541,26 +567,113 @@ function EntityTable() {
         width={600}
       >
         <Form form={mailForm} layout="vertical" onFinish={onMailFinish}>
-          <Form.Item label="Receiver Emails" required>
-            <div className="email-input-container">
-              {emails.map((email, index) => (
-                <Tag key={index} closable onClose={() => removeEmail(email)}>
-                  {email}
-                </Tag>
-              ))}
-              <Input
-                placeholder="Enter email addresses"
-                onChange={handleEmailInputChange}
-                style={{
-                  background: isValidEmail(
-                    mailForm.getFieldValue("receiver_emails")
-                  )
-                    ? "#e6f7e6"
-                    : "white",
-                }}
-              />
-            </div>
+          {/* <Form.Item label="Email Addresses">
+            <TextArea
+              placeholder="Enter email addresses (press Enter for each email)"
+              onChange={handleEmailInputChange}
+              style={{
+                background: "white",
+                border: "1px solid #d9d9d9",
+                borderRadius: "2px",
+                padding: "4px 11px",
+              }}
+              autoSize={{ minRows: 2, maxRows: 6 }}
+            />
           </Form.Item>
+          <div className="email-tag-container">
+            {emails.map((email, index) => (
+              <Tag
+                key={index}
+                closable
+                onClose={() => removeEmail(email)}
+                style={{
+                  background: "#f0f0f0",
+                  borderRadius: "16px",
+                  padding: "4px 8px",
+                  margin: "4px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ color: "#389e0d" }}>{email}</span>
+              </Tag>
+            ))}
+          </div> */}
+
+          <Form.Item label="Email Addresses">
+            <TextArea
+              value={textAreaValue}
+              placeholder="Paste email addresses from Excel or type (domain @cuchd.in will be added automatically if missing)"
+              onChange={handleEmailInputChange}
+              onPaste={handlePaste}
+              style={{
+                background: "white",
+                border: `1px solid ${isValid ? "#52c41a" : "#d9d9d9"}`,
+                borderRadius: "2px",
+                padding: "4px 11px",
+                minHeight: "100px",
+              }}
+            />
+          </Form.Item>
+          <div
+            style={{
+              marginBottom: "10px",
+              maxHeight: "150px",
+              overflowY: "auto",
+            }}
+          >
+            {emails.map((email, index) => (
+              <Tag
+                key={index}
+                closable
+                onClose={() => removeEmail(email)}
+                style={{
+                  background: "#f0f0f0",
+                  borderRadius: "16px",
+                  padding: "4px 8px",
+                  margin: "4px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ color: "#389e0d" }}>{email}</span>
+              </Tag>
+            ))}
+          </div>
+          <div>Total emails: {emails.length}</div>
+          {/* <div
+            className="email-tag-container"
+            style={{
+              maxHeight: "200px",
+              overflowY: "auto",
+              padding: "8px",
+              border: "1px solid #d9d9d9",
+              borderRadius: "2px",
+              marginBottom: "16px",
+            }}
+          >
+            {emails.map((email, index) => (
+              <Tag
+                key={index}
+                closable
+                onClose={() => removeEmail(email)}
+                style={{
+                  background: "#f0f0f0",
+                  borderRadius: "16px",
+                  padding: "4px 8px",
+                  margin: "4px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ color: "#389e0d" }}>{email}</span>
+              </Tag>
+            ))}
+            <div style={{ marginTop: "8px" }}>
+              Total emails: {emails.length}
+            </div>
+          </div> */}
+
           <Form.Item
             name="subject"
             label="Subject"
@@ -572,6 +685,7 @@ function EntityTable() {
             <ReactQuill theme="snow" />
           </Form.Item>
           <Form.Item
+            style={{ display: "none" }}
             name="entity_request_id"
             label="Entity Request ID"
             rules={[{ required: true }]}
@@ -579,7 +693,7 @@ function EntityTable() {
             <Input disabled />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={isLoading}>
               Send Mail
             </Button>
           </Form.Item>

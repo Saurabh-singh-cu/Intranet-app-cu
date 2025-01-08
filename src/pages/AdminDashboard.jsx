@@ -385,11 +385,7 @@ const AdminDashboard = () => {
       const response = await axios.get("http://172.17.2.247:8080/intranetapp/entity-registration/")
       setEntityCount(response?.data);
     }catch(error){
-      Swal.fire({
-        title: "Something Wrong Here...!",
-        text:`${error?.response?.data?.detail}`,
-        icon : "error"
-      })
+    
       console.log(error)
     }
    

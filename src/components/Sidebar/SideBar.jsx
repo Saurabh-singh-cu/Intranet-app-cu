@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser, FaUsers } from "react-icons/fa";
-import { MdCloudUpload, MdEmojiEvents, MdEventNote, MdMessage, MdOutlineDashboardCustomize, MdQrCodeScanner } from "react-icons/md";
+import { MdCloudUpload, MdEmail, MdEmojiEvents, MdEventNote, MdMessage, MdOutlineDashboardCustomize, MdQrCodeScanner } from "react-icons/md";
 import { BiAnalyse, BiSearch, BiCog } from "react-icons/bi";
 import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
 import { BsCartCheck } from "react-icons/bs";
@@ -23,6 +23,12 @@ const routes = [
     name: "Home",
     icon: <FaHome />,
     allowedRoles: ["Admin", "Student Secretary"]
+  },
+  {
+    path: "/email/email-service",
+    name: "Email",
+    icon: <MdEmail />,
+    allowedRoles: ["Admin"]
   },
   {
     path: "/student-secretary-dashboard",
