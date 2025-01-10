@@ -19,7 +19,7 @@ const CreditModal = ({ isOpen, onClose, onSubmit }) => {
   };
 
   const animateScore = () => {
-    const targetScore = 95;
+    const targetScore = 78;
     let currentScore = 0;
     const duration = 1500; // Reduced to 1.5 seconds for snappier feedback
     const interval = 16; // Smoother animation (60fps)
@@ -92,11 +92,14 @@ const CreditModal = ({ isOpen, onClose, onSubmit }) => {
                 placeholder="Enter your UID"
                 required
               />
-              <button type="submit">Submit</button>
+             <div style={{display:"flex", justifyContent:"center"}}>
+             <button type="submit">Submit</button>
+             </div>
             </form>
           </div>
         ) : (
           <div className="score-display">
+            <div style={{display:"flex", justifyContent:"center", fontSize:"21px"}} className='score-detail'>Your Credit Score</div>
             <div className="score-header">
               <div className="score-detail">
                 <span>UID: {uid}</span>
@@ -113,7 +116,7 @@ const CreditModal = ({ isOpen, onClose, onSubmit }) => {
                 <div className="meter-background"></div>
                 <div className="meter-fill"></div>
                 <div className="center-content">
-                  <div className="percentage">{score}%</div>
+                  <div className="percentage">{score}</div>
                   <div className="rating">{getRating()}</div>
                 </div>
                 {/* <div className="needle-container">
@@ -150,6 +153,7 @@ const CreditModal = ({ isOpen, onClose, onSubmit }) => {
                 <div>Department Name: DAA</div>
                 <div>Name: {uid}</div>
                 <div>Date: 20/01/2025</div>
+                <div>Entity: Eloquence Consortium </div>
               </div>
               <button className="download-btn" onClick={handleDownload}>Download Report</button>
             </div>

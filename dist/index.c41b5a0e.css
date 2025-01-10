@@ -4612,7 +4612,7 @@ button {
   border-radius: 16px;
   width: 90%;
   max-width: 500px;
-  padding: 2.5rem;
+  padding: .5rem;
   position: relative;
   box-shadow: 0 10px 25px #0000001a;
 }
@@ -4696,7 +4696,7 @@ button {
 
 .score-circle {
   justify-content: center;
-  margin: 2rem 0;
+  margin: 1rem 0;
   display: flex;
   position: relative;
 }
@@ -4711,14 +4711,14 @@ button {
 }
 
 .meter-background {
-  background: conic-gradient(from -90deg, #e0e0e0 0% 100%);
+  background: conic-gradient(from 180deg, #e0e0e0 0% 100%);
   border-radius: 50%;
   position: absolute;
   inset: 0;
 }
 
 .meter-fill {
-  background: conic-gradient(from -90deg, var(--score-color) 0%, var(--score-color) calc(var(--score) * 1%), transparent calc(var(--score) * 1%));
+  background: conic-gradient(from 180deg, var(--score-color) 0%, var(--score-color) calc(var(--score) * 1%), transparent calc(var(--score) * 1%));
   border-radius: 50%;
   transition: background .3s ease-out;
   position: absolute;
@@ -4774,7 +4774,7 @@ button {
   position: absolute;
   bottom: 0;
   left: -2px;
-  transform: rotate(-90deg);
+  transform: rotate(0);
 }
 
 .needle:after {
@@ -4802,13 +4802,14 @@ button {
 
 .meter-marks {
   border-radius: 50%;
+  display: none;
   position: absolute;
   inset: 0;
 }
 
 .meter-marks:before {
   content: "";
-  background: repeating-conic-gradient(from -90deg, #0000 0deg 4deg, #0000001a 4deg 5deg);
+  background: repeating-conic-gradient(from 180deg, #0000 0deg 4deg, #0000001a 4deg 5deg);
   border-radius: 50%;
   width: 100%;
   height: 100%;
@@ -4818,7 +4819,7 @@ button {
 .score-legend {
   justify-content: center;
   gap: 1.5rem;
-  margin: 2rem 0;
+  margin: .5rem 0;
   display: flex;
 }
 
@@ -4883,9 +4884,7 @@ button {
 }
 
 .score-footer {
-  border-top: 1px solid #e0e0e0;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .member-info {

@@ -82,7 +82,6 @@
 //   } else {
 //     console.log('getUserMedia is not supported in this browser.');
 //   }
-  
 
 //   const requestCameraPermission = async () => {
 //     try {
@@ -447,6 +446,7 @@ const MarkAttendance = () => {
   };
 
   const fetchAttendanceData = async () => {
+    setLoading(true);
     try {
       const userData = JSON.parse(localStorage.getItem("user"));
       const response = await axios.post(
@@ -468,12 +468,14 @@ const MarkAttendance = () => {
 
   const startScanning = async (eventId) => {
     if (!hasCamera || !permissionGranted) {
-      setCustomMessage("Ensure your device has a camera and you have granted permission.");
+      setCustomMessage(
+        "Ensure your device has a camera and you have granted permission."
+      );
       setMessageType("error");
 
       // Clear the message after 2 seconds
       setTimeout(() => {
-        setCustomMessage('');
+        setCustomMessage("");
       }, 2000);
 
       return;
@@ -495,8 +497,9 @@ const MarkAttendance = () => {
         (result) => {
           // Ensure attendance is not marked again if it's already been done
           const currentTime = Date.now();
-          if (!isAttendanceMarked && currentTime - lastScannedTime > 3000) { // Check for a 3-second debounce
-            setIsAttendanceMarked(true);  // Set flag to true to prevent further scans
+          if (!isAttendanceMarked && currentTime - lastScannedTime > 3000) {
+            // Check for a 3-second debounce
+            setIsAttendanceMarked(true); // Set flag to true to prevent further scans
             setLastScannedTime(currentTime); // Update the last scan time
             handleAttendanceMarking(eventId, result.data);
           }
@@ -513,7 +516,7 @@ const MarkAttendance = () => {
 
       // Clear the message after 2 seconds
       setTimeout(() => {
-        setCustomMessage('');
+        setCustomMessage("");
       }, 2000);
     }
   };
@@ -529,19 +532,19 @@ const MarkAttendance = () => {
           reg_id: userData?.secretary_details?.reg_id,
         }
       );
-
+      console.log(response, "WWWWW");
       // Show success message for 3 seconds
-      setCustomMessage(`${response?.detail}! QR Code: ${qrCode}`);
+      setCustomMessage(`${response?.data?.detail}! QR Code: ${qrCode}`);
       setMessageType("success");
 
       // Clear the success message after 3 seconds
       setTimeout(() => {
-        setCustomMessage('');
+        setCustomMessage("");
         setScanningInProgress(false); // Reset scanning flag after success
       }, 3000);
 
       // Allow new scans after a short delay
-      setIsAttendanceMarked(false);  // Reset the flag after delay
+      setIsAttendanceMarked(false); // Reset the flag after delay
     } catch (error) {
       console.error("Error marking attendance:", error);
       setCustomMessage(`${error?.response?.data?.detail}`);
@@ -549,11 +552,11 @@ const MarkAttendance = () => {
 
       // Clear the error message after 2 seconds
       setTimeout(() => {
-        setCustomMessage('');
+        setCustomMessage("");
         setScanningInProgress(false); // Reset scanning flag after failure
-      }, 7000);  // 2 seconds for error message
+      }, 7000); // 2 seconds for error message
 
-      setIsAttendanceMarked(false);  // Reset the flag in case of an error
+      setIsAttendanceMarked(false); // Reset the flag in case of an error
     }
   };
 
@@ -584,53 +587,76 @@ const MarkAttendance = () => {
     <div className="mark-attendance">
       <div className="events-container-1">
         <h2 className="events-title">Ongoing Events</h2>
-        {attendanceData.map((item) => (
-          <div key={item.er_id} className="event-item-1">
-            <button
-              className={`event-header ${activeAccordion === item.er_id ? "active" : ""}`}
-              onClick={() =>
-                !scanning && setActiveAccordion(activeAccordion === item.er_id ? null : item.er_id)
-              }
-              disabled={scanning}
-            >
-              <span className="event-name">{item.event_name}</span>
-              <span className={`arrow ${activeAccordion === item.er_id ? "active-1" : ""}`}>
-                ▼
-              </span>
-            </button>
-            {activeAccordion === item.er_id && !scanning && (
-              <div className="event-details">
-                <div className="time-cards">
-                  <div className="time-card check-in">
-                    <div className="card-header check-green">
-                      <span className="card-icon">⏰</span>
-                      Check In
+        {loading === true ? (
+          <><div style={{}} className="loader"></div></>
+        ) : (
+          <>
+            {" "}
+            {attendanceData.map((item) => (
+              <div key={item.er_id} className="event-item-1">
+                <button
+                  className={`event-header ${
+                    activeAccordion === item.er_id ? "active" : ""
+                  }`}
+                  onClick={() =>
+                    !scanning &&
+                    setActiveAccordion(
+                      activeAccordion === item.er_id ? null : item.er_id
+                    )
+                  }
+                  disabled={scanning}
+                >
+                  <span className="event-name">{item.event_name}</span>
+                  <span
+                    className={`arrow ${
+                      activeAccordion === item.er_id ? "active-1" : ""
+                    }`}
+                  >
+                    ▼
+                  </span>
+                </button>
+                {activeAccordion === item.er_id && !scanning && (
+                  <div className="event-details">
+                    <div className="time-cards">
+                      <div className="time-card check-in">
+                        <div className="card-header check-green">
+                          <span className="card-icon">⏰</span>
+                          Check In
+                        </div>
+                        <div className="card-time">
+                          {formatTime(item.start_time)}
+                        </div>
+                        <div className="card-date">{item.start_date}</div>
+                      </div>
+                      <div className="time-card check-out">
+                        <div className="card-header check-red">
+                          <span className="card-icon">🏁</span>
+                          Check Out
+                        </div>
+                        <div className="card-time">
+                          {formatTime(item.end_time)}
+                        </div>
+                        <div className="card-date">{item.end_date}</div>
+                      </div>
+                      <div className="time-card mark-attendance">
+                        <div className="card-header">
+                          <span className="card-icon">✅</span>
+                          Mark Attendance
+                        </div>
+                        <button
+                          className="mark-attendance-btn"
+                          onClick={() => startScanning(item.er_id)}
+                        >
+                          Mark Attendance
+                        </button>
+                      </div>
                     </div>
-                    <div className="card-time">{formatTime(item.start_time)}</div>
-                    <div className="card-date">{item.start_date}</div>
                   </div>
-                  <div className="time-card check-out">
-                    <div className="card-header check-red">
-                      <span className="card-icon">🏁</span>
-                      Check Out
-                    </div>
-                    <div className="card-time">{formatTime(item.end_time)}</div>
-                    <div className="card-date">{item.end_date}</div>
-                  </div>
-                  <div className="time-card mark-attendance">
-                    <div className="card-header">
-                      <span className="card-icon">✅</span>
-                      Mark Attendance
-                    </div>
-                    <button className="mark-attendance-btn" onClick={() => startScanning(item.er_id)}>
-                      Mark Attendance
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
-            )}
-          </div>
-        ))}
+            ))}
+          </>
+        )}
       </div>
       {scanning && (
         <div className="scanner-overlay">
@@ -638,22 +664,28 @@ const MarkAttendance = () => {
             <h2 className="scanner-title">Scan QR Code</h2>
             <div className="qr-container">
               <div className="qr-scanner-wrapper">
-                <video ref={videoRef} className="qr-video" autoPlay playsInline />
+                <video
+                  ref={videoRef}
+                  className="qr-video"
+                  autoPlay
+                  playsInline
+                />
                 <div className="qr-placeholder-overlay">
                   <div className="qr-placeholder" />
                 </div>
               </div>
             </div>
-            <button className="cancel-scan-button" onClick={stopScanning}>Stop Scanning</button>
+            <button className="cancel-scan-button" onClick={stopScanning}>
+              Stop Scanning
+            </button>
             {customMessage && (
-        <div className={`custom-message ${messageType}`}>
-          {customMessage}
-        </div>
-      )}
+              <div className={`custom-message ${messageType}`}>
+                {customMessage}
+              </div>
+            )}
           </div>
         </div>
       )}
-     
     </div>
   );
 };

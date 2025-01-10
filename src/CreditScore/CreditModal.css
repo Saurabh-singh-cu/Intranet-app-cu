@@ -12,11 +12,12 @@
   justify-content: center;
   z-index: 1000;
   font-family: 'Inter', sans-serif;
+  /* margin-top: 20px; */
 }
 
 .modal-content-credit {
   background: white;
-  padding: 2.5rem;
+  padding: 0.5rem;
   border-radius: 16px;
   width: 90%;
   max-width: 500px;
@@ -104,7 +105,7 @@
 .score-circle {
   display: flex;
   justify-content: center;
-  margin: 2rem 0;
+  margin: 1rem 0;
   position: relative;
 }
 
@@ -125,7 +126,7 @@
   bottom: 0;
   border-radius: 50%;
   background: conic-gradient(
-    from -90deg,
+    from 180deg,
     #e0e0e0 0%,
     #e0e0e0 100%
   );
@@ -139,7 +140,7 @@
   bottom: 0;
   border-radius: 50%;
   background: conic-gradient(
-    from -90deg,
+    from 180deg,
     var(--score-color) 0%,
     var(--score-color) calc(var(--score) * 1%),
     transparent calc(var(--score) * 1%)
@@ -195,7 +196,7 @@
   bottom: 0;
   left: -2px;
   transform-origin: bottom center;
-  transform: rotate(-90deg);
+  transform: rotate(0deg);
   transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -229,6 +230,7 @@
   right: 0;
   bottom: 0;
   border-radius: 50%;
+  display: none;
 }
 
 .meter-marks::before {
@@ -237,7 +239,7 @@
   width: 100%;
   height: 100%;
   background: repeating-conic-gradient(
-    from -90deg,
+    from 180deg,
     transparent 0deg,
     transparent 4deg,
     rgba(0, 0, 0, 0.1) 4deg,
@@ -250,7 +252,7 @@
   display: flex;
   justify-content: center;
   gap: 1.5rem;
-  margin: 2rem 0;
+  margin: 0.5rem 0;
 }
 
 .legend-item {
@@ -291,9 +293,9 @@
 }
 
 .score-footer {
-  margin-top: 2rem;
-  border-top: 1px solid #e0e0e0;
-  padding-top: 1.5rem;
+  margin-top: 1rem;
+  /* border-top: 1px solid #e0e0e0; */
+  /* padding-top: 1.5rem; */
 }
 
 .member-info {

@@ -306,6 +306,7 @@ const AdminDashboard = () => {
     const userRole = getUserinfo?.role_name;
     console.log(userRole, "TTYUYYYYYYY")
     setUserRoleName(userRole?.role_name)
+    console.log(userRoleName, "QWERTYU")
   }, []);
 
   const slides = [
@@ -346,9 +347,12 @@ const AdminDashboard = () => {
     dashboardCardCount();
   }, []);
 
+
+
   useEffect(() => {
     dashboardCardCount();
     getEntityCount();
+    console.log(userRoleName, "ROLENAME")
   }, []);
 
   const dashboardCardCount = async () => {
@@ -391,7 +395,7 @@ const AdminDashboard = () => {
    
   }
 
-  console.log(userRoleName, "ROLENAME")
+  
 
   return (
     <div style={{overflow:"scroll"}} className="dashboard-home">

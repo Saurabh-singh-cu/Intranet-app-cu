@@ -54,6 +54,7 @@ function AppContent() {
   const [isStudentSecretary, setIsStudentSecretary] = useState(false);
   const [isFaculty, setIsFaculty] = useState(false);
   const [user, setUser] = useState([]);
+  const [tokenExpire, setTokenExpire] = useState(false);
 
   const handleLogin = () => {
     console.log("Login success");
@@ -127,6 +128,20 @@ function AppContent() {
       window.removeEventListener("offline", () => {});
       window.removeEventListener("online", () => {});
     };
+  }, []);
+
+  //token expire function
+
+  useEffect(() => {
+    const getTockenExpiration = JSON.parse(localStorage.getItem(`user`));
+    setTokenExpire(getTockenExpiration?.token_expiration_time);
+
+    const currentTime = Date.now();
+    console.log(currentTime - tokenExpire, "TIM LEFT")
+    if (tokenExpire && currentTime >= tokenExpire) {
+      localStorage.removeItem("user");
+      window.location.href = "/login";
+    }
   }, []);
 
   return (
